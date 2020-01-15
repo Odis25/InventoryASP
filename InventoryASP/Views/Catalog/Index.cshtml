@@ -1,0 +1,31 @@
+﻿@model InventoryASP.Models.Catalog.DeviceIndexModel
+
+<div id="devices">
+    <table class="table table-condensed table-hover" id="catalogIndexTable">
+        <thead>
+            <tr>
+                <th>Тип устройства</th>
+                <th>Название</th>
+                <th>Модель</th>
+                <th>Серийный номер</th>
+                <th>Текущий владелец</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var device in Model.Devices)
+            {
+                <tr class="clickable-row" onclick="document.location='Catalog/Detail/Id=@device.Id'" style="cursor:pointer">
+                    <td class="clickable">@device.Type</td>
+                    <td class="clickable">@device.Name</td>
+                    <td class="clickable">@device.DeviceModel</td>
+                    <td class="clickable">@device.SerialNumber</td>
+                    <td class="clickable">@device.HolderName</td>
+                </tr>
+                }
+            </tbody>
+    </table>
+</div>
+
+});
+
+

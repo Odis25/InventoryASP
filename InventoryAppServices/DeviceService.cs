@@ -8,7 +8,7 @@ namespace InventoryAppServices
 {
     public class DeviceService : IDevice
     {
-        private InventoryContext _context;
+        private readonly InventoryContext _context;
 
         public DeviceService(InventoryContext context)
         {
@@ -28,8 +28,7 @@ namespace InventoryAppServices
 
         public Device GetById(int id)
         {
-            return _context.Devices
-                .FirstOrDefault(device => device.Id == id);
+            return _context.Devices.Find(id);
         }
 
         public Employee GetCurrentHolder(int id)

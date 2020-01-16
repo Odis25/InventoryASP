@@ -1,6 +1,5 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,7 +7,7 @@ namespace InventoryAppServices
 {
     public class CheckoutService : ICheckout
     {
-        private InventoryContext _context;
+        private readonly InventoryContext _context;
 
         public CheckoutService(InventoryContext context)
         {
@@ -28,14 +27,13 @@ namespace InventoryAppServices
         public Checkout GetByDeviceId(int id)
         {
             return _context.Checkouts
-                .Include(c=>c.Employee)
                 .FirstOrDefault(c => c.Device.Id == id);
         }
 
-        public Checkout GetByEmployeeId(int id)
+        public IEnumerable<Checkout> GetByEmployeeId(int id)
         {
             return _context.Checkouts
-                .FirstOrDefault(c => c.Employee.Id == id);
+                .Where(c => c.Employee.Id == id);
         }
     }
 }

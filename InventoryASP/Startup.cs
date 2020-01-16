@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using InventoryAppData;
+using InventoryAppServices;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using InventoryASP.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,13 +22,18 @@ namespace InventoryASP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<InventoryContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("InventoryConnection")));
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<InventoryContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<IDevice, DeviceService>();
+            services.AddScoped<ICheckout, CheckoutService>();
+            services.AddScoped<IEmployee, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

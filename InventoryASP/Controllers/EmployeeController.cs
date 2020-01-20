@@ -44,9 +44,8 @@ namespace InventoryASP.Controllers
         public IActionResult NewEmployee()
         {
             var departments = _departmentService.GetAll();
-            var departmentsList = new SelectList(departments, "Id", "Name", 1);
 
-            ViewBag.Departments = departmentsList;
+            ViewBag.Departments = departments;
 
             var model = new NewEmployeeModel();
 

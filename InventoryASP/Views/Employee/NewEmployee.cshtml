@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Department">Отдел</label>
-        <select asp-for="Department" asp-items="@(SelectList)ViewBag.Departments"></select>
+        <select asp-for="Department" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
     </div>
 </form>
 

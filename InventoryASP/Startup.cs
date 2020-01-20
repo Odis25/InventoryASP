@@ -29,7 +29,8 @@ namespace InventoryASP
                 .AddEntityFrameworkStores<InventoryContext>();
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
 
             services.AddScoped<IDevice, DeviceService>();
             services.AddScoped<ICheckout, CheckoutService>();
@@ -44,6 +45,7 @@ namespace InventoryASP
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {

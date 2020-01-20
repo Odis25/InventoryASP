@@ -2,6 +2,7 @@
 using InventoryAppData.Models;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Text;
 
@@ -10,10 +11,13 @@ namespace InventoryASP.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployee _employeeService;
+        private readonly IDepartment _departmentService;
+        
 
-        public EmployeeController(IEmployee employeeService, ICheckout checkoutService)
+        public EmployeeController(IEmployee employeeService, IDepartment departmentService)
         {
             _employeeService = employeeService;
+            _departmentService = departmentService;
         }
 
         public IActionResult Index()
@@ -37,6 +41,25 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
+        public IActionResult NewEmployee()
+        {
+            var departments = _departmentService.GetAll();
+            var departmentsList = new SelectList(departments, "Id", "Name", 1);
+
+            ViewBag.Departments = departmentsList;
+
+            var model = new NewEmployeeModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddNewEmployee()
+        {
+
+            return RedirectToAction("Index", "Employee");
+        }
+
         // Получаем фамилию и инициалы
         private string GetFullName(Employee employee)
         {
@@ -50,5 +73,6 @@ namespace InventoryASP.Controllers
                 .ToString();
             return fullName;
         }
+
     }
 }

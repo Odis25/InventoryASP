@@ -1,0 +1,21 @@
+﻿@model InventoryASP.Models.Employee.NewEmployeeModel
+
+<form asp-action="AddNewEmployee" method="post" id="addNewEmployeeForm">
+    <div class="form-group">
+        <label asp-for="LastName">Фамилия</label>
+        <input asp-for="LastName" class="form-control" placeholder="Иванов"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Name">Имя</label>
+        <input asp-for="Name" class="form-control" placeholder="Иван"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Patronymic">Отчество</label>
+        <input asp-for="Patronymic" class="form-control" placeholder="Иванович"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Department">Отдел</label>
+        <select asp-for="Department" asp-items="@(SelectList)ViewBag.Departments"></select>
+    </div>
+</form>
+

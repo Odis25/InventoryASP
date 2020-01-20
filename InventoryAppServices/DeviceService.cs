@@ -3,6 +3,7 @@ using InventoryAppData.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryAppServices
 {
@@ -15,10 +16,10 @@ namespace InventoryAppServices
             _context = context;
         }
 
-        public void Add(Device newDevice)
+        public async Task Add(Device newDevice)
         {
             _context.Devices.Add(newDevice);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<Device> GetAll()
@@ -35,7 +36,7 @@ namespace InventoryAppServices
         {
             var result = _context.Checkouts
                 .Include(co => co.Employee)
-                .FirstOrDefault(co => co.Device.Id == id).Employee;
+                .FirstOrDefault(co => co.Device.Id == id)?.Employee;
             return result;
         }
 

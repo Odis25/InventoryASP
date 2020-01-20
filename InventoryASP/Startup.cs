@@ -34,6 +34,7 @@ namespace InventoryASP
             services.AddScoped<IDevice, DeviceService>();
             services.AddScoped<ICheckout, CheckoutService>();
             services.AddScoped<IEmployee, EmployeeService>();
+            services.AddScoped<IDepartment, DepartmentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

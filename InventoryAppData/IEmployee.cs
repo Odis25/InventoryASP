@@ -1,5 +1,6 @@
 ﻿using InventoryAppData.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace InventoryAppData
 {
@@ -7,7 +8,9 @@ namespace InventoryAppData
     {
         IEnumerable<Employee> GetAll();
         Employee GetById(int id);
-        void Add(Employee newEmployee);
+        Task Add(Employee newEmployee);
+        Task GiveDevices(IEnumerable<int> idList, int employeeId);
+
 
         IEnumerable<Device> GetHoldedDevices(int id);
         IEnumerable<CheckoutHistory> GetEmployeeHistory(int id);

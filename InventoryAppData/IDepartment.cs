@@ -6,5 +6,6 @@ namespace InventoryAppData
     public interface IDepartment
     {
         IEnumerable<Department> GetAll();
+        Department GetDepartment(int id);
     }
 }

@@ -1,0 +1,28 @@
+﻿@model InventoryASP.Models.Device.AddDeviceModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5>Выберите устройство:</h5>
+    </div>
+    <form asp-action="AddDeviceToEmployee" asp-controller="Employee" method="post">
+        <input type="hidden" asp-for="@Model.EmployeeId" />
+        <div class="modal-body container">
+            <table class="table table-hover">
+                <tbody>
+                    @foreach (var device in Model.Devices)
+                    {                        
+                        <tr>
+                            <td><input type="hidden" asp-for="@device.Id"/></td>
+                            <td><input type="checkbox" asp-for="@device.IsSelected"/></td>
+                            <td>@device.DeviceType</td>
+                            <td>@device.DeviceName</td>
+                            <td>@device.DeviceModel</td>
+                            <td>@device.DeviceManufacturer</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-sm btn-success" type="submit">Добавить</button>
+    </form>
+</div>

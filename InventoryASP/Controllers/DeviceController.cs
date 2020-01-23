@@ -2,6 +2,7 @@
 using InventoryAppData.Models;
 using InventoryASP.Models.Device;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,6 +58,33 @@ namespace InventoryASP.Controllers
             return RedirectToAction("Index", "Device");
         }
 
+        public IActionResult GetFreeDeviceList(int? employeeId)
+        {
+            var devices = _deviceService.GetAllFreeDevices();
+
+            var listingResult = devices.Select(device => new DeviceListingModel
+            {
+                Id = device.Id,
+                DeviceType = device.Type,
+                DeviceName = device.Name,
+                DeviceModel = device.DeviceModel,
+                DeviceManufacturer = device.Manufacturer,
+                SerialNumber = device.SerialNumber,
+                HolderName = GetHolderFullName(device.Id)
+            });
+
+            var model = new AddDeviceModel
+            {
+                Devices = listingResult,
+                EmployeeId = employeeId ?? 0
+            };
+
+            return PartialView(model);
+        }
+
+        
+
+
         // Формируем фамилию и инициалы
         private string GetHolderFullName(int id)
         {
@@ -75,7 +103,6 @@ namespace InventoryASP.Controllers
 
             return holderFullName;
         }
-
         // Формируем новое устройство
         private Device BuildNewDevice(NewDeviceModel model)
         {

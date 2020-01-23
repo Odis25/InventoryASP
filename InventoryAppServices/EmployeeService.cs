@@ -1,8 +1,10 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryAppServices
 {
@@ -14,10 +16,32 @@ namespace InventoryAppServices
         {
             _context = context;
         }
-        public void Add(Employee newEmployee)
+
+        public async Task Add(Employee newEmployee)
         {
             _context.Employees.Add(newEmployee);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task GiveDevices(IEnumerable<int> idList, int employeeId)
+        {
+            if (!idList.Any() || employeeId != 0)
+                return;
+
+            var employee = _context.Employees.Find(employeeId);
+            foreach (var id in idList)
+            {
+                var device = _context.Devices.Find(id);
+                var now = DateTime.Now;
+                _context.Checkouts.Add( new Checkout
+                {
+                    Employee = employee,
+                    Device = device,
+                    Since = now
+                });
+            }
+            await _context.SaveChangesAsync();
+
         }
 
         public IEnumerable<Employee> GetAll()
@@ -31,7 +55,12 @@ namespace InventoryAppServices
 
         public Employee GetById(int id)
         {
-            return _context.Employees.Find(id);
+            return _context.Employees
+                .Include(e => e.Department)
+                .Include(e => e.Position)
+                .Include(e => e.Checkouts)
+                    .ThenInclude(c => c.Device)
+                .FirstOrDefault(e => e.Id == id);
         }
 
         public IEnumerable<CheckoutHistory> GetEmployeeHistory(int id)
@@ -45,5 +74,7 @@ namespace InventoryAppServices
             return _context.Employees
                 .Find(id).Checkouts.Select(c => c.Device);
         }
+
+
     }
 }

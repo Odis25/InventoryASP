@@ -7,6 +7,7 @@ namespace InventoryAppData
     public interface IDevice
     {
         IEnumerable<Device> GetAll();
+        IEnumerable<Device> GetAllFreeDevices();
         Device GetById(int id);
         Task Add(Device newDevice);
 

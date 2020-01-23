@@ -1,0 +1,71 @@
+﻿@model InventoryASP.Models.Employee.EmployeeDetailsModel
+<!--Заголовок секции-->
+<div class="detailsHeader box-shadow mainColor p-2">
+    <h4 class="text-white text-center">Информация о сотруднике</h4>
+</div>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog modal-dialog-centered"></div>
+</div>
+
+<!--основной блок-->
+<div class="jumbotron bg-light shadow-lg">
+    <div class="row">
+        <!--фото и профиль-->
+        <div class="col-4">
+            <img class="profilePhoto shadow-sm border border-light mb-3" src="~/img/userPhoto.png" width="200" height="200" />
+
+            <div class="mb-1"><span class="font-weight-bold">Фамилия:</span> @Model.LastName</div>
+            <div class="mb-1"><span class="font-weight-bold">Имя:</span> @Model.Name</div>
+            <div class="mb-1"><span class="font-weight-bold">Отчество:</span> @Model.Patronymic</div>
+            <div class="mb-1"><span class="font-weight-bold">Отдел:</span> @Model.Department</div>
+            <div class=""><span class="font-weight-bold">Должность:</span> @Model.Position</div>
+        </div>
+
+        <!--детализация -->
+        <div class="col p-0 bg-white" id="employeeDetail">
+
+            <!--Табы-->
+            <nav class="bg-light" id="nav-tabMenu">
+                <div class="nav nav-tabs" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-main-tab" href="#nav-main" data-toggle="tab" role="tab" aria-controls="#nav-main" aria-selected="true">Устройства на балансе</a>
+                    <a class="nav-item nav-link" id="nav-history-tab" href="#nav-history" data-toggle="tab" role="tab" aria-controls="#nav-history" aria-selected="false">История</a>
+                </div>
+            </nav>
+
+            <!--Таб-контент-->
+            <div class="tab-content" id="nav-tabContent">
+
+                <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="#nav-main-tab">
+                    <ol>
+                        @foreach (var checkout in Model.Checkouts)
+                        {
+                            <li class="">
+                                <a href="#item@(checkout.Id)" data-toggle="collapse">@checkout.Device.Type @checkout.Device.Name @checkout.Device.DeviceModel</a>
+                                <ul class="collapse list-unstyled pl-2" id="item@(checkout.Id)">
+                                    <li class="font-italic">Получено: @checkout.Since</li>
+                                </ul>
+                            </li>
+                        }
+                    </ol>
+                </div>
+
+                <div class=" fade" id="nav-history" role="tabpanel" aria-labelledby="#nav-history-tab">
+                    <div class="col"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <!--Кнопки добавления и удаления устройств-->
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col text-left p-0 py-3">
+            <a class="btn btn-success" id="test" asp-controller="Device" asp-action="GetFreeDeviceList" asp-route-employeeId="@Model.Id">Добавить устройство</a>
+        </div>
+    </div>
+
+</div>

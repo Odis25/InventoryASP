@@ -27,6 +27,14 @@ namespace InventoryAppServices
             return _context.Devices;
         }
 
+        public IEnumerable<Device> GetAllFreeDevices()
+        {
+            var usedDevices = _context.Devices
+                .Where(d => !_context.Checkouts.Select(c => c.Device).Contains(d));
+
+            return usedDevices;
+        }
+
         public Device GetById(int id)
         {
             return _context.Devices.Find(id);

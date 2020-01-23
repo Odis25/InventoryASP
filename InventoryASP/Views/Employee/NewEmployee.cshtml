@@ -15,7 +15,13 @@
     </div>
     <div class="form-group">
         <label asp-for="Department">Отдел</label>
-        <select asp-for="Department" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
+        <select asp-for="Department.Id" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
     </div>
+    <div class="form-group">
+        <label asp-for="Position">Должность</label>
+        <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
+    </div>
+    <button type="submit" class="btn btn-success">Добавить</button>
+
 </form>
 

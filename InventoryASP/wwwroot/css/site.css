@@ -63,6 +63,7 @@ body {
     margin-bottom: 60px;
     background: url("../img/mainTheme.jpg") no-repeat #000000;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -72,5 +73,41 @@ body {
 }
 
 .mainScreen{
-    background: rgba(255, 255, 255, 0.5)    
+    background: rgba(255, 255, 255, 0.8)    
 }
+
+.mainColor {
+    background-color: rgb(9, 40, 59);
+}
+
+#mainNavbarMenu{
+    background-color: rgb(9, 40, 59);
+}
+
+#logo {
+    font-family: Broadway;
+}
+
+.nav-tabs > .nav-link {
+    border: 1px solid #dee2e6;
+    background-color: transparent;
+    color: black;
+}
+
+.nav-tabs > .nav-link active{
+    border: 1px solid #dee2e6;
+    background-color: white;
+}
+
+#employeeDetail{
+ 
+}
+
+#nav-tabMenu{
+
+}
+
+#nav-tabContent {
+
+}
+

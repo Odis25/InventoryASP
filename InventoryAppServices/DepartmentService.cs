@@ -17,5 +17,10 @@ namespace InventoryAppServices
         {
             return _context.Departments;
         }
+
+        public Department GetDepartment(int id)
+        {
+            return _context.Departments.Find(id);
+        }
     }
 }

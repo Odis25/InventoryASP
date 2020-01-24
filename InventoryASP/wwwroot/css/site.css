@@ -76,12 +76,16 @@ body {
     background: rgba(255, 255, 255, 0.8)    
 }
 
-.mainColor {
-    background-color: rgb(9, 40, 59);
+.mainBackgroundColor {
+    background-color: #373d4e;
+}
+
+.btn-close, .btn-close:focus{
+    outline-style: none;
 }
 
 #mainNavbarMenu{
-    background-color: rgb(9, 40, 59);
+    padding: 0 1rem;
 }
 
 #logo {
@@ -99,15 +103,5 @@ body {
     background-color: white;
 }
 
-#employeeDetail{
- 
-}
 
-#nav-tabMenu{
-
-}
-
-#nav-tabContent {
-
-}
 

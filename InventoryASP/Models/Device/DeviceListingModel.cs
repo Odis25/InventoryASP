@@ -8,7 +8,9 @@
         public string DeviceModel { get; set; }
         public string DeviceManufacturer { get; set; }
         public string SerialNumber { get; set; }
+        
         public string HolderName { get; set; }
+        public int HolderId { get; set; }
 
         public bool IsSelected { get; set; }
     }

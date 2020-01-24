@@ -1,36 +1,40 @@
 ﻿@model InventoryASP.Models.Device.DeviceIndexModel
 
-<h3 class="text-center">Каталог оборудования</h3>
-
-<div class="row p-2">
-    <span><a asp-controller="Device" asp-action="NewDevice" class="btn btn-dark">Новое устройство</a></span>
+<div class="sectionHeader mainBackgroundColor shadow">
+    <h4 class="text-center text-white p-3">Каталог оборудования</h4>
 </div>
 
-<table class="table table-hover table-sm table-striped table-borderless">
-    <thead class="thead-dark mainColor">
-        <tr>
-            <th>Id</th>
-            <th>Тип</th>
-            <th>Название</th>
-            <th>Модель</th>
-            <th>Серийный номер</th>
-            <th>Производитель</th>
-            <th>Текущий владелец</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var device in Model.Devices)
-        {
-            <tr>
-                <td>@device.Id</td>
-                <td>@device.DeviceType</td>
-                <td>@device.DeviceName</td>
-                <td>@device.DeviceModel</td>
-                <td>@device.SerialNumber</td>
-                <td>@device.DeviceManufacturer</td>
-                <td>@device.HolderName</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container pb-2 pt-2 mainScreen">
+    <span><a asp-controller="Device" asp-action="NewDevice" class="btn btn-dark mb-2 shadow" id="device-newDeviceBtn">Новое оборудование</a></span>   
 
+    <table class="table table-hover table-sm table-striped table-borderless">
+        <thead class="thead-dark mainColor">
+            <tr>
+                <th>Тип</th>
+                <th>Название</th>
+                <th>Модель</th>
+                <th>Серийный номер</th>
+                <th>Производитель</th>
+                <th>Текущий владелец</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var device in Model.Devices)
+            {
+                <tr>
+                    <td>@device.DeviceType</td>
+                    <td>@device.DeviceName</td>
+                    <td>@device.DeviceModel</td>
+                    <td>@device.SerialNumber</td>
+                    <td>@device.DeviceManufacturer</td>
+                    <td><a asp-controller="Employee" asp-action="Details" asp-route-id="@device.HolderId">@device.HolderName</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<div class="modal fade" id="device-modal" data-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered" id="device-modalContent"></div>
+</div>

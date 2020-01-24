@@ -25,7 +25,7 @@ namespace InventoryAppServices
 
         public async Task GiveDevices(IEnumerable<int> idList, int employeeId)
         {
-            if (!idList.Any() || employeeId != 0)
+            if (!idList.Any() || employeeId == 0)
                 return;
 
             var employee = _context.Employees.Find(employeeId);

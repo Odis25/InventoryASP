@@ -1,28 +1,52 @@
-﻿@model InventoryASP.Models.Device.AddDeviceModel
+﻿@model InventoryASP.Models.Device.FreeDeviceListModel
 
 <div class="modal-content">
     <div class="modal-header">
-        <h5>Выберите устройство:</h5>
+        <h5 class="modal-title">Выберите устройство:</h5>
+        <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    <form asp-action="AddDeviceToEmployee" asp-controller="Employee" method="post">
-        <input type="hidden" asp-for="@Model.EmployeeId" />
-        <div class="modal-body container">
-            <table class="table table-hover">
-                <tbody>
-                    @foreach (var device in Model.Devices)
-                    {                        
-                        <tr>
-                            <td><input type="hidden" asp-for="@device.Id"/></td>
-                            <td><input type="checkbox" asp-for="@device.IsSelected"/></td>
-                            <td>@device.DeviceType</td>
-                            <td>@device.DeviceName</td>
-                            <td>@device.DeviceModel</td>
-                            <td>@device.DeviceManufacturer</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    @if (Model.Devices.Any())
+    {
+        <form asp-action="AddDeviceToEmployee" asp-controller="Employee" method="post">
+            <input type="hidden" asp-for="EmployeeId" />
+            <div class=" modal-body">
+                <table class="table table-hover">
+                    <tbody>
+                        @{
+                            for (int i = 0; i < Model.Devices.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input asp-for="@Model.Devices[i].Id" type="hidden" />
+                                        <input type="checkbox" asp-for="@Model.Devices[i].IsSelected" />
+                                    </td>
+                                    <td>@Model.Devices[i].DeviceType</td>
+                                    <td>@Model.Devices[i].DeviceName</td>
+                                    <td>@Model.Devices[i].DeviceModel</td>
+                                    <td>@Model.Devices[i].SerialNumber</td>
+                                    <td>@Model.Devices[i].DeviceManufacturer</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+                <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="modal-body text-center">
+            <p class="font-weight-bold">Нет свободного оборудования. :(</p>
         </div>
-        <button class="btn btn-sm btn-success" type="submit">Добавить</button>
-    </form>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+        </div>
+    }
 </div>

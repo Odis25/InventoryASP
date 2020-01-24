@@ -1,11 +1,8 @@
 ﻿@model InventoryASP.Models.Employee.EmployeeDetailsModel
+
 <!--Заголовок секции-->
 <div class="detailsHeader box-shadow mainColor p-2">
     <h4 class="text-white text-center">Информация о сотруднике</h4>
-</div>
-
-<div id="modDialog" class="modal fade">
-    <div id="dialogContent" class="modal-dialog modal-dialog-centered"></div>
 </div>
 
 <!--основной блок-->
@@ -13,7 +10,7 @@
     <div class="row">
         <!--фото и профиль-->
         <div class="col-4">
-            <img class="profilePhoto shadow-sm border border-light mb-3" src="~/img/userPhoto.png" width="200" height="200" />
+            <img class="profilePhoto img-thumbnail shadow-sm mb-3" src="~/img/userPhoto.png" width="200" height="200" />
 
             <div class="mb-1"><span class="font-weight-bold">Фамилия:</span> @Model.LastName</div>
             <div class="mb-1"><span class="font-weight-bold">Имя:</span> @Model.Name</div>
@@ -64,8 +61,13 @@
     <div class="row">
         <div class="col-4"></div>
         <div class="col text-left p-0 py-3">
-            <a class="btn btn-success" id="test" asp-controller="Device" asp-action="GetFreeDeviceList" asp-route-employeeId="@Model.Id">Добавить устройство</a>
+            <a class="btn btn-success" id="employee-selectDeviceBtn" asp-controller="Device" asp-action="GetFreeDeviceList" asp-route-employeeId="@Model.Id">Добавить устройство</a>
         </div>
     </div>
 
+</div>
+
+<!--Модальные окна-->
+<div id="employee-modal" class="modal fade" data-backdrop="static">
+    <div id="employee-modalContent" class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"></div>
 </div>

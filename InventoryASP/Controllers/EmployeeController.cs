@@ -44,6 +44,7 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
+        // Форма добавления нового сотрудника
         public IActionResult NewEmployee()
         {
             var departments = _departmentService.GetAll();
@@ -57,6 +58,7 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
+        // Добавить нового сотрудника
         [HttpPost]
         public async Task<IActionResult> AddNewEmployee(NewEmployeeModel model)
         {
@@ -66,16 +68,18 @@ namespace InventoryASP.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
+        // Добавить устройство сотруднику
         [HttpPost]
-        public async Task<IActionResult> AddDeviceToEmployee(AddDeviceModel model)
+        public async Task<IActionResult> AddDeviceToEmployee(FreeDeviceListModel model)
         {
-            var idList = model.Devices.Where(d => d.IsSelected == true)?.Select(d => d.Id);
+            var idList = model.Devices.Where(d => d.IsSelected)?.Select(d => d.Id);
 
             await _employeeService.GiveDevices(idList, model.EmployeeId);
 
             return RedirectToAction("Details", "Employee", new { id = model.EmployeeId });
         }
 
+        // Детальная информация о сотруднике
         public IActionResult Details(int id)
         {
             var employee = _employeeService.GetById(id);

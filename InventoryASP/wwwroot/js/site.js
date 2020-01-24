@@ -5,12 +5,19 @@
 
 $(function () {
     $.ajaxSetup({ cache: false });
-    $("#test").click(function (e) {
-
+    $("#employee-selectDeviceBtn").click(function (e) {
         e.preventDefault();
         $.get(this.href, function (data) {
-            $('#dialogContent').html(data);
-            $('#modDialog').modal('show');
+            $('#employee-modalContent').html(data);
+            $('#employee-modal').modal('show');
+        });
+    });
+
+    $('#device-newDeviceBtn').click(function (e) {
+        e.preventDefault();
+        $.get(this.href, function (data) {
+            $('#device-modalContent').html(data);
+            $('#device-modal').modal('show');
         });
     });
 })

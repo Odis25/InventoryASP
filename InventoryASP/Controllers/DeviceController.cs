@@ -30,6 +30,7 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
+                HolderId = GetHolderId(device.Id),
                 HolderName = GetHolderFullName(device.Id)
             });
 
@@ -41,14 +42,16 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
+        // Форма добавления нового устройства
         [HttpGet]
         public IActionResult NewDevice()
         {
             var model = new NewDeviceModel();            
 
-            return View(model);
+            return PartialView(model);
         }
 
+        // Добавляем новое устройство
         [HttpPost]
         public async Task<IActionResult> AddNewDevice(NewDeviceModel model)
         {
@@ -58,7 +61,8 @@ namespace InventoryASP.Controllers
             return RedirectToAction("Index", "Device");
         }
 
-        public IActionResult GetFreeDeviceList(int? employeeId)
+        // Получаем список свободного оборудования
+        public IActionResult GetFreeDeviceList(int employeeId)
         {
             var devices = _deviceService.GetAllFreeDevices();
 
@@ -71,19 +75,25 @@ namespace InventoryASP.Controllers
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
                 HolderName = GetHolderFullName(device.Id)
-            });
+            }).ToList();
 
-            var model = new AddDeviceModel
+            var model = new FreeDeviceListModel
             {
                 Devices = listingResult,
-                EmployeeId = employeeId ?? 0
+                EmployeeId = employeeId
             };
 
             return PartialView(model);
         }
 
-        
+        private int GetHolderId(int id)
+        {
+            var holder = _deviceService.GetCurrentHolder(id);
 
+            var holderId = holder?.Id ?? 0;
+
+            return holderId;
+        }
 
         // Формируем фамилию и инициалы
         private string GetHolderFullName(int id)

@@ -23,6 +23,7 @@ namespace InventoryASP.Controllers
             _positionService = positionService;
         }
 
+        // Список сотрудников
         public IActionResult Index()
         {
             var employees = _employeeService.GetAll();
@@ -55,7 +56,7 @@ namespace InventoryASP.Controllers
 
             var model = new NewEmployeeModel();
 
-            return View(model);
+            return PartialView(model);
         }
 
         // Добавить нового сотрудника

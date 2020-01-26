@@ -1,27 +1,40 @@
 ﻿@model InventoryASP.Models.Employee.NewEmployeeModel
 
-<form asp-action="AddNewEmployee" method="post" id="addNewEmployeeForm">
-    <div class="form-group">
-        <label asp-for="LastName">Фамилия</label>
-        <input asp-for="LastName" class="form-control" placeholder="Иванов"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Name">Имя</label>
-        <input asp-for="Name" class="form-control" placeholder="Иван"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Patronymic">Отчество</label>
-        <input asp-for="Patronymic" class="form-control" placeholder="Иванович"/>
-    </div>
-    <div class="form-group">
-        <label asp-for="Department">Отдел</label>
-        <select asp-for="Department.Id" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="Position">Должность</label>
-        <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
-    </div>
-    <button type="submit" class="btn btn-success">Добавить</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Новый сотрудник:</h4>
+            <button type="button" class="btn-close close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+        </div>
 
-</form>
+        <form asp-action="AddNewEmployee" method="post" id="addNewEmployeeForm">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label asp-for="LastName">Фамилия</label>
+                    <input asp-for="LastName" class="form-control" placeholder="Иванов" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name">Имя</label>
+                    <input asp-for="Name" class="form-control" placeholder="Иван" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Patronymic">Отчество</label>
+                    <input asp-for="Patronymic" class="form-control" placeholder="Иванович" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Department">Отдел</label>
+                    <select asp-for="Department.Id" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Position">Должность</label>
+                    <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Добавить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </form>
+    </div>
 

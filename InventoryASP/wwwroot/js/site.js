@@ -3,21 +3,27 @@
 
 // Write your JavaScript code.
 
-$(function () {
+$(document).ready(function () {
     $.ajaxSetup({ cache: false });
-    $("#employee-selectDeviceBtn").click(function (e) {
-        e.preventDefault();
-        $.get(this.href, function (data) {
-            $('#employee-modalContent').html(data);
-            $('#employee-modal').modal('show');
-        });
-    });
 
-    $('#device-newDeviceBtn').click(function (e) {
-        e.preventDefault();
-        $.get(this.href, function (data) {
-            $('#device-modalContent').html(data);
-            $('#device-modal').modal('show');
-        });
+    // СОБЫТИЯ ВЫЗОВА МОДАЛЬНЫХ ОКОН
+
+    // Выбор устройства для сотрудника
+    $("#employee-selectDeviceBtn").click(openModal);
+
+    // Добавление нового устройства
+    $('#device-newDeviceBtn').click(openModal);
+
+    // Добавление нового сотрудника
+    $('#employee-newEmployeeBtn').click(openModal);
+
+});
+
+// Открытие модального окна
+function openModal(e) {
+    e.preventDefault();
+    $.get(this.href, function (data) {
+        $('#modalWindow-content').html(data);
+        $('#modalWindow-background').modal('show');
     });
-})
+}

@@ -15,7 +15,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark shadow mb-3 mainBackgroundColor" id="mainNavbarMenu">
             <div class="container">
 
-                <a class="navbar-brand p-0 text-white" id="logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" width="80" height="80"/>InventoryApp</a>
+                <a class="navbar-brand p-0 text-white" id="logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" width="80" height="80" />InventoryApp</a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -39,15 +39,25 @@
             </div>
         </nav>
     </header>
+
+    <!--Основной блок-->
     <div class="container">
         @RenderBody()
     </div>
 
+    <!--Подвал сайта-->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - InventoryASP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!--Модальные окна-->
+    <div class="modal fade" id="modalWindow-background" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" id="modalWindow-content"></div>
+    </div>
+
+    <!--Скрипты-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

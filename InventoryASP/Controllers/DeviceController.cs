@@ -2,7 +2,6 @@
 using InventoryAppData.Models;
 using InventoryASP.Models.Device;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace InventoryASP.Controllers
                 SerialNumber = device.SerialNumber,
                 HolderId = GetHolderId(device.Id),
                 HolderName = GetHolderFullName(device.Id)
-            });
+            }).ToList();
 
             var model = new DeviceIndexModel
             {
@@ -42,29 +41,59 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
+        // Детальная информация об устройстве
+        public IActionResult Details(int id)
+        {
+            var device = _deviceService.GetById(id);
+
+            var model = new DeviceDetailsModel
+            {
+                Id = device.Id,
+                DeviceName = device.Name,
+                DeviceType = device.Type,
+                DeviceModel = device.DeviceModel,
+                DeviceSerialNumber = device.SerialNumber,
+                DeviceManufacturer = device.Manufacturer,
+                DeviceDescription = device.Description,
+                DeviceHistory = _deviceService.GetDeviceHistory(id),
+                DeviceCurrentHolder = _deviceService.GetCurrentHolder(id)
+            };
+
+            return View(model);
+        }
+
         // Форма добавления нового устройства
-        [HttpGet]
         public IActionResult NewDevice()
         {
-            var model = new NewDeviceModel();            
+            var model = new NewDeviceModel();
 
             return PartialView(model);
         }
 
         // Добавляем новое устройство
         [HttpPost]
-        public async Task<IActionResult> AddNewDevice(NewDeviceModel model)
+        public IActionResult AddNewDevice(NewDeviceModel model)
         {
             var device = BuildNewDevice(model);
 
-            await _deviceService.Add(device);
+            _deviceService.Add(device);
             return RedirectToAction("Index", "Device");
         }
 
-        // Получаем список свободного оборудования
-        public IActionResult GetFreeDeviceList(int employeeId)
+        // Удалить устройство
+        [HttpPost]
+        public IActionResult DeleteDevice(DeviceIndexModel model)
         {
-            var devices = _deviceService.GetAllFreeDevices();
+            var idList = model.Devices.Where(d => d.IsSelected).Select(device => device.Id).ToArray();
+
+            _deviceService.Delete(idList);
+            return RedirectToAction("Index","Device");
+        }
+
+        // Получаем список свободного оборудования
+        public IActionResult GetAvalibleDevices(int employeeId)
+        {
+            var devices = _deviceService.GetAvalibleDevices();
 
             var listingResult = devices.Select(device => new DeviceListingModel
             {
@@ -77,7 +106,7 @@ namespace InventoryASP.Controllers
                 HolderName = GetHolderFullName(device.Id)
             }).ToList();
 
-            var model = new FreeDeviceListModel
+            var model = new AvalibleDevicesModel
             {
                 Devices = listingResult,
                 EmployeeId = employeeId
@@ -86,6 +115,7 @@ namespace InventoryASP.Controllers
             return PartialView(model);
         }
 
+        // Получаем Id сотрудника
         private int GetHolderId(int id)
         {
             var holder = _deviceService.GetCurrentHolder(id);
@@ -94,7 +124,6 @@ namespace InventoryASP.Controllers
 
             return holderId;
         }
-
         // Формируем фамилию и инициалы
         private string GetHolderFullName(int id)
         {
@@ -123,7 +152,8 @@ namespace InventoryASP.Controllers
                 SerialNumber = model.SerialNumber,
                 Manufacturer = model.Manufacturer,
                 DeviceModel = model.DeviceModel,
-                Description = model.Description
+                Description = model.Description,
+                Status = "Avalible"
             };
 
             return device;

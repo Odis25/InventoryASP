@@ -1,6 +1,7 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,23 +17,55 @@ namespace InventoryAppServices
             _context = context;
         }
 
-        public async Task Add(Device newDevice)
+        public void Add(Device newDevice)
         {
             _context.Devices.Add(newDevice);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+        }
+
+        public void Delete(params int[] idList)
+        {
+            var devices = _context.Devices.Where(d => idList.Contains(d.Id));
+
+            // Закрываем все чекауты
+            var checkouts = _context.Checkouts.Where(c => devices.Contains(c.Device));
+
+            if (checkouts != null)
+            {
+                _context.RemoveRange(checkouts);
+            }
+
+            // Закрываем историю
+            var histories = _context.CheckoutHistories.Where(history => devices.Contains(history.Device) && history.CheckedIn == null);
+
+            if (histories != null)
+            {
+                var now = DateTime.Now;
+
+                foreach (var history in histories)
+                {
+                    history.CheckedIn = now;
+                }
+            }
+            _context.UpdateRange(devices);
+
+            // Меняем статус устройства на "Deleted"
+            foreach (var device in devices)
+            {
+                device.Status = "Deleted";
+            }
+
+            _context.SaveChanges();
         }
 
         public IEnumerable<Device> GetAll()
         {
-            return _context.Devices;
+            return _context.Devices.Where(d=> d.Status != "Deleted");
         }
 
-        public IEnumerable<Device> GetAllFreeDevices()
+        public IEnumerable<Device> GetAvalibleDevices()
         {
-            var usedDevices = _context.Devices
-                .Where(d => !_context.Checkouts.Select(c => c.Device).Contains(d));
-
-            return usedDevices;
+            return _context.Devices.Where(device=> device.Status == "Available");
         }
 
         public Device GetById(int id)

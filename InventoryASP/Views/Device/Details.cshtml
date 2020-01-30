@@ -1,0 +1,16 @@
+﻿@model InventoryASP.Models.Device.DeviceDetailsModel
+
+<!--Заголовок секции-->
+<div class="sectionHeader box-shadow mainBackgroundColor p-2">
+    <h4 class="text-white text-center">Информация об оборудовании</h4>
+</div>
+
+<!--основной блок-->
+<div class="jumbotron bg-light shadow-lg">
+    <p>Id: <span>@Model.Id</span></p>
+    <p>Наименование: <span>@Model.DeviceName</span></p>
+    <p>Тип: <span>@Model.DeviceType</span></p>
+    <p>Модель: <span>@Model.DeviceModel</span></p>
+    <p>Производитель: <span>@Model.DeviceManufacturer</span></p>
+    <p>Серийный номер: <span>@Model.DeviceSerialNumber</span></p>
+</div>

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace InventoryAppServices
 {
@@ -17,31 +16,36 @@ namespace InventoryAppServices
             _context = context;
         }
 
-        public async Task Add(Employee newEmployee)
+        public void Add(Employee newEmployee)
         {
             _context.Employees.Add(newEmployee);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public async Task GiveDevices(IEnumerable<int> idList, int employeeId)
+        public void Delete(params int[] idList)
         {
-            if (!idList.Any() || employeeId == 0)
-                return;
+            var employees = _context.Employees.Where(e => idList.Contains(e.Id));
 
-            var employee = _context.Employees.Find(employeeId);
-            foreach (var id in idList)
+            // Вернуть все устройства
+            var checkouts = _context.Checkouts.Where(c => employees.Contains(c.Employee));
+            if (checkouts != null)
             {
-                var device = _context.Devices.Find(id);
-                var now = DateTime.Now;
-                _context.Checkouts.Add( new Checkout
-                {
-                    Employee = employee,
-                    Device = device,
-                    Since = now
-                });
+                _context.RemoveRange(checkouts);
             }
-            await _context.SaveChangesAsync();
 
+            // Закрыть всю историю использования
+            var now = DateTime.Now;
+            var histories = _context.CheckoutHistories
+                .Where(h => employees.Contains(h.Employee) && h.CheckedIn == null);
+            if (histories != null)
+            {
+                foreach (var history in histories)
+                {
+                    _context.Update(history);
+                    history.CheckedIn = now;
+                }
+            }
+            _context.SaveChanges();
         }
 
         public IEnumerable<Employee> GetAll()
@@ -61,12 +65,6 @@ namespace InventoryAppServices
                 .Include(e => e.Checkouts)
                     .ThenInclude(c => c.Device)
                 .FirstOrDefault(e => e.Id == id);
-        }
-
-        public IEnumerable<CheckoutHistory> GetEmployeeHistory(int id)
-        {
-            return _context.CheckoutHistories
-                .Where(co => co.Employee.Id == id);
         }
 
         public IEnumerable<Device> GetHoldedDevices(int id)

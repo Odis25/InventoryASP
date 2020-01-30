@@ -3,6 +3,7 @@ using InventoryAppData.Models;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +13,15 @@ namespace InventoryASP.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployee _employeeService;
+        private readonly ICheckout _checkoutService;
         private readonly IDepartment _departmentService;
         private readonly IPosition _positionService;
 
 
-        public EmployeeController(IEmployee employeeService, IDepartment departmentService, IPosition positionService)
+        public EmployeeController(IEmployee employeeService, ICheckout checkoutService, IDepartment departmentService, IPosition positionService)
         {
             _employeeService = employeeService;
+            _checkoutService = checkoutService;
             _departmentService = departmentService;
             _positionService = positionService;
         }
@@ -31,7 +34,9 @@ namespace InventoryASP.Controllers
             var listingResult = employees.Select(employee => new EmployeeListingModel
             {
                 Id = employee.Id,
-                FullName = GetFullName(employee),
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Patronymic = employee.Patronymic,
                 Position = employee.Position.Name,
                 Department = employee.Department.Name,
                 Devices = _employeeService.GetHoldedDevices(employee.Id)
@@ -54,37 +59,59 @@ namespace InventoryASP.Controllers
             ViewBag.Departments = departments;
             ViewBag.Positions = positions;
 
-            var model = new NewEmployeeModel();
-
-            return PartialView(model);
+            return PartialView();
         }
 
         // Добавить нового сотрудника
         [HttpPost]
-        public async Task<IActionResult> AddNewEmployee(NewEmployeeModel model)
+        public IActionResult NewEmployee(NewEmployeeModel model)
         {
             var employee = BuildNewEmployee(model);
-            await _employeeService.Add(employee);
+            _employeeService.Add(employee);
 
+            return RedirectToAction("Index", "Employee");
+        }
+
+        // Удалить сотрудника
+        public IActionResult DeleteEmployee(IEnumerable<int> idList)
+        {
+            if (idList.Any())
+                _employeeService.Delete(idList.ToArray());
+            
             return RedirectToAction("Index", "Employee");
         }
 
         // Добавить устройство сотруднику
         [HttpPost]
-        public async Task<IActionResult> AddDeviceToEmployee(FreeDeviceListModel model)
+        public IActionResult CheckOutDevice(AvalibleDevicesModel model)
         {
-            var idList = model.Devices.Where(d => d.IsSelected)?.Select(d => d.Id);
-
-            await _employeeService.GiveDevices(idList, model.EmployeeId);
+            var idList = model.Devices.Where(d => d.IsSelected).Select(d => d.Id).ToArray();
+            _checkoutService.CheckOutDevice(model.EmployeeId, idList);
 
             return RedirectToAction("Details", "Employee", new { id = model.EmployeeId });
+        }
+
+        // Забрать устройство у сотрудника
+        [HttpPost]
+        public IActionResult CheckInDevice(EmployeeDetailsModel model)
+        {
+            var idList = model.Checkouts.Where(c => c.IsSelected)
+                .Select(c => c.Checkout.Device.Id);
+
+            _checkoutService.CheckInDevice(idList);
+
+            return RedirectToAction("Details", new { id = model.Id });
         }
 
         // Детальная информация о сотруднике
         public IActionResult Details(int id)
         {
             var employee = _employeeService.GetById(id);
-            var history = _employeeService.GetEmployeeHistory(employee.Id);
+
+            var checkouts = _checkoutService.GetByEmployeeId(id)
+                .Select(c => new CheckoutModel { Checkout = c }).ToList();
+
+            var checkoutsHistory = _checkoutService.GetEmployeeHistory(id).ToList();
 
             var model = new EmployeeDetailsModel
             {
@@ -94,8 +121,8 @@ namespace InventoryASP.Controllers
                 Patronymic = employee.Patronymic,
                 Department = employee.Department.Name,
                 Position = employee.Position.Name,
-                Checkouts = employee.Checkouts,
-                History = history               
+                Checkouts = checkouts,
+                History = checkoutsHistory
             };
 
             return View(model);
@@ -113,23 +140,9 @@ namespace InventoryASP.Controllers
                 LastName = model.LastName,
                 Patronymic = model.Patronymic,
                 Position = position,
-                Department = department
+                Department = department,
+                Status = "Available"
             };
         }
-
-        // Получаем фамилию и инициалы
-        private string GetFullName(Employee employee)
-        {
-            var fullName = new StringBuilder()
-                .Append(employee.LastName)
-                .Append(" ")
-                .Append(employee.Name.First())
-                .Append(".")
-                .Append(employee.Patronymic.First())
-                .Append(".")
-                .ToString();
-            return fullName;
-        }
-
     }
 }

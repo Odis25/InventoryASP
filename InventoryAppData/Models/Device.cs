@@ -9,5 +9,7 @@
         public string Manufacturer { get; set; }
         public string DeviceModel { get; set; }
         public string Description { get; set; }
+        
+        public string Status { get; set; }
     }
 }

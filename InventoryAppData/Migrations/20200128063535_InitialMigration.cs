@@ -31,7 +31,8 @@ namespace InventoryAppData.Migrations
                     SerialNumber = table.Column<string>(nullable: true),
                     Manufacturer = table.Column<string>(nullable: true),
                     DeviceModel = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -13,7 +13,7 @@ namespace InventoryASP.Models.Employee
         public string Department { get; set; }
         public string Position { get; set; }
 
-        public IEnumerable<Checkout> Checkouts { get; set; }
-        public IEnumerable<CheckoutHistory> History { get; set; }
+        public List<CheckoutModel> Checkouts { get; set; }
+        public List<CheckoutHistory> History { get; set; }
     }
 }

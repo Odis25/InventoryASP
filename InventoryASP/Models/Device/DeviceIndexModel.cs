@@ -4,6 +4,6 @@ namespace InventoryASP.Models.Device
 {
     public class DeviceIndexModel
     {
-        public IEnumerable<DeviceListingModel> Devices { get; set; }
+        public List<DeviceListingModel> Devices { get; set; }
     }
 }

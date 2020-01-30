@@ -1,9 +1,9 @@
-﻿@model InventoryASP.Models.Device.FreeDeviceListModel
+﻿@model InventoryASP.Models.Device.AvalibleDevicesModel
 
     <div class="modal-content">
         <!--Заголовок-->
         <div class="modal-header">
-            <h5 class="modal-title">Выберите устройство:</h5>
+            <h5 class="modal-title">Выберите свободное устройство:</h5>
             <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -11,10 +11,10 @@
 
         @if (Model.Devices.Any())
         {
-            <form asp-action="AddDeviceToEmployee" asp-controller="Employee" method="post">
+            <form asp-action="CheckOutDevice" asp-controller="Employee" method="post">
                 <input type="hidden" asp-for="EmployeeId" />
                 <div class=" modal-body">
-                    <table class="table table-hover">
+                    <table class="table table-sm table-hover table-borderless table-striped">
                         <tbody>
                             @{
                                 for (int i = 0; i < Model.Devices.Count; i++)
@@ -37,7 +37,7 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary" type="submit">Сохранить</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Добавить</button>
                     <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
                 </div>
             </form>

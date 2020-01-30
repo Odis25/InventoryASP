@@ -2,7 +2,7 @@
 
 namespace InventoryASP.Models.Device
 {
-    public class FreeDeviceListModel
+    public class AvalibleDevicesModel
     {
         public List<DeviceListingModel> Devices { get; set; }
         public int EmployeeId { get; set; }

@@ -37,14 +37,14 @@
                     </ul>
                 </div>
             </div>
-           
+
         </nav>
-        
+
     </header>
 
     <!--Основной блок-->
     <div class="container">
-        @RenderBody()        
+        @RenderBody()
     </div>
 
     <!--Подвал сайта-->
@@ -55,9 +55,18 @@
     </footer>
 
     <!--Модальные окна-->
-    <div class="modal fade" id="modalWindow-background" data-backdrop="static">
-        <div class="modal-dialog modal-lg modal-dialog-centered" id="modalWindow-content"></div>        
+    <div class="modal fade bgModal-sm" data-backdrop="static">
+        <div class="modal-dialog modal-sm modal-dialog-centered" id="modalWindow-content-sm"></div>
     </div>
+
+    <div class="modal fade bgModal-m" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" id="modalWindow-content-m"></div>
+    </div>
+
+    <div class="modal fade bgModal-lg" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered" id="modalWindow-content-lg"></div>
+    </div>
+
 
     <!--Скрипты-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

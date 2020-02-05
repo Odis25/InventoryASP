@@ -2,28 +2,32 @@
 
 <div class="login modal-content p-2">
     <div class="modal-header">
+        <h4>Авторизация</h4>
         <button type="button" data-dismiss="modal" class="close">
             <span>&times;</span>
         </button>
     </div>
-    <form method="post" asp-controller="Account" asp-action="Login">
-
+    <form method="post" asp-controller="Account" asp-action="Login">       
         <div class="form-group">
-            <label asp-for="LoginName"></label>
+            <label class="col-form-label" asp-for="LoginName"></label>
             <input class="form-control" asp-for="LoginName" />
             <span class="text-danger" asp-validation-for="LoginName"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Password"></label>
+            <label class="col-form-label" asp-for="Password"></label>
             <input class="form-control" asp-for="Password" />
             <span class="text-danger" asp-validation-for="Password"></span>
         </div>
         <div class="form-group">
-            <label asp-for="RememberMe"></label>
-            <input class="form-check" asp-for="RememberMe" />
+            <div class="form-check">
+                <input class="form-check-input" asp-for="RememberMe" />
+                <label class="form-check-label" asp-for="RememberMe"></label>
+            </div>
         </div>
         <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-        <input type="submit" class="btn btn-primary" value="Войти" />
+        <div class="row justify-content-center">
+            <input type="submit" class="btn btn-primary pl-4 pr-4" value="Войти" />
+        </div>
     </form>
 </div>
 

@@ -7,14 +7,29 @@ $(document).ready(function () {
     $.ajaxSetup({ cache: false });
 
     // Открытие модальных окон
-    $('.openModalBtn').on('click', openModal);
+    $('.openModalBtn-sm').on('click', { size: 'sm' }, openModal);
+    $('.openModalBtn-m').on('click', { size: 'm' }, openModal);
+    $('.openModalBtn-lg').on('click', { size: 'lg' }, openModal);
 });
 
 // Открытие модального окна
 function openModal(e) {
     e.preventDefault();
     $.get(this.href, function (data) {
-        $('#modalWindow-content').html(data);
-        $('#modalWindow-background').modal('show');
+        switch (e.data.size) {
+            case 'sm':
+                $('#modalWindow-content-sm').html(data);
+                $('.bgModal-sm').modal('show');
+                break;
+            case 'm':
+                $('#modalWindow-content-m').html(data);
+                $('.bgModal-m').modal('show');
+                break;
+            case 'lg':
+                $('#modalWindow-content-lg').html(data);
+                $('.bgModal-lg').modal('show');
+                break;
+        }
+        
     });
 }

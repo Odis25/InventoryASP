@@ -73,6 +73,7 @@ namespace InventoryASP.Controllers
         }
 
         // Удалить сотрудника
+        [HttpPost]
         public IActionResult DeleteEmployee(IEnumerable<int> idList)
         {
             if (idList.Any())
@@ -141,7 +142,7 @@ namespace InventoryASP.Controllers
                 Patronymic = model.Patronymic,
                 Position = position,
                 Department = department,
-                Status = "Available"
+                IsActive = true
             };
         }
     }

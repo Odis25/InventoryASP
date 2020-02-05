@@ -12,8 +12,8 @@
             <!--Табы-->
             <nav class="" id="nav-tabMenu">
                 <div class="nav nav-tabs" role="tablist">
-                    <a class="nav-item nav-link active" id="nav-main-tab" href="#nav-main" data-toggle="tab" role="tab" aria-controls="#nav-main" aria-selected="true">Устройства на балансе</a>
-                    <a class="nav-item nav-link" id="nav-history-tab" href="#nav-history" data-toggle="tab" role="tab" aria-controls="#nav-history" aria-selected="false">История</a>
+                    <a class="nav-item nav-link active" id="nav-main-tab" href="#nav-main" data-toggle="tab">Устройства на балансе</a>
+                    <a class="nav-item nav-link" id="nav-history-tab" href="#nav-history" data-toggle="tab">История</a>
                 </div>
             </nav>
         </div>
@@ -29,8 +29,9 @@
             <div class="mb-1"><span class="font-weight-bold">Отчество:</span> @Model.Patronymic</div>
             <div class="mb-1"><span class="font-weight-bold">Отдел:</span> @Model.Department</div>
             <div class=""><span class="font-weight-bold">Должность:</span> @Model.Position</div>
+
             <form method="post" class="form-row" asp-action="DeleteEmployee">
-                <input type="hidden" asp-for="Id" />
+                <input type="hidden" name="idList" value="@Model.Id"/>
                 <button type="submit" class="btn btn-danger">Удалить</button>
             </form>
 
@@ -42,7 +43,7 @@
             <!--Таб-контент-->
             <div class="tab-content" id="nav-tabContent">
 
-                <div class="tab-pane show active" id="nav-main" role="tabpanel" aria-labelledby="#nav-main-tab">
+                <div class="tab-pane show active" id="nav-main">
                     <form method="post" asp-action="CheckInDevice" id="deleteDeviceForm">
                         <input type="hidden" asp-for="Id" />
                         <table class="table table-sm">
@@ -79,7 +80,7 @@
                     </form>
                 </div>
 
-                <div class="tab-pane" id="nav-history" role="tabpanel" aria-labelledby="#nav-history-tab">
+                <div class="tab-pane" id="nav-history">
                     <table class="table table-sm table-fixed">
                         <thead class="">
                             <tr>
@@ -113,7 +114,7 @@
     <!--Кнопки добавления и удаления устройств-->
     <div class="row">
         <div class="col offset-4 text-left p-0 py-3">
-            <a class="btn btn-success" id="employee-selectDeviceBtn" asp-controller="Device" asp-action="GetAvalibleDevices" asp-route-employeeId="@Model.Id">Добавить устройство</a>
+            <a class="btn btn-success openModalBtn" asp-controller="Device" asp-action="GetAvalibleDevices" asp-route-employeeId="@Model.Id">Добавить устройство</a>
             <button type="submit" form="deleteDeviceForm" class="btn btn-danger">Удалить</button>
         </div>
     </div>

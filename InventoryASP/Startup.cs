@@ -1,8 +1,8 @@
 using InventoryAppData;
+using InventoryAppData.Models;
 using InventoryAppServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +25,7 @@ namespace InventoryASP
             services.AddDbContext<InventoryContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<InventoryContext>();
 
             services.AddControllersWithViews();

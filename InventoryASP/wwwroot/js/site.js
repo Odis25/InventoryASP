@@ -6,17 +6,8 @@
 $(document).ready(function () {
     $.ajaxSetup({ cache: false });
 
-    // СОБЫТИЯ ВЫЗОВА МОДАЛЬНЫХ ОКОН
-
-    // Выбор устройства для сотрудника
-    $("#employee-selectDeviceBtn").click(openModal);
-
-    // Добавление нового устройства
-    $('#device-newDeviceBtn').click(openModal);
-
-    // Добавление нового сотрудника
-    $('#employee-newEmployeeBtn').click(openModal);
-
+    // Открытие модальных окон
+    $('.openModalBtn').on('click', openModal);
 });
 
 // Открытие модального окна

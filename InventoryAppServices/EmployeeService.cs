@@ -45,12 +45,21 @@ namespace InventoryAppServices
                     history.CheckedIn = now;
                 }
             }
+
+            // Убираем сотрудников из списка активных
+            _context.Employees.UpdateRange(employees);
+            foreach (var employee in employees)
+            {
+                employee.IsActive = false;
+            }
+
+            // Сохраняем изменения
             _context.SaveChanges();
         }
 
         public IEnumerable<Employee> GetAll()
         {
-            return _context.Employees
+            return _context.Employees.Where(e=>e.IsActive)
                 .Include(e => e.Department)
                 .Include(e => e.Position)
                 .Include(e => e.Checkouts)
@@ -59,7 +68,7 @@ namespace InventoryAppServices
 
         public Employee GetById(int id)
         {
-            return _context.Employees
+            return _context.Employees.Where(e => e.IsActive)
                 .Include(e => e.Department)
                 .Include(e => e.Position)
                 .Include(e => e.Checkouts)

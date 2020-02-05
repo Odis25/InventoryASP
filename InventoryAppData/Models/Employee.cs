@@ -8,7 +8,7 @@ namespace InventoryAppData.Models
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Patronymic { get; set; }
-        public string Status { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual Department Department { get; set; }
         public virtual Position Position { get; set; }

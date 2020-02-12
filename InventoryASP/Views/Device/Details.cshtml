@@ -1,16 +1,61 @@
 ﻿@model InventoryASP.Models.Device.DeviceDetailsModel
-
-<!--Заголовок секции-->
-<div class="sectionHeader box-shadow mainBackgroundColor p-2">
-    <h4 class="text-white text-center">Информация об оборудовании</h4>
-</div>
-
 <!--основной блок-->
-<div class="jumbotron bg-light shadow-lg">
-    <p>Id: <span>@Model.Id</span></p>
-    <p>Наименование: <span>@Model.DeviceName</span></p>
-    <p>Тип: <span>@Model.DeviceType</span></p>
-    <p>Модель: <span>@Model.DeviceModel</span></p>
-    <p>Производитель: <span>@Model.DeviceManufacturer</span></p>
-    <p>Серийный номер: <span>@Model.DeviceSerialNumber</span></p>
+<div class="section bg-light shadow-lg">
+
+    <div class="row p-2">
+        <div class="col">
+            <a class="close btn-close" asp-controller="Device" asp-action="Index">
+                <span>&times;</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col-5 p-2">
+            <div class="border box-shadow p-2">
+                <h5 class="border-bottom pb-2">Информация:</h5>
+                <div><span class="font-weight-bold">Id:</span> @Model.Id</div>
+                <div><span class="font-weight-bold">Наименование:</span> @Model.DeviceName</div>
+                <div><span class="font-weight-bold">Тип:</span> @Model.DeviceType</div>
+                <div><span class="font-weight-bold">Модель:</span> @Model.DeviceModel</div>
+                <div><span class="font-weight-bold">Производитель:</span> @Model.DeviceManufacturer</div>
+                <div><span class="font-weight-bold">Серийный номер:</span> @Model.DeviceSerialNumber</div>
+                <div>
+                    <span class="font-weight-bold">Текущий владелец:</span> @Model.HolderFullName
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="DeviceDescription">Описание:</label>
+                    <textarea rows="10" class="form-control" asp-for="DeviceDescription" readonly contenteditable="false"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="col p-2">
+            <div class="p-2 border box-shadow deviceHistoryPane">
+                <h5 class="border-bottom pb-2">История:</h5>
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Выдано</th>
+                            <th>Возвращено</th>
+                            <th>Сотрудник</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var history in Model.DeviceHistory)
+                        {
+                            <tr>
+                                <td>@history.Id</td>
+                                <td>@history.Since</td>
+                                <td>@history.Until</td>
+                                <td>@history.HolderFullName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 </div>

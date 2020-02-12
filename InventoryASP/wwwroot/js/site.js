@@ -3,7 +3,7 @@
 
 // Write your JavaScript code.
 
-$(document).ready(function () {
+$(function () {
     $.ajaxSetup({ cache: false });
 
     // Открытие модальных окон
@@ -15,7 +15,7 @@ $(document).ready(function () {
 // Открытие модального окна
 function openModal(e) {
     e.preventDefault();
-    $.get(this.href, function (data) {
+    $.get(this.href).done(function (data) {
         switch (e.data.size) {
             case 'sm':
                 $('#modalWindow-content-sm').html(data);
@@ -29,7 +29,6 @@ function openModal(e) {
                 $('#modalWindow-content-lg').html(data);
                 $('.bgModal-lg').modal('show');
                 break;
-        }
-        
+        }        
     });
 }

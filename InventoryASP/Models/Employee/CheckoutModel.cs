@@ -1,5 +1,4 @@
 ﻿using InventoryAppData.Models;
-using System;
 
 namespace InventoryASP.Models.Employee
 {

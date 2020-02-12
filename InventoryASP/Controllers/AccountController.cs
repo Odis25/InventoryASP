@@ -41,7 +41,8 @@ namespace InventoryASP.Controllers
                     ModelState.AddModelError("", "Неправильный логин или пароль");
                 }
             }
-            return View(model);
+            return PartialView(model);
         }
+
     }
 }

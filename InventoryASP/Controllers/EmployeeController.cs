@@ -73,12 +73,18 @@ namespace InventoryASP.Controllers
         }
 
         // Удалить сотрудника
-        [HttpPost]
-        public IActionResult DeleteEmployee(IEnumerable<int> idList)
+        public IActionResult DeleteEmployee(int id)
         {
-            if (idList.Any())
-                _employeeService.Delete(idList.ToArray());
-            
+            ViewBag.Id = id;
+            return PartialView();
+        }
+
+        // Удалить сотрудника
+        [HttpPost]
+        public IActionResult DeleteEmployeePost(int id)
+        {
+            _employeeService.Delete(id);
+
             return RedirectToAction("Index", "Employee");
         }
 
@@ -93,15 +99,11 @@ namespace InventoryASP.Controllers
         }
 
         // Забрать устройство у сотрудника
-        [HttpPost]
-        public IActionResult CheckInDevice(EmployeeDetailsModel model)
+        public IActionResult CheckInDevice(int deviceId, int employeeid)
         {
-            var idList = model.Checkouts.Where(c => c.IsSelected)
-                .Select(c => c.Checkout.Device.Id);
+            _checkoutService.CheckInDevice(new[] { deviceId });
 
-            _checkoutService.CheckInDevice(idList);
-
-            return RedirectToAction("Details", new { id = model.Id });
+            return RedirectToAction("Details", new { id = employeeid });
         }
 
         // Детальная информация о сотруднике

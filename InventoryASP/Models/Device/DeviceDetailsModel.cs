@@ -1,5 +1,4 @@
-﻿using InventoryAppData.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace InventoryASP.Models.Device
 {
@@ -13,7 +12,9 @@ namespace InventoryASP.Models.Device
         public string DeviceSerialNumber { get; set; }
         public string DeviceDescription { get; set; }
 
-        public InventoryAppData.Models.Employee DeviceCurrentHolder { get; set; }
-        public IEnumerable<CheckoutHistory> DeviceHistory { get; set; }
+        public string HolderFullName { get; set; }
+        public int? HolderId { get; set; }
+
+        public IEnumerable<DeviceHistoryModel> DeviceHistory { get; set; }
     }
 }

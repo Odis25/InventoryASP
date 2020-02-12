@@ -29,8 +29,8 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
-                HolderId = GetHolderId(device.Id),
-                HolderName = GetHolderFullName(device.Id)
+                HolderFullName = GetHolderFullName(device.Id),
+                HolderId = _deviceService.GetCurrentHolder(device.Id)?.Id
             }).ToList();
 
             var model = new DeviceIndexModel
@@ -45,18 +45,28 @@ namespace InventoryASP.Controllers
         public IActionResult Details(int id)
         {
             var device = _deviceService.GetById(id);
+            var holder = _deviceService.GetCurrentHolder(id);
+            var history = _deviceService.GetDeviceHistory(id).Select(h => new DeviceHistoryModel
+            {
+                Id = h.Id,
+                Since = h.CheckedOut,
+                Until = h.CheckedIn,
+                HolderId = h.Employee.Id,
+                HolderFullName = GetHolderFullName(h.Device.Id)
+            });
 
             var model = new DeviceDetailsModel
             {
                 Id = device.Id,
                 DeviceName = device.Name,
-                DeviceType = device.Type,
-                DeviceModel = device.DeviceModel,
+                DeviceType = device.Type != "" ? device.Type : "---",
+                DeviceModel = device.DeviceModel != "" ? device.DeviceModel : "---",
                 DeviceSerialNumber = device.SerialNumber,
                 DeviceManufacturer = device.Manufacturer,
                 DeviceDescription = device.Description,
-                DeviceHistory = _deviceService.GetDeviceHistory(id),
-                DeviceCurrentHolder = _deviceService.GetCurrentHolder(id)
+                DeviceHistory = history,
+                HolderId = _deviceService.GetCurrentHolder(device.Id)?.Id,
+                HolderFullName = holder != null ? GetHolderFullName(device.Id) : "---"
             };
 
             return View(model);
@@ -81,13 +91,19 @@ namespace InventoryASP.Controllers
         }
 
         // Удалить устройство
-        [HttpPost]
-        public IActionResult DeleteDevice(DeviceIndexModel model)
+        public IActionResult DeleteDevice(int id)
         {
-            var idList = model.Devices.Where(d => d.IsSelected).Select(device => device.Id).ToArray();
+            ViewBag.Id = id;
+            return PartialView();
+        }
 
-            _deviceService.Delete(idList);
-            return RedirectToAction("Index","Device");
+        // Удалить устройство
+        [HttpPost]
+        public IActionResult DeleteDevicePost(int id)
+        {
+            _deviceService.Delete(id);
+
+            return RedirectToAction("Index", "Device");
         }
 
         // Получаем список свободного оборудования
@@ -103,7 +119,7 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
-                HolderName = GetHolderFullName(device.Id)
+                HolderFullName = GetHolderFullName(device.Id)
             }).ToList();
 
             var model = new AvalibleDevicesModel
@@ -115,19 +131,11 @@ namespace InventoryASP.Controllers
             return PartialView(model);
         }
 
-        // Получаем Id сотрудника
-        private int GetHolderId(int id)
-        {
-            var holder = _deviceService.GetCurrentHolder(id);
-
-            var holderId = holder?.Id ?? 0;
-
-            return holderId;
-        }
         // Формируем фамилию и инициалы
-        private string GetHolderFullName(int id)
+        private string GetHolderFullName(int deviceId)
         {
-            var holder = _deviceService.GetCurrentHolder(id);
+            var holder = _deviceService.GetCurrentHolder(deviceId);
+
             if (holder == null)
                 return "";
 
@@ -153,7 +161,7 @@ namespace InventoryASP.Controllers
                 Manufacturer = model.Manufacturer,
                 DeviceModel = model.DeviceModel,
                 Description = model.Description,
-                Status = "Avalible"
+                Status = "Available"
             };
 
             return device;

@@ -1,42 +1,51 @@
 ﻿@model InventoryASP.Models.Device.DeviceIndexModel
 
-<!--Заголовок-->
-<div class="sectionHeader mainBackgroundColor shadow">
-    <h4 class="text-center text-white p-3">Каталог оборудования</h4>
-</div>
+<div class="pb-2 mainScreen">
 
-<div class="container pb-2 pt-2 mainScreen">
-    <form method="post" asp-action="DeleteDevice">
-        <span><a asp-controller="Device" asp-action="NewDevice" class="btn btn-dark mb-2 shadow openModalBtn-lg">Новое оборудование</a></span>
-        <span><input type="submit" class="btn btn-danger mb-2 shadow" value="Удалить" /></span>
+    <!--Заголовок секции-->
+    <div class="sectionHeader clearfix">
+        <h4 class="text-white float-left">Каталог оборудования</h4>
+        <a asp-controller="Device" asp-action="NewDevice" class="float-right btn btn-sm btn-success shadow openModalBtn-lg">
+            <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+        </a>
+    </div>
 
-        <table class="table table-hover table-sm table-striped table-borderless">
-            <thead class="thead-dark mainBackgroundColor">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Тип</th>
+                <th>Модель</th>
+                <th>Серийный номер</th>
+                <th>Производитель</th>
+                <th>Текущий владелец</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Devices.Count; i++)
+            {
                 <tr>
-                    <th></th>
-                    <th>Название</th>
-                    <th>Тип</th>
-                    <th>Модель</th>
-                    <th>Серийный номер</th>
-                    <th>Производитель</th>
-                    <th>Текущий владелец</th>
+                    <td><a asp-action="Details" asp-route-id="@Model.Devices[i].Id">@Model.Devices[i].DeviceName</a></td>
+                    <td>@Model.Devices[i].DeviceType</td>
+                    <td>@Model.Devices[i].DeviceModel</td>
+                    <td>@Model.Devices[i].SerialNumber</td>
+                    <td>@Model.Devices[i].DeviceManufacturer</td>
+                    <td><a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Devices[i].HolderId">@Model.Devices[i].HolderFullName</a></td>
+                    <td>
+                        <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@Model.Devices[i].Id">
+                            <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
+                        </a>
+                        <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@Model.Devices[i].Id">
+                            <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.Devices.Count; i++)
-                {
-                    <tr>
-                        <td><input type="hidden" asp-for="@Model.Devices[i].Id"/><input type="checkbox" asp-for="@Model.Devices[i].IsSelected" class="form-check" /></td>
-                        <td><a asp-action="Details" asp-route-id="@Model.Devices[i].Id">@Model.Devices[i].DeviceName</a></td>
-                        <td>@Model.Devices[i].DeviceType</td>
-                        <td>@Model.Devices[i].DeviceModel</td>
-                        <td>@Model.Devices[i].SerialNumber</td>
-                        <td>@Model.Devices[i].DeviceManufacturer</td>
-                        <td><a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Devices[i].HolderId">@Model.Devices[i].HolderName</a></td>
-                    </tr>
-                }
-                
-            </tbody>
-        </table>
-    </form>
+            }
+
+        </tbody>
+    </table>
+
 </div>
+
+

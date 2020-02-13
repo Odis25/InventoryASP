@@ -11,7 +11,8 @@ namespace InventoryAppData
         Checkout GetById(int checkoutId);
         Checkout GetLatestCheckout(int deviceId);
 
-        string GetCurrentCheckoutHolderFullName(int deviceId);
+        int GetCheckoutHolderId(int deviceId);
+        string GetCheckoutHolderFullName(int deviceId);
 
         void Add(Checkout newCheckout);
         void CheckOutItems(int employeeId, params int[] deviceId);

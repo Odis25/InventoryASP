@@ -10,16 +10,18 @@ namespace InventoryASP.Controllers
 {
     public class DeviceController : Controller
     {
-        private readonly IDevice _deviceService;
+        private readonly IDevice _devices;
+        private readonly ICheckout _checkouts;
 
-        public DeviceController(IDevice deviceService)
+        public DeviceController(IDevice devices, ICheckout checkouts)
         {
-            _deviceService = deviceService;
+            _devices = devices;
+            _checkouts = checkouts;
         }
 
         public IActionResult Index()
         {
-            var devices = _deviceService.GetAll();
+            var devices = _devices.GetAll();
 
             var listingResult = devices.Select(device => new DeviceListingModel
             {
@@ -29,9 +31,12 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
-                HolderFullName = GetHolderFullName(device.Id),
-                HolderId = _deviceService.GetCurrentHolder(device.Id)?.Id
-            }).ToList();
+                Holder = new Holder
+                {
+                    HolderId = _checkouts.GetCheckoutHolderId(device.Id),
+                    HolderFullName = _checkouts.GetCheckoutHolderFullName(device.Id)
+                }
+            });
 
             var model = new DeviceIndexModel
             {
@@ -44,16 +49,26 @@ namespace InventoryASP.Controllers
         // Детальная информация об устройстве
         public IActionResult Details(int id)
         {
-            var device = _deviceService.GetById(id);
-            var holder = _deviceService.GetCurrentHolder(id);
-            var history = _deviceService.GetDeviceHistory(id).Select(h => new DeviceHistoryModel
+            var device = _devices.GetById(id);
+
+            var holder = new Holder
             {
-                Id = h.Id,
-                Since = h.CheckedOut,
-                Until = h.CheckedIn,
-                HolderId = h.Employee.Id,
-                HolderFullName = GetHolderFullName(h.Device.Id)
-            });
+                HolderId = _checkouts.GetCheckoutHolderId(id),
+                HolderFullName = _checkouts.GetCheckoutHolderFullName(id)
+            };
+
+            var history = _checkouts.GetCheckoutHistory(id)
+                .Select(h => new HistoryModel
+                {
+                    Id = h.Id,
+                    Since = h.CheckedOut,
+                    Until = h.CheckedIn,
+                    Holder = new Holder
+                    {
+                        HolderId = h.Employee.Id,
+                        HolderFullName = _checkouts.GetCheckoutHolderFullName(h.Device.Id)
+                    }
+                });
 
             var model = new DeviceDetailModel
             {
@@ -64,8 +79,8 @@ namespace InventoryASP.Controllers
                 DeviceSerialNumber = device.SerialNumber,
                 DeviceManufacturer = device.Manufacturer,
                 DeviceDescription = device.Description,
-                LatestCheckout = ,
-                HolderFullName = holder != null ? GetHolderFullName(device.Id) : "---"
+                Holder = holder,
+                CheckoutHistory = history
             };
 
             return View(model);
@@ -83,9 +98,18 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult AddNewDevice(NewDeviceModel model)
         {
-            var device = BuildNewDevice(model);
+            var device = new Device
+            {
+                Name = model.Name,
+                Type = model.Type,
+                SerialNumber = model.SerialNumber,
+                Manufacturer = model.Manufacturer,
+                DeviceModel = model.DeviceModel,
+                Description = model.Description
+            };
 
-            _deviceService.Add(device);
+            _devices.Add(device);
+
             return RedirectToAction("Index", "Device");
         }
 
@@ -100,15 +124,15 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult DeleteDevicePost(int id)
         {
-            _deviceService.Delete(id);
+            _devices.Delete(id);
 
             return RedirectToAction("Index", "Device");
         }
 
         // Получаем список свободного оборудования
-        public IActionResult GetAvalibleDevices(int employeeId)
+        public IActionResult GetAvailableDevices(int employeeId)
         {
-            var devices = _deviceService.GetAvalibleDevices();
+            var devices = _devices.GetAvailableDevices();
 
             var listingResult = devices.Select(device => new DeviceListingModel
             {
@@ -117,53 +141,16 @@ namespace InventoryASP.Controllers
                 DeviceName = device.Name,
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
-                SerialNumber = device.SerialNumber,
-                HolderFullName = GetHolderFullName(device.Id)
-            }).ToList();
+                SerialNumber = device.SerialNumber
+            });
 
-            var model = new AvalibleDevicesModel
+            var model = new AvailableDevicesModel
             {
                 Devices = listingResult,
                 EmployeeId = employeeId
             };
 
             return PartialView(model);
-        }
-
-        // Формируем фамилию и инициалы
-        private string GetHolderFullName(int deviceId)
-        {
-            var holder = _deviceService.GetCurrentHolder(deviceId);
-
-            if (holder == null)
-                return "";
-
-            var holderFullName = new StringBuilder()
-                .Append(holder.LastName)
-                .Append(" ")
-                .Append(holder.Name.First())
-                .Append(".")
-                .Append(holder.Patronymic.First())
-                .Append(".")
-                .ToString();
-
-            return holderFullName;
-        }
-        // Формируем новое устройство
-        private Device BuildNewDevice(NewDeviceModel model)
-        {
-            var device = new Device
-            {
-                Name = model.Name,
-                Type = model.Type,
-                SerialNumber = model.SerialNumber,
-                Manufacturer = model.Manufacturer,
-                DeviceModel = model.DeviceModel,
-                Description = model.Description,
-                Status = "Available"
-            };
-
-            return device;
         }
     }
 }

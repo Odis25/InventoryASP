@@ -1,4 +1,5 @@
-﻿@model InventoryASP.Models.Device.DeviceDetailsModel
+﻿@model InventoryASP.Models.Device.DeviceDetailModel
+
 <!--основной блок-->
 <div class="section bg-light shadow-lg">
 
@@ -14,14 +15,23 @@
         <div class="col-5 p-2">
             <div class="border box-shadow p-2">
                 <h5 class="border-bottom pb-2">Информация:</h5>
-                <div><span class="font-weight-bold">Id:</span> @Model.Id</div>
-                <div><span class="font-weight-bold">Наименование:</span> @Model.DeviceName</div>
-                <div><span class="font-weight-bold">Тип:</span> @Model.DeviceType</div>
-                <div><span class="font-weight-bold">Модель:</span> @Model.DeviceModel</div>
-                <div><span class="font-weight-bold">Производитель:</span> @Model.DeviceManufacturer</div>
-                <div><span class="font-weight-bold">Серийный номер:</span> @Model.DeviceSerialNumber</div>
+                <div><span class="font-weight-bold">Id: </span>@Model.DeviceId</div>
+                <div><span class="font-weight-bold">Наименование: </span>@Model.DeviceName</div>
+                <div><span class="font-weight-bold">Тип: </span>@Model.DeviceType</div>
+                <div><span class="font-weight-bold">Модель: </span>@Model.DeviceModel</div>
+                <div><span class="font-weight-bold">Производитель: </span>@Model.DeviceManufacturer</div>
+                <div><span class="font-weight-bold">Серийный номер: </span>@Model.DeviceSerialNumber</div>
                 <div>
-                    <span class="font-weight-bold">Текущий владелец:</span> @Model.HolderFullName
+                    <span class="font-weight-bold">Текущий владелец: </span>
+
+                    @if (Model.Holder.HolderId != 0)
+                    {
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Holder.HolderId">@Model.Holder.HolderFullName</a>
+                    }
+                    else
+                    {
+                        @Model.Holder.HolderFullName
+                    }
                 </div>
                 <div class="form-group">
                     <label class="font-weight-bold" asp-for="DeviceDescription">Описание:</label>
@@ -43,13 +53,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var history in Model.DeviceHistory)
+                        @foreach (var history in Model.CheckoutHistory)
                         {
                             <tr>
                                 <td>@history.Id</td>
                                 <td>@history.Since</td>
                                 <td>@history.Until</td>
-                                <td>@history.HolderFullName</td>
+                                <td>@history.Holder.HolderFullName</td>
                             </tr>
                         }
                     </tbody>

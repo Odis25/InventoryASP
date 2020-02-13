@@ -30,9 +30,13 @@
                     <td>@employee.Position</td>
                     <td>
                         <ol class="m-0">
-                            @foreach (var device in employee.Devices)
+                            @foreach (var checkout in employee.Checkouts)
                             {
-                                <li><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.Type @device.Name @device.DeviceModel</a></li>
+                                <li>
+                                    <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Device.Id">
+                                        @checkout.Device.Type @checkout.Device.Name @checkout.Device.DeviceModel
+                                    </a>
+                                </li>
                             }
                         </ol>
                     </td>

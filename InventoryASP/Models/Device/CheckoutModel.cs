@@ -1,6 +1,6 @@
 ﻿using InventoryAppData.Models;
 
-namespace InventoryASP.Models.Employee
+namespace InventoryASP.Models.Device
 {
     public class CheckoutModel
     {

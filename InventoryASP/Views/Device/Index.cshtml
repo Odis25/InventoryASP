@@ -4,7 +4,7 @@
 
     <!--Заголовок секции-->
     <div class="sectionHeader clearfix">
-        <h4 class="text-white float-left">Каталог оборудования</h4>
+        <h4 class="text-white float-left">Оборудование</h4>
         <a asp-controller="Device" asp-action="NewDevice" class="float-right btn btn-sm btn-success shadow openModalBtn-lg">
             <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
         </a>
@@ -23,20 +23,31 @@
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < Model.Devices.Count; i++)
+            @foreach (var device in Model.Devices)
             {
                 <tr>
-                    <td><a asp-action="Details" asp-route-id="@Model.Devices[i].Id">@Model.Devices[i].DeviceName</a></td>
-                    <td>@Model.Devices[i].DeviceType</td>
-                    <td>@Model.Devices[i].DeviceModel</td>
-                    <td>@Model.Devices[i].SerialNumber</td>
-                    <td>@Model.Devices[i].DeviceManufacturer</td>
-                    <td><a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Devices[i].HolderId">@Model.Devices[i].HolderFullName</a></td>
+                    <td><a asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
+                    <td>@device.DeviceType</td>
+                    <td>@device.DeviceModel</td>
+                    <td>@device.SerialNumber</td>
+                    <td>@device.DeviceManufacturer</td>
                     <td>
-                        <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@Model.Devices[i].Id">
+                        @if (device.Holder.HolderId != 0)
+                        {
+                            <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.Holder.HolderId">
+                                @device.Holder.HolderFullName
+                            </a>
+                        }
+                        else
+                        {
+                            @device.Holder.HolderFullName
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@device.Id">
                             <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
                         </a>
-                        <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@Model.Devices[i].Id">
+                        <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@device.Id">
                             <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
                         </a>
                     </td>

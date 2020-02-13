@@ -1,54 +1,52 @@
-﻿@model InventoryASP.Models.Device.AvalibleDevicesModel
+﻿@model InventoryASP.Models.Device.AvailableDevicesModel
 
-    <div class="modal-content">
-        <!--Заголовок-->
-        <div class="modal-header">
-            <h5 class="modal-title">Выберите свободное устройство:</h5>
-            <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<div class="modal-content">
+    <!--Заголовок-->
+    <div class="modal-header">
+        <h5 class="modal-title">Выберите свободное устройство:</h5>
+        <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
-        @if (Model.Devices.Any())
-        {
-            <form asp-action="CheckOutDevice" asp-controller="Employee" method="post">
-                <input type="hidden" asp-for="EmployeeId" />
-                <div class=" modal-body">
-                    <table class="table table-sm table-hover table-borderless table-striped">
-                        <tbody>
-                            @{
-                                for (int i = 0; i < Model.Devices.Count; i++)
-                                {
-                                    <tr>
-                                        <td>
-                                            <input asp-for="@Model.Devices[i].Id" type="hidden" />
-                                            <input type="checkbox" asp-for="@Model.Devices[i].IsSelected" />
-                                        </td>
-                                        <td>@Model.Devices[i].DeviceType</td>
-                                        <td>@Model.Devices[i].DeviceName</td>
-                                        <td>@Model.Devices[i].DeviceModel</td>
-                                        <td>@Model.Devices[i].SerialNumber</td>
-                                        <td>@Model.Devices[i].DeviceManufacturer</td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
+    @if (Model.Devices.Any())
+    {
+        <form asp-action="CheckOutDevice" asp-controller="Employee" method="post">
+            <input type="hidden" asp-for="EmployeeId" />
+            <div class=" modal-body">
+                <table class="table table-sm table-hover table-borderless table-striped">
+                    <tbody>
+                        @foreach(var device in Model.Devices)
+                        {
+                            <tr>
+                                <td>
+                                    <input asp-for="@device.Id" type="hidden" />
+                                    <input type="checkbox" asp-for="@device.IsSelected" />
+                                </td>
+                                <td>@device.DeviceType</td>
+                                <td>@device.DeviceName</td>
+                                <td>@device.DeviceModel</td>
+                                <td>@device.SerialNumber</td>
+                                <td>@device.DeviceManufacturer</td>
+                            </tr>
+                        }
+                    </tbody>
 
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary" type="submit">Добавить</button>
-                    <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
-                </div>
-            </form>
-        }
-        else
-        {
-            <div class="modal-body text-center">
-                <p class="font-weight-bold">Нет свободного оборудования. :(</p>
+                </table>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" type="submit">Добавить</button>
                 <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
             </div>
-        }
-    </div>
+        </form>
+    }
+    else
+    {
+        <div class="modal-body text-center">
+            <p class="font-weight-bold">Нет свободного оборудования. :(</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+        </div>
+    }
+</div>

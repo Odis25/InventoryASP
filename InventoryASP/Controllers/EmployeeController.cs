@@ -12,24 +12,19 @@ namespace InventoryASP.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployee _employeeService;
-        private readonly ICheckout _checkoutService;
-        private readonly IDepartment _departmentService;
-        private readonly IPosition _positionService;
+        private readonly IEmployee _employees;
+        private readonly ICheckout _checkouts;
 
-
-        public EmployeeController(IEmployee employeeService, ICheckout checkoutService, IDepartment departmentService, IPosition positionService)
+        public EmployeeController(IEmployee employees, ICheckout checkouts)
         {
-            _employeeService = employeeService;
-            _checkoutService = checkoutService;
-            _departmentService = departmentService;
-            _positionService = positionService;
+            _employees = employees;
+            _checkouts = checkouts;
         }
 
         // Список сотрудников
         public IActionResult Index()
         {
-            var employees = _employeeService.GetAll();
+            var employees = _employees.GetAll();
 
             var listingResult = employees.Select(employee => new EmployeeListingModel
             {
@@ -39,7 +34,7 @@ namespace InventoryASP.Controllers
                 Patronymic = employee.Patronymic,
                 Position = employee.Position.Name,
                 Department = employee.Department.Name,
-                Devices = _employeeService.GetHoldedDevices(employee.Id)
+                Checkouts = employee.Checkouts
             });
 
             var model = new EmployeeIndexModel
@@ -66,8 +61,16 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult NewEmployee(NewEmployeeModel model)
         {
-            var employee = BuildNewEmployee(model);
-            _employeeService.Add(employee);
+            var employee = new Employee
+            {
+                Name = model.Name,
+                LastName = model.LastName,
+                Patronymic = model.Patronymic,
+                Position = model.Position,
+                Department = model.Department,
+            };
+
+            _employees.Add(employee);
 
             return RedirectToAction("Index", "Employee");
         }
@@ -83,17 +86,17 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult DeleteEmployeePost(int id)
         {
-            _employeeService.Delete(id);
+            _employees.Delete(id);
 
             return RedirectToAction("Index", "Employee");
         }
 
         // Добавить устройство сотруднику
         [HttpPost]
-        public IActionResult CheckOutDevice(AvalibleDevicesModel model)
+        public IActionResult CheckOutDevice(AvailableDevicesModel model)
         {
             var idList = model.Devices.Where(d => d.IsSelected).Select(d => d.Id).ToArray();
-            _checkoutService.CheckOutDevice(model.EmployeeId, idList);
+            _checkouts.CheckOutItems(model.EmployeeId, idList);
 
             return RedirectToAction("Details", "Employee", new { id = model.EmployeeId });
         }
@@ -101,7 +104,7 @@ namespace InventoryASP.Controllers
         // Забрать устройство у сотрудника
         public IActionResult CheckInDevice(int deviceId, int employeeid)
         {
-            _checkoutService.CheckInDevice(new[] { deviceId });
+            _checkouts.CheckInItem(deviceId);
 
             return RedirectToAction("Details", new { id = employeeid });
         }
@@ -109,10 +112,9 @@ namespace InventoryASP.Controllers
         // Детальная информация о сотруднике
         public IActionResult Details(int id)
         {
-            var employee = _employeeService.GetById(id);
+            var employee = _employees.GetById(id);
 
-            var checkouts = _checkoutService.GetByEmployeeId(id)
-                .Select(c => new CheckoutModel { Checkout = c }).ToList();
+            var checkouts = employee.Checkouts;
 
             var checkoutsHistory = _checkoutService.GetEmployeeHistory(id).ToList();
 
@@ -129,23 +131,6 @@ namespace InventoryASP.Controllers
             };
 
             return View(model);
-        }
-
-        // Создаем модель сотрудника
-        private Employee BuildNewEmployee(NewEmployeeModel model)
-        {
-            var department = _departmentService.GetDepartment(model.Department.Id);
-            var position = _positionService.GetPosition(model.Position.Id);
-
-            return new Employee
-            {
-                Name = model.Name,
-                LastName = model.LastName,
-                Patronymic = model.Patronymic,
-                Position = position,
-                Department = department,
-                IsActive = true
-            };
         }
     }
 }

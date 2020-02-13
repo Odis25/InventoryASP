@@ -6,14 +6,15 @@ namespace InventoryAppData
     public interface ICheckout
     {
         IEnumerable<Checkout> GetAll();
-        IEnumerable<Checkout> GetByEmployeeId(int id);
-        IEnumerable<CheckoutHistory> GetDeviceHistory(int id);
-        IEnumerable<CheckoutHistory> GetEmployeeHistory(int id);
+        IEnumerable<CheckoutHistory> GetCheckoutHistory(int deviceId);
 
-        Checkout GetByDeviceId(int id);
+        Checkout GetById(int checkoutId);
+        Checkout GetLatestCheckout(int deviceId);
 
-        void Add(Checkout newCheckout);       
-        void CheckOutDevice(int employeeId, params int[] deviceId);
-        void CheckInDevice(IEnumerable<int> deviceId);
+        string GetCurrentCheckoutHolderFullName(int deviceId);
+
+        void Add(Checkout newCheckout);
+        void CheckOutItems(int employeeId, params int[] deviceId);
+        void CheckInItem(int deviceId);
     }
 }

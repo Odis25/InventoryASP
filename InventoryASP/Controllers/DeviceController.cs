@@ -55,17 +55,16 @@ namespace InventoryASP.Controllers
                 HolderFullName = GetHolderFullName(h.Device.Id)
             });
 
-            var model = new DeviceDetailsModel
+            var model = new DeviceDetailModel
             {
-                Id = device.Id,
+                DeviceId = device.Id,
                 DeviceName = device.Name,
-                DeviceType = device.Type != "" ? device.Type : "---",
-                DeviceModel = device.DeviceModel != "" ? device.DeviceModel : "---",
+                DeviceType = device.Type,
+                DeviceModel = device.DeviceModel,
                 DeviceSerialNumber = device.SerialNumber,
                 DeviceManufacturer = device.Manufacturer,
                 DeviceDescription = device.Description,
-                DeviceHistory = history,
-                HolderId = _deviceService.GetCurrentHolder(device.Id)?.Id,
+                LatestCheckout = ,
                 HolderFullName = holder != null ? GetHolderFullName(device.Id) : "---"
             };
 

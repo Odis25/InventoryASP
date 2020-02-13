@@ -18,16 +18,19 @@ namespace InventoryAppServices
 
         public void Add(Employee newEmployee)
         {
+            newEmployee.IsActive = true;
+
             _context.Employees.Add(newEmployee);
             _context.SaveChanges();
         }
 
-        public void Delete(params int[] idList)
+        public void Delete(int employeeId)
         {
-            var employees = _context.Employees.Where(e => idList.Contains(e.Id));
+            var employee = _context.Employees.Find(employeeId);
 
             // Вернуть все устройства
-            var checkouts = _context.Checkouts.Where(c => employees.Contains(c.Employee));
+            var checkouts = _context.Checkouts.Where(c => c.Employee == employee);
+
             if (checkouts != null)
             {
                 _context.RemoveRange(checkouts);
@@ -35,23 +38,22 @@ namespace InventoryAppServices
 
             // Закрыть всю историю использования
             var now = DateTime.Now;
+
             var histories = _context.CheckoutHistories
-                .Where(h => employees.Contains(h.Employee) && h.CheckedIn == null);
+                .Where(h => h.Employee == employee && h.CheckedIn == null);
+
             if (histories != null)
             {
+                _context.UpdateRange(histories);
                 foreach (var history in histories)
-                {
-                    _context.Update(history);
+                {                   
                     history.CheckedIn = now;
                 }
             }
 
-            // Убираем сотрудников из списка активных
-            _context.Employees.UpdateRange(employees);
-            foreach (var employee in employees)
-            {
-                employee.IsActive = false;
-            }
+            // Обновляем статус сотрудника
+            _context.Update(employee);
+            employee.IsActive = false;
 
             // Сохраняем изменения
             _context.SaveChanges();
@@ -59,29 +61,28 @@ namespace InventoryAppServices
 
         public IEnumerable<Employee> GetAll()
         {
-            return _context.Employees.Where(e=>e.IsActive)
-                .Include(e => e.Department)
-                .Include(e => e.Position)
-                .Include(e => e.Checkouts)
-                    .ThenInclude(c => c.Device);
-        }
-
-        public Employee GetById(int id)
-        {
-            return _context.Employees.Where(e => e.IsActive)
-                .Include(e => e.Department)
-                .Include(e => e.Position)
-                .Include(e => e.Checkouts)
-                    .ThenInclude(c => c.Device)
-                .FirstOrDefault(e => e.Id == id);
-        }
-
-        public IEnumerable<Device> GetHoldedDevices(int id)
-        {
             return _context.Employees
-                .Find(id).Checkouts.Select(c => c.Device);
+                .Include(e => e.Checkouts)
+                .Include(e => e.Department)
+                .Include(e => e.Position);
         }
 
+        public Employee GetById(int employeeId)
+        {
+            return GetAll()
+                .FirstOrDefault(e => e.Id == employeeId);
+        }
 
+        public IEnumerable<Checkout> GetCheckouts(int employeeId)
+        {
+            return _context.Checkouts
+                .Where(c => c.Employee.Id == employeeId);
+        }
+
+        public IEnumerable<CheckoutHistory> GetHistory(int employeeId)
+        {
+            return _context.CheckoutHistories
+                .Where(ch => ch.Employee.Id == employeeId);
+        }
     }
 }

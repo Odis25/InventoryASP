@@ -6,11 +6,12 @@ namespace InventoryAppData
     public interface IEmployee
     {
         IEnumerable<Employee> GetAll();
-        IEnumerable<Device> GetHoldedDevices(int id);
-       
-        void Add(Employee newEmployee);
-        void Delete(params int[] idList);
+        IEnumerable<Checkout> GetCheckouts(int employeeId);
+        IEnumerable<CheckoutHistory> GetHistory(int employeeId);
 
-        Employee GetById(int id);
+        Employee GetById(int employeeId);
+
+        void Add(Employee newEmployee);
+        void Delete(int employeeId);
     }
 }

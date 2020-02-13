@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace InventoryAppServices
 {
@@ -16,57 +17,55 @@ namespace InventoryAppServices
             _context = context;
         }
 
+        public IEnumerable<Checkout> GetAll()
+        {
+            return _context.Checkouts;
+        }
+
+        public IEnumerable<CheckoutHistory> GetCheckoutHistory(int deviceId)
+        {
+            return _context.CheckoutHistories
+                .Include(history => history.Device)
+                .Include(history => history.Employee)
+                .Where(history => history.Device.Id == deviceId);
+        }
+
+        public Checkout GetById(int checkoutId)
+        {
+            return _context.Checkouts.Find(checkoutId);
+        }
+
+        public Checkout GetLatestCheckout(int deviceId)
+        {
+            return _context.Checkouts
+                .FirstOrDefault(c => c.Device.Id == deviceId);
+        }
+
         public void Add(Checkout newCheckout)
         {
             _context.Checkouts.Add(newCheckout);
             _context.SaveChanges();
         }
 
-        public IEnumerable<Checkout> GetAll()
+        public void CheckOutItems(int employeeId, params int[] deviceId)
         {
-            return _context.Checkouts;
-        }
-
-        public Checkout GetByDeviceId(int id)
-        {
-            return _context.Checkouts
-                .FirstOrDefault(c => c.Device.Id == id);
-        }
-
-        public IEnumerable<CheckoutHistory> GetDeviceHistory(int id)
-        {
-            return _context.CheckoutHistories
-                .Where(h => h.Device.Id == id)
-                .Include(h => h.Employee);
-        }
-
-        public IEnumerable<CheckoutHistory> GetEmployeeHistory(int id)
-        {
-            return _context.CheckoutHistories
-                .Where(h => h.Employee.Id == id)
-                .Include(h => h.Device);
-        }
-
-        public void CheckOutDevice(int employeeId, params int[] deviceId)
-        {
-            if (employeeId == 0 || deviceId.Length == 0)
+            if (deviceId.Length == 0)
                 return;
 
             var employee = _context.Employees.Find(employeeId);
             var now = DateTime.Now;
 
-
             foreach (var id in deviceId)
             {
-                // создаем запись о получении оборудования
                 var device = _context.Devices.Find(id);
+
+                // Создаем запись о получении оборудования
                 _context.Checkouts.Add(new Checkout
                 {
                     Employee = employee,
                     Device = device,
                     Since = now
                 });
-                device.Status = "Checked Out";
 
                 // Создаем историю использования
                 _context.CheckoutHistories.Add(new CheckoutHistory
@@ -75,36 +74,76 @@ namespace InventoryAppServices
                     Device = device,
                     CheckedOut = now
                 });
+
+                // Обновляем статус устройства
+                UpdateDeviceStatus(id, "Checked Out");
             }
 
             _context.SaveChanges();
         }
 
-        public void CheckInDevice(IEnumerable<int> deviceId)
+        public void CheckInItem(int deviceId)
         {
             var now = DateTime.Now;
 
-            foreach (var id in deviceId)
-            {
-                var device = _context.Devices.Find(id);
-                var checkout = _context.Checkouts.FirstOrDefault(c => c.Device == device);
-                var history = _context.CheckoutHistories.FirstOrDefault(h => h.Device == device && h.CheckedIn == null);
-
-                _context.Update(device);
-                device.Status = "Available";
-
-                _context.Update(history);
-                history.CheckedIn = now;
-
-                _context.Remove(checkout);
-            }
+            //Закрываем чекауты
+            RemoveExistingCheckouts(deviceId);
+            // Закрываем открытую историю
+            CloseExistingCheckoutHistory(deviceId, now);
+            // Обновляем статус устройства
+            UpdateDeviceStatus(deviceId, "Available");
 
             _context.SaveChanges();
         }
 
-        public IEnumerable<Checkout> GetByEmployeeId(int id)
+        public string GetCurrentCheckoutHolderFullName(int deviceId)
         {
-            return _context.Checkouts.Where(c => c.Employee.Id == id);
+            var checkout = _context.Checkouts.FirstOrDefault(c => c.Device.Id == deviceId);
+            if (checkout != null)
+            {
+                var holder = checkout.Employee;
+                return new StringBuilder()
+                    .Append(holder.LastName)
+                    .Append(" ")
+                    .Append(holder.Name.First())
+                    .Append('.')
+                    .Append(holder.Patronymic.First())
+                    .Append('.')
+                    .ToString();
+            }
+            else return "";
         }
+
+        private void UpdateDeviceStatus(int deviceId, string status)
+        {
+            var device = _context.Devices.Find(deviceId);
+            if (device != null)
+            {
+                _context.Update(device);
+                device.Status = status;
+            }
+        }
+
+        private void CloseExistingCheckoutHistory(int deviceId, DateTime closingTime)
+        {
+            var history = _context.CheckoutHistories.FirstOrDefault(h => h.Device.Id == deviceId && h.CheckedIn == null);
+
+            if (history != null)
+            {
+                _context.Update(history);
+                history.CheckedIn = closingTime;
+            }
+        }
+
+        private void RemoveExistingCheckouts(int deviceId)
+        {
+            var checkout = _context.Checkouts
+                .FirstOrDefault(checkout => checkout.Device.Id == deviceId);
+
+            if (checkout != null)
+            {
+                _context.Remove(checkout);
+            }
+        }        
     }
 }

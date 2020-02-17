@@ -1,8 +1,10 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
+using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +16,13 @@ namespace InventoryASP.Controllers
     {
         private readonly IEmployee _employees;
         private readonly ICheckout _checkouts;
+        private readonly IDepartment _departments;
 
-        public EmployeeController(IEmployee employees, ICheckout checkouts)
+        public EmployeeController(IEmployee employees, ICheckout checkouts, IDepartment departments)
         {
             _employees = employees;
             _checkouts = checkouts;
+            _departments = departments;
         }
 
         // Список сотрудников
@@ -34,7 +38,7 @@ namespace InventoryASP.Controllers
                 Patronymic = employee.Patronymic,
                 Position = employee.Position.Name,
                 Department = employee.Department.Name,
-                Checkouts = employee.Checkouts
+                Checkouts = GetCheckouts(employee)
             });
 
             var model = new EmployeeIndexModel
@@ -46,20 +50,17 @@ namespace InventoryASP.Controllers
         }
 
         // Форма добавления нового сотрудника
-        public IActionResult NewEmployee()
+        public IActionResult Create()
         {
-            var departments = _departmentService.GetAll();
-            var positions = _positionService.GetAll();
-
-            ViewBag.Departments = departments;
-            ViewBag.Positions = positions;
+            ViewBag.Departments = _departments.GetDepartments(); 
+            ViewBag.Positions = _departments.GetPositions();
 
             return PartialView();
         }
 
         // Добавить нового сотрудника
         [HttpPost]
-        public IActionResult NewEmployee(NewEmployeeModel model)
+        public IActionResult AddEmployee(NewEmployeeModel model)
         {
             var employee = new Employee
             {
@@ -76,7 +77,7 @@ namespace InventoryASP.Controllers
         }
 
         // Удалить сотрудника
-        public IActionResult DeleteEmployee(int id)
+        public IActionResult Delete(int id)
         {
             ViewBag.Id = id;
             return PartialView();
@@ -84,7 +85,7 @@ namespace InventoryASP.Controllers
 
         // Удалить сотрудника
         [HttpPost]
-        public IActionResult DeleteEmployeePost(int id)
+        public IActionResult DeleteEmployee(int id)
         {
             _employees.Delete(id);
 
@@ -113,10 +114,8 @@ namespace InventoryASP.Controllers
         public IActionResult Details(int id)
         {
             var employee = _employees.GetById(id);
-
-            var checkouts = employee.Checkouts;
-
-            var checkoutsHistory = _checkoutService.GetEmployeeHistory(id).ToList();
+            var checkouts = GetCheckouts(employee);
+            var checkoutsHistory = _employees.GetCheckoutHistory(id);
 
             var model = new EmployeeDetailsModel
             {
@@ -131,6 +130,14 @@ namespace InventoryASP.Controllers
             };
 
             return View(model);
+        }
+
+        private IEnumerable<CheckoutModel> GetCheckouts(Employee employee)
+        {
+            return employee.Checkouts.Select(checkout => new CheckoutModel
+            {
+                Checkout = checkout
+            });
         }
     }
 }

@@ -73,13 +73,7 @@ namespace InventoryAppServices
                 .FirstOrDefault(e => e.Id == employeeId);
         }
 
-        public IEnumerable<Checkout> GetCheckouts(int employeeId)
-        {
-            return _context.Checkouts
-                .Where(c => c.Employee.Id == employeeId);
-        }
-
-        public IEnumerable<CheckoutHistory> GetHistory(int employeeId)
+        public IEnumerable<CheckoutHistory> GetCheckoutHistory(int employeeId)
         {
             return _context.CheckoutHistories
                 .Where(ch => ch.Employee.Id == employeeId);

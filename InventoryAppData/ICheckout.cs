@@ -9,10 +9,7 @@ namespace InventoryAppData
         IEnumerable<CheckoutHistory> GetCheckoutHistory(int deviceId);
 
         Checkout GetById(int checkoutId);
-        Checkout GetLatestCheckout(int deviceId);
-
-        int GetCheckoutHolderId(int deviceId);
-        string GetCheckoutHolderFullName(int deviceId);
+        Checkout GetCheckout(int deviceId);
 
         void Add(Checkout newCheckout);
         void CheckOutItems(int employeeId, params int[] deviceId);

@@ -1,62 +1,71 @@
 ﻿@model InventoryASP.Models.Device.DeviceIndexModel
+@inject Microsoft.AspNetCore.Identity.UserManager<InventoryAppData.Models.ApplicationUser> UserManager
 
-<div class="pb-2 mainScreen">
 
-    <!--Заголовок секции-->
-    <div class="sectionHeader clearfix">
-        <h4 class="text-white float-left">Оборудование</h4>
-        <a asp-controller="Device" asp-action="NewDevice" class="float-right btn btn-sm btn-success shadow openModalBtn-lg">
-            <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
-        </a>
+<!--Заголовок секции-->
+<div class="row no-gutters sectionHeader">
+    <div class="col sectionHeading clearfix">
+        <h4 class="float-left m-0">Оборудование</h4>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Device" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
+                <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+            </a>
+        }
     </div>
-
-    <table class="table table-hover table-sm">
-        <thead>
-            <tr>
-                <th>Название</th>
-                <th>Тип</th>
-                <th>Модель</th>
-                <th>Серийный номер</th>
-                <th>Производитель</th>
-                <th>Текущий владелец</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var device in Model.Devices)
-            {
-                <tr>
-                    <td><a asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
-                    <td>@device.DeviceType</td>
-                    <td>@device.DeviceModel</td>
-                    <td>@device.SerialNumber</td>
-                    <td>@device.DeviceManufacturer</td>
-                    <td>
-                        @if (device.Holder.HolderId != 0)
-                        {
-                            <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.Holder.HolderId">
-                                @device.Holder.HolderFullName
-                            </a>
-                        }
-                        else
-                        {
-                            @device.Holder.HolderFullName
-                        }
-                    </td>
-                    <td>
-                        <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@device.Id">
-                            <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
-                        </a>
-                        <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@device.Id">
-                            <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
-                        </a>
-                    </td>
-                </tr>
-            }
-
-        </tbody>
-    </table>
-
 </div>
+
+<!--Контент секции-->
+<div class="row no-gutters sectionContent">
+    <div class="col">
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Тип</th>
+                    <th>Модель</th>
+                    <th>Серийный номер</th>
+                    <th>Производитель</th>
+                    <th>Текущий владелец</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var device in Model.Devices)
+                {
+                    <tr>
+                        <td><a asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
+                        <td>@device.DeviceType</td>
+                        <td>@device.DeviceModel</td>
+                        <td>@device.SerialNumber</td>
+                        <td>@device.DeviceManufacturer</td>
+                        <td>
+                            @if (device.CurrentHolder != null)
+                            {
+                                <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.CurrentHolder.Id">
+                                    @device.CurrentHolder.FullName
+                                </a>
+                            }
+                        </td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+                                <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@device.Id">
+                                    <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
+                                </a>
+                                <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@device.Id">
+                                    <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
 
 

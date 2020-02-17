@@ -24,13 +24,13 @@
                 <div>
                     <span class="font-weight-bold">Текущий владелец: </span>
 
-                    @if (Model.Holder.HolderId != 0)
+                    @if (Model.CurrentHolder.Id != 0)
                     {
-                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.Holder.HolderId">@Model.Holder.HolderFullName</a>
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.CurrentHolder.Id">@Model.CurrentHolder.FullName</a>
                     }
                     else
                     {
-                        @Model.Holder.HolderFullName
+                        <span>---</span>
                     }
                 </div>
                 <div class="form-group">
@@ -59,7 +59,7 @@
                                 <td>@history.Id</td>
                                 <td>@history.Since</td>
                                 <td>@history.Until</td>
-                                <td>@history.Holder.HolderFullName</td>
+                                <td>@history.Holder.FullName</td>
                             </tr>
                         }
                     </tbody>

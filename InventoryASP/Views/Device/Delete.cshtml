@@ -9,7 +9,7 @@
         <p>Вы уверены что хотите удалить это оборудование?</p>
     </div>
     <div class="modal-footer p-2">
-        <form method="post" asp-action="DeleteDevicePost">
+        <form method="post" asp-action="DeleteDevice">
             <input type="hidden" name ="id" value="@ViewBag.Id" />
             <button class="btn btn-danger" type="submit">Удалить</button> 
             <button class="btn btn-secondary" data-dismiss="modal">Отмена</button>

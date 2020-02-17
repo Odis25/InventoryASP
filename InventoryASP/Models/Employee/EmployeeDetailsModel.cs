@@ -1,4 +1,5 @@
 ﻿using InventoryAppData.Models;
+using InventoryASP.Models.Checkouts;
 using System.Collections.Generic;
 
 namespace InventoryASP.Models.Employee
@@ -13,7 +14,7 @@ namespace InventoryASP.Models.Employee
         public string Department { get; set; }
         public string Position { get; set; }
 
-        public List<CheckoutModel> Checkouts { get; set; }
-        public List<CheckoutHistory> History { get; set; }
+        public IEnumerable<CheckoutModel> Checkouts { get; set; }
+        public IEnumerable<CheckoutHistory> History { get; set; }
     }
 }

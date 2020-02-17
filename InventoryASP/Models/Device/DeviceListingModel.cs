@@ -1,4 +1,6 @@
-﻿namespace InventoryASP.Models.Device
+﻿using InventoryASP.Models.Employee;
+
+namespace InventoryASP.Models.Device
 {
     public class DeviceListingModel
     {
@@ -12,12 +14,6 @@
 
         public bool IsSelected { get; set; }
 
-        public Holder Holder { get; set; }
-    }
-
-    public class Holder
-    {
-        public int HolderId { get; set; }
-        public string HolderFullName { get; set; }
+        public EmployeeListingModel CurrentHolder { get; set; }
     }
 }

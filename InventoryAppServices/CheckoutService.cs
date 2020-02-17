@@ -36,11 +36,10 @@ namespace InventoryAppServices
             return _context.Checkouts.Find(checkoutId);
         }
 
-        // Получить последнюю запись по ID устройства
-        public Checkout GetLatestCheckout(int deviceId)
+        // Получить запись по ID устройства
+        public Checkout GetCheckout(int deviceId)
         {
             return _context.Checkouts
-                .OrderByDescending(c => c.Since)
                 .FirstOrDefault(c => c.Device.Id == deviceId);
         }
 
@@ -100,30 +99,6 @@ namespace InventoryAppServices
             UpdateDeviceStatus(deviceId, "Available");
 
             _context.SaveChanges();
-        }
-
-        // Получить ФИО владельца устройства
-        public string GetCheckoutHolderFullName(int deviceId)
-        {
-            var checkout = _context.Checkouts.FirstOrDefault(c => c.Device.Id == deviceId);
-            if (checkout != null)
-            {
-                var holder = checkout.Employee;
-                return new StringBuilder()
-                    .Append(holder.LastName)
-                    .Append(" ")
-                    .Append(holder.Name.First())
-                    .Append('.')
-                    .Append(holder.Patronymic.First())
-                    .Append('.')
-                    .ToString();
-            }
-            else return "";
-        }
-
-        public int GetCheckoutHolderId(int deviceId)
-        {
-            return GetLatestCheckout(deviceId)?.Device.Id ?? 0;
         }
 
         private void UpdateDeviceStatus(int deviceId, string status)

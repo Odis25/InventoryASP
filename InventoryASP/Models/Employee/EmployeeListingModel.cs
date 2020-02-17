@@ -1,5 +1,8 @@
 ﻿using InventoryAppData.Models;
+using InventoryASP.Models.Checkouts;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace InventoryASP.Models.Employee
 {
@@ -11,10 +14,24 @@ namespace InventoryASP.Models.Employee
         public string Patronymic { get; set; }
         public string Department { get; set; }
         public string Position { get; set; }
-        public string FullName { get; set; }
 
         public bool IsSelected { get; set; }
 
-        public IEnumerable<Checkout> Checkouts { get; set; }
+        public IEnumerable<CheckoutModel> Checkouts { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return new StringBuilder()
+                    .Append(LastName)
+                    .Append(" ")
+                    .Append(Name.First())
+                    .Append('.')
+                    .Append(Patronymic.First())
+                    .Append('.')
+                    .ToString();
+            }
+        }
     }
 }

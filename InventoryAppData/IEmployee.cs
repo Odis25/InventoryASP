@@ -6,8 +6,7 @@ namespace InventoryAppData
     public interface IEmployee
     {
         IEnumerable<Employee> GetAll();
-        IEnumerable<Checkout> GetCheckouts(int employeeId);
-        IEnumerable<CheckoutHistory> GetHistory(int employeeId);
+        IEnumerable<CheckoutHistory> GetCheckoutHistory(int employeeId);
 
         Employee GetById(int employeeId);
 

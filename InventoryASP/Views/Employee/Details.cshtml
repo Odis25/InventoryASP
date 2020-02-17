@@ -46,20 +46,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int i = 0; i < Model.Checkouts.Count; i++)
+                                @foreach (var checkout in Model.Checkouts)
                                 {
                                     <tr>
-                                        <td>@(i + 1)</td>
+                                        <td></td>
                                         <td>
-                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@Model.Checkouts[i].Checkout.Device.Id">
-                                                @Model.Checkouts[i].Checkout.Device.Name @Model.Checkouts[i].Checkout.Device.Manufacturer @Model.Checkouts[i].Checkout.Device.DeviceModel @Model.Checkouts[i].Checkout.Device.Type
+                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
+                                                @checkout.Checkout.Device.Name @checkout.Checkout.Device.Manufacturer @checkout.Checkout.Device.DeviceModel @checkout.Checkout.Device.Type
                                             </a>
                                         </td>
-                                        <td>@Model.Checkouts[i].Checkout.Device.SerialNumber</td>
+                                        <td>@checkout.Checkout.Device.SerialNumber</td>
 
                                         <td>
                                             <a class="btn btn-sm btn-secondary btnMini p-1"
-                                               asp-action="CheckInDevice" asp-route-employeeId="@Model.Id" asp-route-deviceId="@Model.Checkouts[i].Checkout.Device.Id">
+                                               asp-action="CheckInDevice" asp-route-employeeId="@Model.Id" asp-route-deviceId="@checkout.Checkout.Device.Id">
                                                 <img src="~/icons/icons8_trash_16.png" />
                                             </a>
                                         </td>

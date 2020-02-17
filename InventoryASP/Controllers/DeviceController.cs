@@ -1,10 +1,10 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
+using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
+using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
@@ -19,6 +19,7 @@ namespace InventoryASP.Controllers
             _checkouts = checkouts;
         }
 
+        // Список всех устройств
         public IActionResult Index()
         {
             var devices = _devices.GetAll();
@@ -31,11 +32,7 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
-                Holder = new Holder
-                {
-                    HolderId = _checkouts.GetCheckoutHolderId(device.Id),
-                    HolderFullName = _checkouts.GetCheckoutHolderFullName(device.Id)
-                }
+                CurrentHolder = GetDeviceHolder(device)
             });
 
             var model = new DeviceIndexModel
@@ -51,23 +48,15 @@ namespace InventoryASP.Controllers
         {
             var device = _devices.GetById(id);
 
-            var holder = new Holder
-            {
-                HolderId = _checkouts.GetCheckoutHolderId(id),
-                HolderFullName = _checkouts.GetCheckoutHolderFullName(id)
-            };
+            var holder = GetDeviceHolder(device);
 
             var history = _checkouts.GetCheckoutHistory(id)
                 .Select(h => new HistoryModel
                 {
                     Id = h.Id,
-                    Since = h.CheckedOut,
-                    Until = h.CheckedIn,
-                    Holder = new Holder
-                    {
-                        HolderId = h.Employee.Id,
-                        HolderFullName = _checkouts.GetCheckoutHolderFullName(h.Device.Id)
-                    }
+                    Since = h.CheckedOut.ToString(),
+                    Until = h.CheckedIn.ToString(),
+                    Holder = GetDeviceHolder(h.Device)
                 });
 
             var model = new DeviceDetailModel
@@ -79,7 +68,7 @@ namespace InventoryASP.Controllers
                 DeviceSerialNumber = device.SerialNumber,
                 DeviceManufacturer = device.Manufacturer,
                 DeviceDescription = device.Description,
-                Holder = holder,
+                CurrentHolder = holder,
                 CheckoutHistory = history
             };
 
@@ -87,7 +76,7 @@ namespace InventoryASP.Controllers
         }
 
         // Форма добавления нового устройства
-        public IActionResult NewDevice()
+        public IActionResult Create()
         {
             var model = new NewDeviceModel();
 
@@ -96,7 +85,7 @@ namespace InventoryASP.Controllers
 
         // Добавляем новое устройство
         [HttpPost]
-        public IActionResult AddNewDevice(NewDeviceModel model)
+        public IActionResult AddDevice(NewDeviceModel model)
         {
             var device = new Device
             {
@@ -114,7 +103,7 @@ namespace InventoryASP.Controllers
         }
 
         // Удалить устройство
-        public IActionResult DeleteDevice(int id)
+        public IActionResult Delete(int id)
         {
             ViewBag.Id = id;
             return PartialView();
@@ -122,7 +111,7 @@ namespace InventoryASP.Controllers
 
         // Удалить устройство
         [HttpPost]
-        public IActionResult DeleteDevicePost(int id)
+        public IActionResult DeleteDevice(int id)
         {
             _devices.Delete(id);
 
@@ -151,6 +140,24 @@ namespace InventoryASP.Controllers
             };
 
             return PartialView(model);
+        }
+
+        private EmployeeListingModel GetDeviceHolder(Device device)
+        {
+            var employee = _checkouts.GetCheckout(device.Id)?.Employee;
+
+            if (employee == null)
+                return null;
+
+            return new EmployeeListingModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Patronymic = employee.Patronymic,
+                Department = employee.Department.Name,
+                Position = employee.Position.Name
+            };
         }
     }
 }

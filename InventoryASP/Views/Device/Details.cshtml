@@ -24,7 +24,7 @@
                 <div>
                     <span class="font-weight-bold">Текущий владелец: </span>
 
-                    @if (Model.CurrentHolder.Id != 0)
+                    @if (Model.CurrentHolder != null)
                     {
                         <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.CurrentHolder.Id">@Model.CurrentHolder.FullName</a>
                     }

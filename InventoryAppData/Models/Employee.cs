@@ -13,8 +13,8 @@ namespace InventoryAppData.Models
 
         public bool IsActive { get; set; }
 
-        public Department Department { get; set; }
-        public Position Position { get; set; }
+        public virtual Department Department { get; set; }
+        public virtual Position Position { get; set; }
 
         public virtual IEnumerable<Checkout> Checkouts { get; set; }
     }

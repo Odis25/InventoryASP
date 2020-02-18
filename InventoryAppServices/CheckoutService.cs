@@ -1,10 +1,9 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace InventoryAppServices
 {
@@ -27,7 +26,9 @@ namespace InventoryAppServices
         public IEnumerable<CheckoutHistory> GetCheckoutHistory(int deviceId)
         {
             return _context.CheckoutHistories
-                .Where(history => history.Device.Id == deviceId);
+                .Where(history => history.Device.Id == deviceId)
+                .Include(ch=>ch.Employee).ThenInclude(e=>e.Position)
+                .Include(ch=>ch.Employee).ThenInclude(e=>e.Department);
         }
 
         // Получить запись по ID
@@ -40,7 +41,11 @@ namespace InventoryAppServices
         public Checkout GetCheckout(int deviceId)
         {
             return _context.Checkouts
-                .FirstOrDefault(c => c.Device.Id == deviceId);
+                .Where(c => c.Device.Id == deviceId)
+                .Include(c=>c.Device)
+                .Include(c=>c.Employee).ThenInclude(e=>e.Position)
+                .Include(c=>c.Employee).ThenInclude(e=>e.Department)
+                .FirstOrDefault();
         }
 
         // Добавить новую запись

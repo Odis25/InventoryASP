@@ -62,7 +62,7 @@ namespace InventoryAppServices
         public IEnumerable<Employee> GetAll()
         {
             return _context.Employees
-                .Include(e => e.Checkouts)
+                .Include(e => e.Checkouts).ThenInclude(c=>c.Device)
                 .Include(e => e.Department)
                 .Include(e => e.Position);
         }
@@ -76,7 +76,8 @@ namespace InventoryAppServices
         public IEnumerable<CheckoutHistory> GetCheckoutHistory(int employeeId)
         {
             return _context.CheckoutHistories
-                .Where(ch => ch.Employee.Id == employeeId);
+                .Where(ch => ch.Employee.Id == employeeId)
+                .Include(ch=>ch.Device);
         }
     }
 }

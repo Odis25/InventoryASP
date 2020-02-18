@@ -4,6 +4,7 @@ using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace InventoryASP.Controllers
@@ -56,8 +57,8 @@ namespace InventoryASP.Controllers
                     Id = h.Id,
                     Since = h.CheckedOut.ToString(),
                     Until = h.CheckedIn.ToString(),
-                    Holder = GetDeviceHolder(h.Device)
-                });
+                    Holder = GetDeviceHolder(h)
+                }).ToList();
 
             var model = new DeviceDetailModel
             {
@@ -145,6 +146,23 @@ namespace InventoryASP.Controllers
         private EmployeeListingModel GetDeviceHolder(Device device)
         {
             var employee = _checkouts.GetCheckout(device.Id)?.Employee;
+
+            if (employee == null)
+                return null;
+
+            return new EmployeeListingModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Patronymic = employee.Patronymic,
+                Department = employee.Department.Name,
+                Position = employee.Position.Name
+            };
+        }
+        private EmployeeListingModel GetDeviceHolder(CheckoutHistory history)
+        {
+            var employee = history.Employee;
 
             if (employee == null)
                 return null;

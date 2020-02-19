@@ -3,6 +3,7 @@ using InventoryAppData.Models;
 using InventoryAppServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,21 +26,24 @@ namespace InventoryASP
             services.AddDbContext<InventoryContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<InventoryContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<InventoryContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
             services.AddRazorPages()
-                .AddRazorRuntimeCompilation();
+                    .AddRazorRuntimeCompilation();
 
             services.AddScoped<IDevice, DeviceService>();
             services.AddScoped<ICheckout, CheckoutService>();
             services.AddScoped<IEmployee, EmployeeService>();
             services.AddScoped<IDepartment, DepartmentService>();
+
+            services.AddTransient<DataSeeder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataSeeder dataSeeder)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +57,10 @@ namespace InventoryASP
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            dataSeeder.SeedData().Wait();
+            dataSeeder.SeedSuperUser().Wait();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

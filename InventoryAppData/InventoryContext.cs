@@ -6,7 +6,10 @@ namespace InventoryAppData
 {
     public class InventoryContext : IdentityDbContext<ApplicationUser>
     {
-        public InventoryContext(DbContextOptions options) : base(options) { }
+        public InventoryContext(DbContextOptions options) : base(options) 
+        {
+            Database.EnsureCreated();
+        }
 
         public DbSet<Device> Devices { get; set; }
         public DbSet<Employee> Employees { get; set; }

@@ -6,7 +6,7 @@
         <h4 class="text-white float-left">Сотрудники</h4>
         @if (User.IsInRole("Admin"))
         {
-            <a asp-controller="Employee" asp-action="NewEmployee" class="float-right btn btn-sm btn-success openModalBtn-lg">
+            <a asp-controller="Employee" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
                 <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
             </a>
         }
@@ -51,7 +51,7 @@
                                 <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditEmployee" asp-route-id="@employee.Id">
                                     <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
                                 </a>
-                                <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteEmployee" asp-route-id="@employee.Id">
+                                <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@employee.Id">
                                     <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
                                 </a>
                             </td>

@@ -4,7 +4,7 @@ namespace InventoryASP.Models.Device
 {
     public class AvailableDevicesModel
     {
-        public IEnumerable<DeviceListingModel> Devices { get; set; }
+        public List<DeviceListingModel> Devices { get; set; }
         public int EmployeeId { get; set; }
     }
 }

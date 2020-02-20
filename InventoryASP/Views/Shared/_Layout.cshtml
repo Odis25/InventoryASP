@@ -10,34 +10,42 @@
 <body>
     <header>
         <!--Навигация-->
-        <nav class="navbar navbar-light bg-light navbar-expand-sm navbar-toggleable-sm">
+        <nav class="navbar navbar-light bg-light navbar-expand-lg">
             <div class="container">
-                    <div class="navbarHeader">
-                        <a class="navbar-brand navLogo" asp-controller="Home" asp-action="Index">
-                            <img src="~/img/logo.png" width="60" /> InventoryApp
-                        </a>
-                    </div>
+                <div class="navbarHeader">
+                    <a class="navbar-brand navLogo" asp-controller="Home" asp-action="Index">
+                        <img src="~/img/logo.png" width="60" /> InventoryApp
+                    </a>
+                </div>
 
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <div class="navbar-collapse collapse d-sm-inline-flex">
+                <div class="navbar-collapse collapse d-lg-inline-flex">
+                    <ul class="nav navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Device" asp-action="Index">Оборудование</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Employee" asp-action="Index">Сотрудники</a>
+                        </li>
+                    </ul>
 
-                        <ul class="nav navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Device" asp-action="Index">Оборудование</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index">Сотрудники</a>
-                            </li>
-                        </ul>
-                        <partial name="_LoginPartial" />
-                    </div>
+                    <form method="post" asp-controller="Search" asp-action="Find" class="form-inline mr-2">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Поиск..." name="searchQuery" />
+                            <div class="input-group-append">
+                                <button type="submit" class="input-group-text"><img src="~/img/search_24px.png"></button>
+                            </div>
+                        </div>
+                    </form>
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </nav>
     </header>

@@ -38,6 +38,7 @@ namespace InventoryASP
             services.AddScoped<ICheckout, CheckoutService>();
             services.AddScoped<IEmployee, EmployeeService>();
             services.AddScoped<IDepartment, DepartmentService>();
+            services.AddScoped<ISearch, SearchService>();
 
             services.AddTransient<DataSeeder>();
         }

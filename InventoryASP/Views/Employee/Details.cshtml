@@ -59,7 +59,10 @@
 
                                         <td>
                                             <a class="btn btn-sm btn-secondary btnMini p-1"
-                                               asp-action="CheckInDevice" asp-route-employeeId="@Model.Id" asp-route-deviceId="@checkout.Checkout.Device.Id">
+                                               asp-controller="Checkout"
+                                               asp-action="CheckInDevice"
+                                               asp-route-employeeId="@Model.Id"
+                                               asp-route-deviceId="@checkout.Checkout.Device.Id">
                                                 <img src="~/icons/icons8_trash_16.png" />
                                             </a>
                                         </td>
@@ -68,14 +71,10 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="tab-pane" id="nav-history">
                         <table class="table table-sm table-hover table-fixed">
                             <thead class="bg-secondary text-light">
                                 <tr>
-                                    @*<td>Название</td>
-                                    <td>Модель</td>
-                                    <td>Тип</td>*@
                                     <td>#</td>
                                     <td>Оборудование</td>
                                     <td>Серийный номер</td>
@@ -87,9 +86,6 @@
                                 @foreach (var history in Model.History)
                                 {
                                     <tr>
-                                        @*<td>@history.Device.Name</td>
-                                        <td>@history.Device.DeviceModel</td>
-                                        <td>@history.Device.Type</td>*@
                                         <td>@history.Id</td>
                                         <td>@history.Device.Name @history.Device.Manufacturer @history.Device.DeviceModel @history.Device.Type</td>
                                         <td>@history.Device.SerialNumber</td>
@@ -107,7 +103,12 @@
     <!--Кнопки добавления и удаления устройств-->
     <div class="row">
         <div class="col offset-4 text-left py-2 pb-3">
-            <a class="btn btn-sm btn-success openModalBtn-lg" asp-controller="Device" asp-action="GetAvalibleDevices" asp-route-employeeId="@Model.Id"><img src="~/icons/icons8_add_32.png" /> Добавить оборудование</a>
+            <a class="btn btn-sm btn-success openModalBtn-lg"
+               asp-controller="Device"
+               asp-action="GetAvailableDevices"
+               asp-route-employeeId="@Model.Id">
+                <img src="~/icons/icons8_add_32.png" />Добавить оборудование
+            </a>
         </div>
     </div>
 

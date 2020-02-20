@@ -132,7 +132,7 @@ namespace InventoryASP.Controllers
                 DeviceModel = device.DeviceModel,
                 DeviceManufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber
-            });
+            }).ToList();
 
             var model = new AvailableDevicesModel
             {

@@ -16,18 +16,18 @@
             <div class=" modal-body">
                 <table class="table table-sm table-hover table-borderless table-striped">
                     <tbody>
-                        @foreach(var device in Model.Devices)
+                        @for (int i = 0; i < Model.Devices.Count; i++)
                         {
                             <tr>
                                 <td>
-                                    <input asp-for="@device.Id" type="hidden" />
-                                    <input type="checkbox" asp-for="@device.IsSelected" />
+                                    <input asp-for="Devices[i].Id" type="hidden" />
+                                    <input type="checkbox" asp-for="Devices[i].IsSelected" />
                                 </td>
-                                <td>@device.DeviceType</td>
-                                <td>@device.DeviceName</td>
-                                <td>@device.DeviceModel</td>
-                                <td>@device.SerialNumber</td>
-                                <td>@device.DeviceManufacturer</td>
+                                <td>@Model.Devices[i].DeviceType</td>
+                                <td>@Model.Devices[i].DeviceName</td>
+                                <td>@Model.Devices[i].DeviceModel</td>
+                                <td>@Model.Devices[i].SerialNumber</td>
+                                <td>@Model.Devices[i].DeviceManufacturer</td>
                             </tr>
                         }
                     </tbody>

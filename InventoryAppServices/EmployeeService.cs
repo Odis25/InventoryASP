@@ -46,7 +46,7 @@ namespace InventoryAppServices
             {
                 _context.UpdateRange(histories);
                 foreach (var history in histories)
-                {                   
+                {
                     history.CheckedIn = now;
                 }
             }
@@ -61,8 +61,8 @@ namespace InventoryAppServices
 
         public IEnumerable<Employee> GetAll()
         {
-            return _context.Employees
-                .Include(e => e.Checkouts).ThenInclude(c=>c.Device)
+            return _context.Employees.Where(e => e.IsActive)
+                .Include(e => e.Checkouts).ThenInclude(c => c.Device)
                 .Include(e => e.Department)
                 .Include(e => e.Position);
         }
@@ -77,7 +77,7 @@ namespace InventoryAppServices
         {
             return _context.CheckoutHistories
                 .Where(ch => ch.Employee.Id == employeeId)
-                .Include(ch=>ch.Device);
+                .Include(ch => ch.Device);
         }
     }
 }

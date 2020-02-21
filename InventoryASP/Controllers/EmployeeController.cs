@@ -68,7 +68,7 @@ namespace InventoryASP.Controllers
                 LastName = model.LastName,
                 Patronymic = model.Patronymic,
                 Position = model.Position,
-                Department = model.Department,
+                Department = model.Department
             };
 
             _employees.Add(employee);

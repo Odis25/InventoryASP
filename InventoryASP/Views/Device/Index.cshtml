@@ -3,17 +3,31 @@
 
 
 <!--Заголовок секции-->
-<div class="row no-gutters sectionHeader">
-    <div class="col sectionHeading clearfix">
-        <h4 class="float-left m-0">Оборудование</h4>
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Device" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
-                <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
-            </a>
-        }
+    <div class="sectionHeader">
+        <div class="row no-gutters">
+            <div class="col d-inline-flex sectionHeading">
+                <h4 class="flex-grow-1 m-0">Оборудование</h4>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
+                        <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+                    </a>
+                }
+            </div>           
+        </div>
+
+        <div class="row no-gutters">
+            <form method="post" asp-controller="Search" asp-action="FindDevice" class="form-inline flex-grow-1" id="searchDeviceForm">
+                <div class="input-group searchGroup">
+                    <input class="searchInput" type="search" autocomplete="off" placeholder="Поиск по оборудованию..." name="searchQuery" />
+                    <div class="input-group-append">
+                        <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
     </div>
-</div>
 
 <!--Контент секции-->
 <div class="row no-gutters sectionContent">

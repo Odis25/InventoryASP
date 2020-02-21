@@ -5,6 +5,7 @@ a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
+    color: wheat;
 }
 
 /* Provide sufficient contrast against white background */
@@ -30,18 +31,6 @@ html {
     }
 }
 
-.border-top {
-    border-top: 1px solid #e5e5e5;
-}
-
-.border-bottom {
-    border-bottom: 1px solid #1b6ec2;
-}
-
-.box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
 button.accept-policy {
     font-size: 1rem;
     line-height: inherit;
@@ -63,8 +52,19 @@ body {
     background-position: center;
     background-size: 100%;
     background-repeat: no-repeat;
-    font-family: 'Roboto';    
+    font-family: 'Roboto';
 }
+
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+/*------Навигация------*/
 
 .navbar {
     box-shadow: 0 5px 4px -6px #000;
@@ -76,12 +76,68 @@ body {
         font-weight: bold;
     }
 
+.nav-link {
+    color: #777;
+    border-bottom: 2px solid transparent;
+    transition: color ease-in 0.1s;
+}
+.nav-link:hover {
+    color: #000;
+}
+
+#mainNavbar .nav-link:hover {
+    color: #000;
+    border-bottom: 2px solid #000;
+}
+
+/*-------Поиск-------*/
+
+.searchGroup {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 3px 3px 5px #000;
+}
+
+.searchInput {
+    background-color: #aaa;
+    border: none;
+    outline: none;
+    padding: 5px;
+    transition: ease-in 0.1s;
+    width: 150px;
+    color: white;
+}
+
+    .searchInput:focus {
+        color: black;
+        background-color: white;
+        width: 300px
+    }
+
+.searchBtn {
+    border: none;
+    background-color: #aaa;
+    outline: none;
+}
+
+#searchDeviceForm .searchInput {
+    width: 1000px;
+    color: black;
+    background-color: white;
+}
+
+#searchDeviceForm .searchBtn {
+    
+}
+
+/*--------Секции--------*/
+
 .sectionHeader {
     background-color: rgba(0,0,0,0.9);
     padding: 8px 15px 8px 15px;
 }
 
-.sectionHeading{
+.sectionHeading {
     color: white;
     font-size: 1.3em;
     padding: 16px 0 16px 0;
@@ -89,19 +145,12 @@ body {
     margin-bottom: 12px;
 }
 
-.sectionContent{
+.sectionContent {
     background-color: white;
     padding: 0 15px 10px 15px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.3);
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-}
 
 /*-------------------Мои Стили----------------------------------*/
 
@@ -118,10 +167,6 @@ body {
     background: rgba(255, 255, 255, 0.8)
 }
 
-.mainBackgroundColor {
-    background-color: #373d4e;
-}
-
 .btn-close, .btn-close:focus {
     outline-style: none;
 }
@@ -131,12 +176,12 @@ body {
     padding: 0.25rem 0.3rem;
 }
 
-#mainNavbarMenu {
-    padding: 0 1rem;
-}
-
-#logo {
-    font-family: Broadway;
+.navLogo {
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    color: white;
+    font-size:1.8em;
+    text-shadow: 2px 2px 4px #888;
 }
 
 /*-------------ТАБЫ-----------------------*/

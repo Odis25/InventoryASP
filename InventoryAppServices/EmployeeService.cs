@@ -18,7 +18,12 @@ namespace InventoryAppServices
 
         public void Add(Employee newEmployee)
         {
+            var position = _context.Positions.Find(newEmployee.Position.Id);
+            var department = _context.Departments.Find(newEmployee.Department.Id);
+
             newEmployee.IsActive = true;
+            newEmployee.Position = position;
+            newEmployee.Department = department;
 
             _context.Employees.Add(newEmployee);
             _context.SaveChanges();

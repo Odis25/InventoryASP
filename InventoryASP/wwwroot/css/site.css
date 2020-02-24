@@ -81,9 +81,10 @@ body {
     border-bottom: 2px solid transparent;
     transition: color ease-in 0.1s;
 }
-.nav-link:hover {
-    color: #000;
-}
+
+    .nav-link:hover {
+        color: #000;
+    }
 
 #mainNavbar .nav-link:hover {
     color: #000;
@@ -99,7 +100,7 @@ body {
 }
 
 .searchInput {
-    background-color: #aaa;
+    background-color: #bbb;
     border: none;
     outline: none;
     padding: 5px;
@@ -116,18 +117,27 @@ body {
 
 .searchBtn {
     border: none;
-    background-color: #aaa;
+    background-color: #666;
     outline: none;
 }
 
-#searchDeviceForm .searchInput {
-    width: 1000px;
-    color: black;
-    background-color: white;
+.subSearchForm .searchGroup {
+    box-shadow: none;
+    border-bottom: 2px solid #fff;
+    border-radius: 0;
 }
 
-#searchDeviceForm .searchBtn {
-    
+.subSearchForm .searchInput {
+    color: #fff;
+    background-color: transparent;
+}
+
+    .subSearchForm .searchInput:focus {
+        color: #fff;
+    }
+
+.subSearchForm .searchBtn {
+    background-color: transparent;
 }
 
 /*--------Секции--------*/
@@ -147,9 +157,12 @@ body {
 
 .sectionContent {
     background-color: white;
-    padding: 0 15px 10px 15px;
+    padding: 25px 55px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.3);
 }
+
+    .sectionContent table {
+    }
 
 
 /*-------------------Мои Стили----------------------------------*/
@@ -180,7 +193,7 @@ body {
     font-family: 'Roboto Mono';
     font-weight: bold;
     color: white;
-    font-size:1.8em;
+    font-size: 1.8em;
     text-shadow: 2px 2px 4px #888;
 }
 

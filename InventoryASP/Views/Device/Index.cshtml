@@ -1,6 +1,5 @@
-﻿ @model InventoryASP.Models.Device.DeviceIndexModel
+﻿@model InventoryASP.Models.Device.DeviceIndexModel
 @inject Microsoft.AspNetCore.Identity.UserManager<InventoryAppData.Models.ApplicationUser> UserManager
-
 
 <!--Заголовок секции-->
     <div class="sectionHeader">
@@ -13,20 +12,22 @@
                         <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
                     </a>
                 }
-            </div>           
+            </div>
         </div>
 
+        <!--Поиск по разделу-->
         <div class="row no-gutters">
-            <form method="post" asp-controller="Search" asp-action="FindDevice" class="form-inline flex-grow-1" id="searchDeviceForm">
+            <form method="post" asp-controller="Search" asp-action="FindDevice" class="col subSearchForm">
                 <div class="input-group searchGroup">
-                    <input class="searchInput" type="search" autocomplete="off" placeholder="Поиск по оборудованию..." name="searchQuery" />
-                    <div class="input-group-append">
+                    <div class="input-group-prepend">
                         <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
                     </div>
+                    <input class="searchInput flex-grow-1" type="search" autocomplete="off" placeholder="Поиск по оборудованию..." name="searchQuery" />
+
                 </div>
             </form>
-            
         </div>
+
     </div>
 
 <!--Контент секции-->

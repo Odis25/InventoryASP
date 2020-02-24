@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace InventoryASP.Controllers
 {
-    public class SearchController: Controller
+    public class SearchController : Controller
     {
         private readonly ISearch _search;
         private readonly ICheckout _checkouts;
@@ -35,15 +35,28 @@ namespace InventoryASP.Controllers
             return View("SearchResult", model);
         }
 
-
         public IActionResult FindEmployee(string searchQuery)
         {
-            return View("SearchResult");
+            var employees = _search.SearchEmployee(searchQuery);
+            var model = new SearchResultModel
+            {
+                Employees = BuildEmployeeListingModel(employees),
+                SearchQuery = searchQuery
+            };
+
+            return View("SearchResult", model);
         }
 
         public IActionResult FindDevice(string searchQuery)
         {
-            return View("SearchResult");
+            var devices = _search.SearchDevice(searchQuery);
+
+            var model = new SearchResultModel
+            {
+                Devices = BuildDeviceListingModel(devices),
+                SearchQuery = searchQuery
+            };
+            return View("SearchResult", model);
         }
 
         private IEnumerable<EmployeeListingModel> BuildEmployeeListingModel(IEnumerable<Employee> employees)

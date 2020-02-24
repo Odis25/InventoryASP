@@ -1,15 +1,28 @@
 ﻿@model InventoryASP.Models.Employee.EmployeeIndexModel
 
 <!--Заголовок секции-->
-<div class="row no-gutters sectionHeader">
-    <div class="col sectionHeading clearfix">
-        <h4 class="text-white float-left">Сотрудники</h4>
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-controller="Employee" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
-                <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
-            </a>
-        }
+<div class="sectionHeader">
+    <div class="row no-gutters">
+        <div class="col d-lg-inline-flex sectionHeading">
+            <h4 class="flex-grow-1 m-0">Сотрудники</h4>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Employee" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
+                    <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+                </a>
+            }
+        </div>
+    </div>
+    <!--Поиск по разделу-->
+    <div class="row no-gutters">
+        <form method="post" asp-controller="Search" asp-action="FindDevice" class="col subSearchForm">
+            <div class="input-group searchGroup">
+                <div class="input-group-prepend">
+                    <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
+                </div>
+                <input class="searchInput flex-grow-1" type="search" autocomplete="off" placeholder="Поиск по сотрудникам..." name="searchQuery" />
+            </div>
+        </form>
     </div>
 </div>
 

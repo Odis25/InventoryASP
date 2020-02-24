@@ -7,7 +7,7 @@
 </div>
 <div class="row">
     <div class="col sectionContent">
-        @if (Model.Devices.Any())
+        @if (Model.Devices != null && Model.Devices.Any())
         {
             <table class="table table-hover table-sm">
                 <thead>
@@ -27,7 +27,7 @@
                 }
             </table>
         }
-        @if (Model.Employees.Any())
+        @if (Model.Employees != null && Model.Employees.Any())
         {
             <table class="table table-hover table-sm">
                 <thead>

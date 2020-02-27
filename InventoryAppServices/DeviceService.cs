@@ -64,13 +64,17 @@ namespace InventoryAppServices
         // Получить все устройства
         public IEnumerable<Device> GetAll()
         {
-            return _context.Devices.Where(d => d.Status != "Deleted");
+            return _context.Devices
+                .Where(d => d.Status != "Deleted")
+                .OrderBy(d=>d.Name);
         }
 
         // Получить доступные устройства
         public IEnumerable<Device> GetAvailableDevices()
         {
-            return _context.Devices.Where(device => device.Status == "Available");
+            return _context.Devices
+                .Where(device => device.Status == "Available")
+                .OrderBy(d=>d.Name);
         }
 
         // Получить устройство по ID

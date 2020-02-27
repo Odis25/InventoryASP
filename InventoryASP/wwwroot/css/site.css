@@ -1,13 +1,4 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-    color: wheat;
-}
-
+﻿
 /* Provide sufficient contrast against white background */
 a {
     color: #0366d6;
@@ -23,24 +14,14 @@ a {
 -------------------------------------------------- */
 html {
     font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
     html {
         font-size: 16px;
     }
-}
-
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
 }
 
 body {
@@ -55,6 +36,9 @@ body {
     font-family: 'Roboto';
 }
 
+.body-content {
+    max-width: 1280px;
+}
 
 .footer {
     position: absolute;
@@ -62,6 +46,23 @@ body {
     width: 100%;
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
+}
+
+/*------------------Лого---------------------*/
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    color: wheat;
+}
+
+.navLogo {
+    font-family: 'Roboto Mono';
+    font-weight: bold;
+    color: white;
+    font-size: 1.8em;
+    text-shadow: 2px 2px 4px #888;
 }
 
 /*------Навигация------*/
@@ -91,7 +92,7 @@ body {
     border-bottom: 2px solid #000;
 }
 
-/*-------Поиск-------*/
+/*-------Глобальный Поиск-------*/
 
 .searchGroup {
     border-radius: 6px;
@@ -104,7 +105,7 @@ body {
     border: none;
     outline: none;
     padding: 5px;
-    transition: ease-in 0.1s;
+    transition: all ease-in 0.1s;
     width: 150px;
     color: white;
 }
@@ -121,30 +122,36 @@ body {
     outline: none;
 }
 
-.subSearchForm .searchGroup {
-    box-shadow: none;
-    border-bottom: 2px solid #fff;
-    border-radius: 0;
+/*---------------Поиск по категориям----------------*/
+
+.subSearchForm {
+    display: flex;
+    flex-direction: row-reverse;
 }
 
-.subSearchForm .searchInput {
-    color: #fff;
-    background-color: transparent;
-}
-
-    .subSearchForm .searchInput:focus {
-        color: #fff;
+    .subSearchForm .searchGroup {
+        box-shadow: none;
+        border-bottom: 2px solid #fff;
+        border-radius: 0;
     }
 
-.subSearchForm .searchBtn {
-    background-color: transparent;
-}
+    .subSearchForm .searchInput {
+        color: #fff;
+        background-color: transparent;
+    }
 
-/*--------Секции--------*/
+        .subSearchForm .searchInput:focus {
+        }
+
+    .subSearchForm .searchBtn {
+        background-color: transparent;
+    }
+
+/*-------------------Секции-------------------------*/
 
 .sectionHeader {
     background-color: rgba(0,0,0,0.9);
-    padding: 8px 15px 8px 15px;
+    padding: 8px 15px;
 }
 
 .sectionHeading {
@@ -157,27 +164,47 @@ body {
 
 .sectionContent {
     background-color: white;
-    padding: 25px 55px;
+    padding: 15px 15px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 6px 6px rgba(0,0,0,0.3);
 }
 
-    .sectionContent table {
-    }
-
-
-/*-------------------Мои Стили----------------------------------*/
-
-.section {
-    height: 600px;
+.detailsSection {
+    border-radius: 5px;
+    padding: 10px 25px;
 }
+
+.detailsBodyContent {
+    margin-top: 15px;
+}
+
+.profilePhoto {
+    display: block;
+    height: 250px;
+    width: 250px;
+}
+
+/*-----------таблицы------------*/
+
+.indexTable thead {
+    background-color: wheat;
+}
+
+.indexTable td {
+    vertical-align: middle;
+}
+
+.indexTable tbody tr:hover {
+    background-color: #ccc;
+}
+
+.indexTable .controlCell {
+    text-align: center;
+}
+/*-------------Детализация---------------*/
 
 .deviceHistoryPane {
     overflow-y: auto;
     height: 100%;
-}
-
-.mainScreen {
-    background: rgba(255, 255, 255, 0.8)
 }
 
 .btn-close, .btn-close:focus {
@@ -186,50 +213,113 @@ body {
 
 .btnMini {
     line-height: 0.5;
+    border: 1px solid #aaa;
     padding: 0.25rem 0.3rem;
 }
 
-.navLogo {
-    font-family: 'Roboto Mono';
-    font-weight: bold;
-    color: white;
-    font-size: 1.8em;
-    text-shadow: 2px 2px 4px #888;
-}
+    .btnMini:hover {
+        background-color: rgba(0,0,0,0.2);
+    }
 
 /*-------------ТАБЫ-----------------------*/
-#employeeDetail .nav-item > .nav-link {
-    background-color: rgba(155, 155, 155, 0.16);
-    color: black;
+
+#employeeDetail {
+    height: 500px;
 }
 
-    #employeeDetail .nav-item > .nav-link.active {
-        background-color: #fff;
+    #employeeDetail .nav-item > .nav-link {
+        border-radius: 8px 8px 0 0;
+        background-color: rgba(155, 155, 155, 0.20);
+        color: black;
     }
 
-/*----------------------------------------*/
-#nav-tabContent {
-    padding: 0.3rem;
-    height: 450px;
-}
-
-.table-fixed {
-    table-layout: auto;
-}
-
-    .table-fixed td:first-of-type {
-        width: 5%;
-    }
-
-    .table-fixed tbody {
-        display: block;
-        overflow: auto;
-        max-height: 400px;
-    }
-
-        .table-fixed thead,
-        .table-fixed tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
+        #employeeDetail .nav-item > .nav-link:hover {
+            background-color: rgba(155, 155, 155, 0.40);
         }
+
+        #employeeDetail .nav-item > .nav-link.active {
+            font-weight: bold;
+            background-color: #fff;
+        }
+
+#nav-tabContent {
+    border: 1px solid #ccc;
+    border-top: none;
+    padding: 0.2rem;
+    height: 450px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+}
+
+/*--------- Таблица детализации ----------------*/
+
+#deviceTable {
+    font-size: .95em;
+}
+
+    #deviceTable thead {
+        background-color: wheat;
+        font-weight: bold;
+    }
+
+    #deviceTable tbody {
+        background-color: transparent;
+    }
+
+        #deviceTable tbody tr {
+        }
+
+/*--------- Детализация оборудования -------*/
+
+.deviceHistoryPane .deviceHistoryTable td:nth-child(2),
+.deviceHistoryPane .deviceHistoryTable td:nth-child(3),
+.deviceHistoryPane .deviceHistoryTable td:nth-child(4) {
+    width: 30%
+}
+
+.description {
+    resize: none;
+}
+
+.description:focus {
+    box-shadow: none;
+}
+
+/*------ Историческая таблица ----------*/
+.deviceHistoryTable {
+    font-size: .95em;
+}
+
+    .deviceHistoryTable tbody {
+        overflow-y: auto;
+        max-height: 410px;
+        display: block;
+    }
+
+    .deviceHistoryTable thead tr {
+        background-color: wheat;
+        font-weight: bold;
+    }
+
+    .deviceHistoryTable thead tr,
+    .deviceHistoryTable tbody tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+    }
+
+    .deviceHistoryTable td:nth-child(1) {
+        width: 5%
+    }
+
+    .deviceHistoryTable td:nth-child(2) {
+        width: 40%
+    }
+
+    .deviceHistoryTable td:nth-child(3) {
+        width: 25%
+    }
+
+    .deviceHistoryTable td:nth-child(4),
+    .deviceHistoryTable td:nth-child(5) {
+        width: 15%
+    }

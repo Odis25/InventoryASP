@@ -27,9 +27,9 @@ namespace InventoryASP.Models.Employee
                     .Append(LastName)
                     .Append(" ")
                     .Append(Name.First())
-                    .Append('.')
+                    .Append(". ")
                     .Append(Patronymic.First())
-                    .Append('.')
+                    .Append(".")
                     .ToString();
             }
         }

@@ -1,24 +1,25 @@
 ﻿@model InventoryASP.Models.Employee.EmployeeIndexModel
-
 <!--Заголовок секции-->
 <div class="sectionHeader">
     <div class="row no-gutters">
-        <div class="col d-lg-inline-flex sectionHeading">
-            <h4 class="flex-grow-1 m-0">Сотрудники</h4>
+        <div class="col d-inline-flex sectionHeading">
+            <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Сотрудники</h4>
             @if (User.IsInRole("Admin"))
             {
-                <a asp-controller="Employee" asp-action="Create" class="float-right btn btn-sm btn-success openModalBtn-lg">
-                    <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+                <a asp-controller="Employee" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
+                    <span class=""><img src="~/icons/add_user_male_24px_1.png" class="mr-1"/>Добавить</span>
                 </a>
             }
         </div>
     </div>
     <!--Поиск по разделу-->
     <div class="row no-gutters">
-        <form method="post" asp-controller="Search" asp-action="FindDevice" class="col subSearchForm">
+        <form method="post" asp-controller="Search" asp-action="FindEmployee" class="col subSearchForm">
             <div class="input-group searchGroup">
                 <div class="input-group-prepend">
-                    <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
+                    <button type="submit" class="searchBtn">
+                        <img src="~/img/search_24px.png">
+                    </button>
                 </div>
                 <input class="searchInput flex-grow-1" type="search" autocomplete="off" placeholder="Поиск по сотрудникам..." name="searchQuery" />
             </div>
@@ -28,15 +29,18 @@
 
 <!--Контент секции-->
 <div class="row no-gutters sectionContent">
-    <div class="col">
-        <table class="table table-hover table-sm">
+    <div class="col border">
+        <table class="table table-hover table-sm indexTable">
             <thead>
                 <tr>
                     <th>Ф.И.О.</th>
                     <th>Отдел</th>
                     <th>Должность</th>
                     <th>Оборудование на балансе</th>
-                    <th></th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th class="text-center">Управление</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -47,25 +51,27 @@
                         <td>@employee.Department</td>
                         <td>@employee.Position</td>
                         <td>
-                            <ol class="m-0">
-                                @foreach (var checkout in employee.Checkouts)
-                                {
-                                    <li>
-                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
-                                            <span>@checkout.Checkout.Device.Type @checkout.Checkout.Device.Name @checkout.Checkout.Device.DeviceModel</span>
-                                        </a>
-                                    </li>
-                                }
-                            </ol>
+                            
+                                <ol class="m-0">
+                                    @foreach (var checkout in employee.Checkouts)
+                                    {
+                                        <li>
+                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
+                                                <span>@checkout.Checkout.Device.Type @checkout.Checkout.Device.Name @checkout.Checkout.Device.DeviceModel</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ol>
+                            
                         </td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <td>
-                                <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditEmployee" asp-route-id="@employee.Id">
-                                    <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
+                            <td  class="controlCell">
+                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="EditEmployee" asp-route-id="@employee.Id">
+                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать"/>
                                 </a>
-                                <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@employee.Id">
-                                    <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
+                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@employee.Id">
+                                    <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить"/>
                                 </a>
                             </td>
                         }

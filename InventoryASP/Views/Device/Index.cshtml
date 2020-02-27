@@ -5,11 +5,11 @@
     <div class="sectionHeader">
         <div class="row no-gutters">
             <div class="col d-inline-flex sectionHeading">
-                <h4 class="flex-grow-1 m-0">Оборудование</h4>
+                <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Оборудование</h4>
                 @if (User.IsInRole("Admin"))
                 {
                     <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
-                        <span><img src="~/icons/icons8_add_32.png" /></span>Добавить
+                        <span><img src="~/icons/add_device_24px.png" class="mr-1"/>Добавить</span>
                     </a>
                 }
             </div>
@@ -32,8 +32,8 @@
 
 <!--Контент секции-->
 <div class="row no-gutters sectionContent">
-    <div class="col">
-        <table class="table table-hover table-sm">
+    <div class="col border">
+        <table class="table table-striped table-hover table-sm indexTable">
             <thead>
                 <tr>
                     <th>Название</th>
@@ -42,7 +42,10 @@
                     <th>Серийный номер</th>
                     <th>Производитель</th>
                     <th>Текущий владелец</th>
-                    <th></th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th class="controlCell">Управление</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -64,12 +67,12 @@
                         </td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <td>
-                                <a class="btn btn-sm btn-primary btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@device.Id">
-                                    <img src="~/icons/icons8_pencil_16.png" alt="Редактировать" />
+                            <td class="controlCell">
+                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="EditDevice" asp-route-id="@device.Id">
+                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать"/>
                                 </a>
-                                <a class="btn btn-sm btn-danger btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@device.Id">
-                                    <img src="~/icons/icons8_trash_16.png" alt="Удалить" />
+                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="DeleteDevice" asp-route-id="@device.Id">
+                                    <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить"/>
                                 </a>
                             </td>
                         }

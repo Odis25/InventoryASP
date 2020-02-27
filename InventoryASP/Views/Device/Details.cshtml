@@ -1,9 +1,8 @@
 ﻿@model InventoryASP.Models.Device.DeviceDetailModel
-
 <!--основной блок-->
-<div class="section bg-light shadow-lg">
+<div class="sectionContent detailsSection">
 
-    <div class="row p-2">
+    <div class="row detailsHeader">
         <div class="col">
             <a class="close btn-close" asp-controller="Device" asp-action="Index">
                 <span>&times;</span>
@@ -11,11 +10,10 @@
         </div>
     </div>
 
-    <div class="row no-gutters">
-        <div class="col-5 p-2">
-            <div class="border box-shadow p-2">
-                <h5 class="border-bottom pb-2">Информация:</h5>
-                <div><span class="font-weight-bold">Id: </span>@Model.DeviceId</div>
+    <div class="row detailsBodyContent">
+        <div class="col-5">
+            <div class="border p-2">
+                <h5 class="border-bottom pb-2 font-weight-bold">Информация:</h5>
                 <div><span class="font-weight-bold">Наименование: </span>@Model.DeviceName</div>
                 <div><span class="font-weight-bold">Тип: </span>@Model.DeviceType</div>
                 <div><span class="font-weight-bold">Модель: </span>@Model.DeviceModel</div>
@@ -28,38 +26,41 @@
                     {
                         <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.CurrentHolder.Id">@Model.CurrentHolder.FullName</a>
                     }
-                    else
-                    {
-                        <span>---</span>
-                    }
+
                 </div>
                 <div class="form-group">
-                    <label class="font-weight-bold" asp-for="DeviceDescription">Описание:</label>
-                    <textarea rows="10" class="form-control" asp-for="DeviceDescription" readonly contenteditable="false"></textarea>
+                    <label class="font-weight-bold" asp-for="DeviceDescription">Примечание:</label>
+                    <textarea rows="10" class="form-control description" asp-for="DeviceDescription" readonly contenteditable="false"></textarea>
                 </div>
             </div>
         </div>
 
-        <div class="col p-2">
-            <div class="p-2 border box-shadow deviceHistoryPane">
-                <h5 class="border-bottom pb-2">История:</h5>
-                <table class="table table-hover table-sm">
+        <!------Таблица истории------>
+        <div class="col-7">
+            <div class="p-2 border deviceHistoryPane">
+                <h5 class="border-bottom font-weight-bold pb-2">История:</h5>
+                <table class="table table-hover table-sm deviceHistoryTable">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Выдано</th>
-                            <th>Возвращено</th>
-                            <th>Сотрудник</th>
+                            <td>#</td>
+                            <td>Получено</td>
+                            <td>Возвращено</td>
+                            <td>Сотрудник</td>
                         </tr>
                     </thead>
+                    @{ var i = 1; }
                     <tbody>
                         @foreach (var history in Model.CheckoutHistory)
                         {
                             <tr>
-                                <td>@history.Id</td>
+                                <td>@(i++)</td>
                                 <td>@history.Since</td>
                                 <td>@history.Until</td>
-                                <td>@history.Holder.FullName</td>
+                                <td>
+                                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@history.Holder.Id">
+                                        @history.Holder.FullName
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>

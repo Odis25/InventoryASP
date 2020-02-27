@@ -1,115 +1,145 @@
 ﻿@model InventoryASP.Models.Employee.EmployeeDetailsModel
-<!--основной блок-->
-<div class="section bg-light shadow-lg">
+@inject Microsoft.AspNetCore.Identity.UserManager<InventoryAppData.Models.ApplicationUser> UserManager
+@inject Microsoft.AspNetCore.Identity.SignInManager<InventoryAppData.Models.ApplicationUser> SignInManager
 
-    <div class="row p-2">
+
+<div class="sectionContent detailsSection">
+    <!--Заголовок-->
+    <div class="row detailsHeader">
         <div class="col">
             <a class="close btn-close" asp-controller="Employee" asp-action="Index">
-                <span>&times;</span>
+                <span class="text-black">&times;</span>
             </a>
         </div>
     </div>
 
-    <div class="row">
+    <!--основной контент-->
+    <div class="row detailsBodyContent">
+
         <!--фото и профиль-->
         <div class="col-4">
-            <div class="pl-3">
-                <img class="profilePhoto img-thumbnail shadow-sm mb-3" src="~/img/userPhoto.png" width="250" height="250" />
-
-                <div class="mb-1"><span class="font-weight-bold">Фамилия:</span> @Model.LastName</div>
-                <div class="mb-1"><span class="font-weight-bold">Имя:</span> @Model.Name</div>
-                <div class="mb-1"><span class="font-weight-bold">Отчество:</span> @Model.Patronymic</div>
-                <div class="mb-1"><span class="font-weight-bold">Отдел:</span> @Model.Department</div>
-                <div class=""><span class="font-weight-bold">Должность:</span> @Model.Position</div>
+            <div class="">
+                <img class="profilePhoto img-thumbnail" src="~/img/userPhoto.png" />
+                <div class="mt-3"><span class="font-weight-bold">Фамилия:</span> @Model.LastName</div>
+                <div class="mt-1"><span class="font-weight-bold">Имя:</span> @Model.Name</div>
+                <div class="mt-1"><span class="font-weight-bold">Отчество:</span> @Model.Patronymic</div>
+                <div class="mt-1"><span class="font-weight-bold">Отдел:</span> @Model.Department</div>
+                <div class="mt-1"><span class="font-weight-bold">Должность:</span> @Model.Position</div>
             </div>
         </div>
 
         <!--детализация -->
-        <div class="col" id="employeeDetail">
-            <div class="pr-3">
-                <!--Табы-->
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#nav-main">Оборудование</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#nav-history">История</a></li>
-                </ul>
-                <!--Таб-контент-->
-                <div class="tab-content border-left border-right border-bottom" id="nav-tabContent">
+        <div class="col-8" id="employeeDetail">
 
-                    <div class="tab-pane show active " id="nav-main">
-                        <table class="table table-sm table-hover">
-                            <thead class="bg-secondary text-light">
-                                <tr>
-                                    <td scope="col">#</td>
-                                    <td scope="col">Оборудование</td>
-                                    <td scope="col">Серийный номер</td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var checkout in Model.Checkouts)
+            <!--Табы-->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#nav-main">Оборудование</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#nav-history">История</a>
+                </li>
+            </ul>
+
+            <!--Таб-контент-->
+            <div class="tab-content" id="nav-tabContent">
+
+                <!--Оборудование на балансе-->
+                <div class="tab-pane show active" id="nav-main">
+                    <table class="table table-sm table-hover" id="deviceTable">
+                        <thead class="">
+                            <tr>
+                                <td scope="col">#</td>
+                                <td scope="col">Оборудование</td>
+                                <td scope="col">Серийный номер</td>
+                                @if (User.IsInRole("Admin"))
                                 {
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
-                                                @checkout.Checkout.Device.Name @checkout.Checkout.Device.Manufacturer @checkout.Checkout.Device.DeviceModel @checkout.Checkout.Device.Type
-                                            </a>
-                                        </td>
-                                        <td>@checkout.Checkout.Device.SerialNumber</td>
+                                    <td class="text-center">Управление</td>
+                                }
 
-                                        <td>
-                                            <a class="btn btn-sm btn-secondary btnMini p-1"
+                            </tr>
+                        </thead>
+                        @{
+                            var i = 1;
+                        }
+                        <tbody>
+                            @foreach (var checkout in Model.Checkouts)
+                            {
+                                <tr>
+                                    <td>@(i++)</td>
+                                    <td>
+                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
+                                            @checkout.Checkout.Device.Name @checkout.Checkout.Device.Manufacturer @checkout.Checkout.Device.DeviceModel @checkout.Checkout.Device.Type
+                                        </a>
+                                    </td>
+                                    <td>@checkout.Checkout.Device.SerialNumber</td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td class="text-center">
+                                            <a class="btn btn-sm  btnMini p-1"
                                                asp-controller="Checkout"
                                                asp-action="CheckInDevice"
                                                asp-route-employeeId="@Model.Id"
                                                asp-route-deviceId="@checkout.Checkout.Device.Id">
-                                                <img src="~/icons/icons8_trash_16.png" />
+                                                <img src="~/icons/icons8_delete_16px.png" />
                                             </a>
                                         </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane" id="nav-history">
-                        <table class="table table-sm table-hover table-fixed">
-                            <thead class="bg-secondary text-light">
-                                <tr>
-                                    <td>#</td>
-                                    <td>Оборудование</td>
-                                    <td>Серийный номер</td>
-                                    <td>Получено</td>
-                                    <td>Возвращено</td>
+                                    }
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var history in Model.History)
-                                {
-                                    <tr>
-                                        <td>@history.Id</td>
-                                        <td>@history.Device.Name @history.Device.Manufacturer @history.Device.DeviceModel @history.Device.Type</td>
-                                        <td>@history.Device.SerialNumber</td>
-                                        <td>@history.CheckedOut</td>
-                                        <td>@history.CheckedIn</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!--История-->
+                <div class="tab-pane" id="nav-history">
+                    <table class="table table-sm table-hover table-fixed deviceHistoryTable">
+                        <thead class="">
+                            <tr>
+                                <td>#</td>
+                                <td>Оборудование</td>
+                                <td>Серийный номер</td>
+                                <td>Получено</td>
+                                <td>Возвращено</td>
+                            </tr>
+                        </thead>
+                        @{
+                            i = 1;
+                        }
+                        <tbody>
+                            @foreach (var history in Model.History)
+                            {
+                                <tr>
+                                    <td>@(i++)</td>
+                                    <td>
+                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@history.Device.Id">
+                                            @history.Device.Name @history.Device.Manufacturer @history.Device.DeviceModel @history.Device.Type
+                                        </a>
+                                    </td>
+                                    <td>@history.Device.SerialNumber</td>
+                                    <td>@history.CheckedOut</td>
+                                    <td>@history.CheckedIn</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
+
         </div>
     </div>
     <!--Кнопки добавления и удаления устройств-->
     <div class="row">
-        <div class="col offset-4 text-left py-2 pb-3">
-            <a class="btn btn-sm btn-success openModalBtn-lg"
-               asp-controller="Device"
-               asp-action="GetAvailableDevices"
-               asp-route-employeeId="@Model.Id">
-                <img src="~/icons/icons8_add_32.png" />Добавить оборудование
-            </a>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col offset-4 text-left py-2 pb-3">
+                <a class="btn btn-sm btn-success openModalBtn-lg"
+                   asp-controller="Device"
+                   asp-action="GetAvailableDevices"
+                   asp-route-employeeId="@Model.Id">
+                    <img src="~/icons/add_shopping_cart_24px.png" />Добавить оборудование
+                </a>
+            </div>
+        }
     </div>
 
 </div>

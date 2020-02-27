@@ -1,10 +1,8 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace InventoryAppServices
 {
@@ -20,24 +18,26 @@ namespace InventoryAppServices
         public IEnumerable<Device> SearchDevice(string searchQuery)
         {
             return _context.Devices.Where(device => 
+                device.Status != "Deleted" && (
                 device.Name.Contains(searchQuery) ||
                 device.Type.Contains(searchQuery) ||
                 device.Manufacturer.Contains(searchQuery) ||
                 device.SerialNumber.Contains(searchQuery) ||
-                device.DeviceModel.Contains(searchQuery));
+                device.DeviceModel.Contains(searchQuery)));
         }
 
         public IEnumerable<Employee> SearchEmployee(string searchQuery)
         {
-            return _context.Employees.Where(employee => 
+            return _context.Employees.Where(employee =>
+                employee.IsActive && (
                 employee.Name.Contains(searchQuery) ||
                 employee.LastName.Contains(searchQuery) ||
                 employee.Patronymic.Contains(searchQuery) ||
                 employee.Position.Name.Contains(searchQuery) ||
-                employee.Department.Name.Contains(searchQuery))
+                employee.Department.Name.Contains(searchQuery)))
                 .Include(e=>e.Department)
                 .Include(e=>e.Position)
-                .Include(e=>e.Checkouts);
+                .Include(e=>e.Checkouts).ThenInclude(c=>c.Device);
         }
     }
 }

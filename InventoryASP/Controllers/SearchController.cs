@@ -38,25 +38,24 @@ namespace InventoryASP.Controllers
         public IActionResult FindEmployee(string searchQuery)
         {
             var employees = _search.SearchEmployee(searchQuery);
-            var model = new SearchResultModel
+            var model = new EmployeeIndexModel
             {
-                Employees = BuildEmployeeListingModel(employees),
-                SearchQuery = searchQuery
+                Employees = BuildEmployeeListingModel(employees)
             };
 
-            return View("SearchResult", model);
+            return View("~/Views/Employee/Index.cshtml", model);
         }
 
         public IActionResult FindDevice(string searchQuery)
         {
             var devices = _search.SearchDevice(searchQuery);
 
-            var model = new SearchResultModel
+            var model = new DeviceIndexModel
             {
                 Devices = BuildDeviceListingModel(devices),
-                SearchQuery = searchQuery
             };
-            return View("SearchResult", model);
+
+            return View("~/Views/Device/Index.cshtml", model);
         }
 
         private IEnumerable<EmployeeListingModel> BuildEmployeeListingModel(IEnumerable<Employee> employees)

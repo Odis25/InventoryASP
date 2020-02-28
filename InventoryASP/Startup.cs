@@ -26,7 +26,12 @@ namespace InventoryASP
             services.AddDbContext<InventoryContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            //services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<ApplicationUser, IdentityRole>(options=>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireNonAlphanumeric = false;
+            })
                 .AddEntityFrameworkStores<InventoryContext>()
                 .AddDefaultTokenProviders();
 

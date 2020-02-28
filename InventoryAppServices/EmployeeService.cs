@@ -16,6 +16,7 @@ namespace InventoryAppServices
             _context = context;
         }
 
+        // Добавить нового сотрудника
         public void Add(Employee newEmployee)
         {
             var position = _context.Positions.Find(newEmployee.Position.Id);
@@ -29,6 +30,7 @@ namespace InventoryAppServices
             _context.SaveChanges();
         }
 
+        // Удалить сотрудника
         public void Delete(int employeeId)
         {
             var employee = _context.Employees.Find(employeeId);
@@ -64,6 +66,7 @@ namespace InventoryAppServices
             _context.SaveChanges();
         }
 
+        // Получить список всех сотрудников
         public IEnumerable<Employee> GetAll()
         {
             return _context.Employees.Where(e => e.IsActive).OrderBy(e=> e.LastName)
@@ -72,18 +75,38 @@ namespace InventoryAppServices
                 .Include(e => e.Position);
         }
 
+        // Получить сотрудника по Id
         public Employee GetById(int employeeId)
         {
             return GetAll()
                 .FirstOrDefault(e => e.Id == employeeId);
         }
 
+        // Получить историю использования оборудования сотрудником
         public IEnumerable<CheckoutHistory> GetCheckoutHistory(int employeeId)
         {
             return _context.CheckoutHistories
                 .Where(ch => ch.Employee.Id == employeeId)
                 .OrderByDescending(ch=>ch.CheckedIn)
                 .Include(ch => ch.Device);
+        }
+
+        // Изменить данные сотрудника
+        public void Update(Employee employee)
+        {
+            var modifiedEmployee = _context.Employees.Find(employee.Id);
+            
+            var position = _context.Positions.Find(employee.Position.Id);
+            var department = _context.Departments.Find(employee.Department.Id);
+
+            modifiedEmployee.ImageUrl = employee.ImageUrl;
+            modifiedEmployee.LastName = employee.LastName;
+            modifiedEmployee.Name = employee.Name;
+            modifiedEmployee.Patronymic = employee.Patronymic;
+            modifiedEmployee.Position = position;
+            modifiedEmployee.Department = department;
+
+            _context.SaveChanges();
         }
     }
 }

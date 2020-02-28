@@ -67,7 +67,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <td  class="controlCell">
-                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="EditEmployee" asp-route-id="@employee.Id">
+                                <a class="btn btn-sm btnMini openModalBtn-m" asp-action="Update" asp-route-id="@employee.Id">
                                     <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать"/>
                                 </a>
                                 <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@employee.Id">

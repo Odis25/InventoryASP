@@ -1,0 +1,47 @@
+﻿@model InventoryASP.Models.Employee.NewEmployeeModel
+
+<div class="modal-content">
+    <!--Заголовок-->
+    <div class="modal-header">
+        <h4>Изменить данные сотрудника:</h4>
+        <button type="button" class="btn-close close" data-dismiss="modal">
+            <span>&times;</span>
+        </button>
+    </div>
+    <!--Основной блок-->
+    <form method="post" asp-action="ModifyEmployee">
+        <div class="modal-body">
+            <div class="form-group">
+                <label asp-for="LastName">Фамилия</label>
+                <input asp-for="LastName" class="form-control" placeholder="Иванов" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name">Имя</label>
+                <input asp-for="Name" class="form-control" placeholder="Иван" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Patronymic">Отчество</label>
+                <input asp-for="Patronymic" class="form-control" placeholder="Иванович" />
+                <span asp-validation-for="Patronymic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department">Отдел</label>
+                <select asp-for="Department.Id" asp-items="@(new SelectList(ViewBag.Departments, "Id","Name"))" class="custom-select"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position">Должность</label>
+                <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
+            </div>
+            <input type="hidden" asp-for="Id" />
+        </div>
+
+        <!--Подвал-->
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Изменить</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        </div>
+    </form>
+</div>
+

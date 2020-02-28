@@ -11,6 +11,7 @@ namespace InventoryAppData
         Device GetById(int deviceId);
 
         void Add(Device newDevice);
-        void Delete(int deviceId);      
+        void Delete(int deviceId);
+        void Update(Device device);
     }
 }

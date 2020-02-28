@@ -1,13 +1,10 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
 using InventoryASP.Models.Checkouts;
-using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
@@ -52,10 +49,49 @@ namespace InventoryASP.Controllers
         // Форма добавления нового сотрудника
         public IActionResult Create()
         {
-            ViewBag.Departments = _departments.GetDepartments(); 
+            ViewBag.Departments = _departments.GetDepartments();
             ViewBag.Positions = _departments.GetPositions();
 
             return PartialView();
+        }
+
+        // Форма изменения данных сотрудника
+        public IActionResult Update(int id)
+        {
+            var employee = _employees.GetById(id);
+            var model = new NewEmployeeModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                LastName = employee.LastName,
+                Patronymic = employee.Patronymic,
+                Department = employee.Department,
+                Position = employee.Position
+            };
+
+            ViewBag.Departments = _departments.GetDepartments();
+            ViewBag.Positions = _departments.GetPositions();
+
+            return PartialView(model);
+        }
+
+        // Изменить данные сотрудника
+        [HttpPost]
+        public IActionResult ModifyEmployee(NewEmployeeModel model)
+        {
+            var employee = new Employee
+            {
+                Id = model.Id,
+                LastName = model.LastName,
+                Name = model.Name,
+                Patronymic = model.Patronymic,
+                Position = model.Position,
+                Department = model.Department
+            };
+
+        _employees.Update(employee);
+
+            return RedirectToAction("Index");
         }
 
         // Добавить нового сотрудника
@@ -92,7 +128,7 @@ namespace InventoryASP.Controllers
             return RedirectToAction("Index", "Employee");
         }
 
-        
+
         // Детальная информация о сотруднике
         public IActionResult Details(int id)
         {

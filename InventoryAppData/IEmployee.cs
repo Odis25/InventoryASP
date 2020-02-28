@@ -12,5 +12,6 @@ namespace InventoryAppData
 
         void Add(Employee newEmployee);
         void Delete(int employeeId);
+        void Update(Employee employee);
     }
 }

@@ -53,13 +53,43 @@ namespace InventoryASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
-            // удаляем аутентификационные куки
+            // Удаляем аутентификационные куки
             await _signInManager.SignOutAsync();
 
             if (returnUrl != null)
                 return LocalRedirect(returnUrl);
             else
                 return RedirectToAction("Index", "Home");
+        }
+
+
+        public async Task<IActionResult> ManageUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var model = new ManageUserModel
+            {
+                UserId = userId,
+                UserName = user.Name
+            };
+
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ManageUserModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                var result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+
+                if (result.Succeeded)
+                    return LocalRedirect("~/Home/Index");
+            }
+
+            return PartialView("ManageUser", model);
         }
     }
 }

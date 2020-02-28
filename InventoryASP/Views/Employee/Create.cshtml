@@ -8,19 +8,22 @@
             </button>
         </div>
 
-        <form method="post" asp-action="AddEmployee" id="addNewEmployeeForm">
+        <form method="post" asp-action="AddEmployee">
             <div class="modal-body">
                 <div class="form-group">
                     <label asp-for="LastName">Фамилия</label>
                     <input asp-for="LastName" class="form-control" placeholder="Иванов" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Name">Имя</label>
                     <input asp-for="Name" class="form-control" placeholder="Иван" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Patronymic">Отчество</label>
                     <input asp-for="Patronymic" class="form-control" placeholder="Иванович" />
+                    <span asp-validation-for="Patronymic" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Department">Отдел</label>

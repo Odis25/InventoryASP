@@ -61,6 +61,21 @@ namespace InventoryAppServices
             _context.SaveChanges();
         }
 
+        // Изменить данные устройства
+        public void Update(Device device)
+        {
+            var modifiedDevice = _context.Devices.Find(device.Id);
+
+            modifiedDevice.Name = device.Name;
+            modifiedDevice.Manufacturer = device.Manufacturer;
+            modifiedDevice.DeviceModel = device.DeviceModel;
+            modifiedDevice.SerialNumber = device.SerialNumber;
+            modifiedDevice.Type = device.Type;
+            modifiedDevice.Description = device.Description;
+
+            _context.SaveChanges();
+        }
+
         // Получить все устройства
         public IEnumerable<Device> GetAll()
         {

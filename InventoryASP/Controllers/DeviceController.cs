@@ -76,7 +76,7 @@ namespace InventoryASP.Controllers
             return View(model);
         }
 
-        // Форма добавления нового устройства
+        // Форма добавления нового оборудования
         public IActionResult Create()
         {
             var model = new NewDeviceModel();
@@ -84,7 +84,7 @@ namespace InventoryASP.Controllers
             return PartialView(model);
         }
 
-        // Добавляем новое устройство
+        // Добавляем новое оборудование
         [HttpPost]
         public IActionResult AddDevice(NewDeviceModel model)
         {
@@ -103,14 +103,52 @@ namespace InventoryASP.Controllers
             return RedirectToAction("Index", "Device");
         }
 
-        // Удалить устройство
+        // Форма изменения данных оборудования
+        public IActionResult Update(int id)
+        {
+            var device = _devices.GetById(id);
+            var model = new NewDeviceModel
+            {
+                Id = device.Id,
+                Name = device.Name,
+                DeviceModel = device.DeviceModel,
+                Manufacturer = device.Manufacturer,
+                SerialNumber = device.SerialNumber,
+                Type = device.Type,
+                Description = device.Description
+            };
+
+            return PartialView(model);
+        }
+
+        // Изменить данные оборудования
+        [HttpPost]
+        public IActionResult ModifyDevice(NewDeviceModel model)
+        {
+            var device = new Device
+            {
+                Id = model.Id,
+                Name = model.Name,
+                DeviceModel = model.DeviceModel,
+                Manufacturer = model.Manufacturer,
+                SerialNumber = model.SerialNumber,
+                Type = model.Type,
+                Description = model.Description
+            };
+
+            _devices.Update(device);
+
+            return RedirectToAction("Index");
+        }
+
+        // Удалить оборудование
         public IActionResult Delete(int id)
         {
             ViewBag.Id = id;
             return PartialView();
         }
 
-        // Удалить устройство
+        // Удалить оборудование
         [HttpPost]
         public IActionResult DeleteDevice(int id)
         {

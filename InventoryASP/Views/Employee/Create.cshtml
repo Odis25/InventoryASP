@@ -8,7 +8,7 @@
             </button>
         </div>
 
-        <form method="post" asp-action="AddEmployee">
+        <form method="post" asp-action="AddEmployee" id="createEmployeeForm">
             <div class="modal-body">
                 <div class="form-group">
                     <label asp-for="LastName">Фамилия</label>
@@ -33,9 +33,10 @@
                     <label asp-for="Position">Должность</label>
                     <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
                 </div>
+                <input type="hidden" name="IsValid" value="@ViewData.ModelState.IsValid" />
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Добавить</button>
+                <button type="button" onclick="CreateEmployee()" class="btn btn-primary">Добавить</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </form>

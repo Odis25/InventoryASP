@@ -25,6 +25,7 @@ namespace InventoryAppData
             var user = new ApplicationUser
             {
                 UserName = "SuperUser",
+                Name = "Вадим",
                 NormalizedUserName = "superuser",
                 Email = "artem.budanov@incomsystem.ru",
                 NormalizedEmail = "artem.budanov@incomsystem.ru",

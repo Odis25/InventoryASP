@@ -32,3 +32,46 @@ function openModal(e) {
         }        
     });
 }
+
+// Логин пользователя
+function Login() {
+
+    var model = $("#loginForm").serialize();
+    $.ajax({
+        type: "post",
+        data: model,
+        url: "/Account/Login",
+        success: function (result) {
+
+            // Код обработки результата
+            $("#modalWindow-content-sm").html(result);
+
+            var isValid = $("#loginIsValid").val() == "True";
+
+            if (isValid) {
+                window.location.href = "/Home/Index";
+            }
+        }
+    })
+}
+
+// Создать нового сотрудника
+function CreateEmployee() {
+
+    var model = $("#createEmployeeForm").serialize();
+
+    $.post("/Employee/AddEmployee", model).done(function (result) {
+
+        alert('test');
+
+        //$("#modalWindow-content-lg").html(result);
+        //alert(result);
+        //var isValid = $("#createEmployeeForm").find("name=[IsValid]").val() == 'True';
+
+        //alert(isValid);
+
+        //if (isValid) {
+        //    window.location.href = "/Employee/Index";
+        //}
+    });
+}

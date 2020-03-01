@@ -98,18 +98,21 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult AddEmployee(NewEmployeeModel model)
         {
-            var employee = new Employee
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                LastName = model.LastName,
-                Patronymic = model.Patronymic,
-                Position = model.Position,
-                Department = model.Department
-            };
+                var employee = new Employee
+                {
+                    Name = model.Name,
+                    LastName = model.LastName,
+                    Patronymic = model.Patronymic,
+                    Position = model.Position,
+                    Department = model.Department
+                };
 
-            _employees.Add(employee);
+                _employees.Add(employee);               
+            }
 
-            return RedirectToAction("Index", "Employee");
+            return PartialView("Create", model);
         }
 
         // Удалить сотрудника

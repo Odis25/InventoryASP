@@ -1,7 +1,7 @@
 ﻿@model InventoryASP.Models.Account.LoginModel
 
-<div class="login modal-content p-2">
-    
+<div class="login modal-content p-2" id="loginPage">
+
     <div class="modal-header">
         <h4>Авторизация</h4>
         <button type="button" data-dismiss="modal" class="close">
@@ -9,7 +9,7 @@
         </button>
     </div>
 
-    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">       
+    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" id="loginForm">
         <div class="form-group">
             <label class="col-form-label" asp-for="LoginName"></label>
             <input class="form-control" asp-for="LoginName" />
@@ -27,9 +27,10 @@
             </div>
         </div>
         <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-        
+
+        <input type="hidden" id="loginIsValid" value="@ViewData.ModelState.IsValid.ToString()" />
         <div class="row justify-content-center">
-            <input type="submit" class="btn btn-primary pl-4 pr-4" value="Войти" />
+            <button type="button" class="btn btn-primary pl-4 pr-4" onclick="Login()">Войти</button>
         </div>
     </form>
 

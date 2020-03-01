@@ -29,19 +29,11 @@ namespace InventoryASP.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.LoginName, model.Password, model.RememberMe, false);
 
-                if (result.Succeeded)
-                {
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-                        return LocalRedirect(model.ReturnUrl);
-
-                    return Redirect(Url.Content("~/"));
-                }
-                else
+                if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", "Неправильный логин или пароль");
                 }

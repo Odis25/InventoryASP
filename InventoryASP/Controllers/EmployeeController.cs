@@ -55,6 +55,29 @@ namespace InventoryASP.Controllers
             return PartialView();
         }
 
+        // Добавить нового сотрудника
+        [HttpPost]
+        public IActionResult AddEmployee(NewEmployeeModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var employee = new Employee
+                {
+                    Name = model.Name,
+                    LastName = model.LastName,
+                    Patronymic = model.Patronymic,
+                    Position = model.Position,
+                    Department = model.Department
+                };
+                _employees.Add(employee);
+            }
+
+            ViewBag.Departments = _departments.GetDepartments();
+            ViewBag.Positions = _departments.GetPositions();
+
+            return PartialView("Create", model);
+        }
+
         // Форма изменения данных сотрудника
         public IActionResult Update(int id)
         {
@@ -79,41 +102,27 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult ModifyEmployee(NewEmployeeModel model)
         {
-            var employee = new Employee
-            {
-                Id = model.Id,
-                LastName = model.LastName,
-                Name = model.Name,
-                Patronymic = model.Patronymic,
-                Position = model.Position,
-                Department = model.Department
-            };
-
-        _employees.Update(employee);
-
-            return RedirectToAction("Index");
-        }
-
-        // Добавить нового сотрудника
-        [HttpPost]
-        public IActionResult AddEmployee(NewEmployeeModel model)
-        {
             if (ModelState.IsValid)
             {
                 var employee = new Employee
                 {
-                    Name = model.Name,
+                    Id = model.Id,
                     LastName = model.LastName,
+                    Name = model.Name,
                     Patronymic = model.Patronymic,
                     Position = model.Position,
                     Department = model.Department
                 };
-
-                _employees.Add(employee);               
+                _employees.Update(employee);
             }
+            
+            ViewBag.Departments = _departments.GetDepartments();
+            ViewBag.Positions = _departments.GetPositions();
 
-            return PartialView("Create", model);
+            return PartialView("Update", model);
         }
+
+        
 
         // Удалить сотрудника
         public IActionResult Delete(int id)

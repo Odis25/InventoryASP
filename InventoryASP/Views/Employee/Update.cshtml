@@ -9,7 +9,7 @@
         </button>
     </div>
     <!--Основной блок-->
-    <form method="post" asp-action="ModifyEmployee">
+    <form method="post" asp-action="ModifyEmployee" id="modifyEmployeeForm">
         <div class="modal-body">
             <div class="form-group">
                 <label asp-for="LastName">Фамилия</label>
@@ -35,11 +35,12 @@
                 <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
             </div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="employeeIsValid" value="@ViewData.ModelState.IsValid.ToString()" />
         </div>
 
         <!--Подвал-->
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Изменить</button>
+            <button type="button" onclick="UpdateEmployee()" class="btn btn-primary">Изменить</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
         </div>
     </form>

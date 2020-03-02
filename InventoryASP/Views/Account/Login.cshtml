@@ -8,31 +8,32 @@
             <span>&times;</span>
         </button>
     </div>
-
-    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" id="loginForm">
-        <div class="form-group">
-            <label class="col-form-label" asp-for="LoginName"></label>
-            <input class="form-control" asp-for="LoginName" />
-            <span class="text-danger" asp-validation-for="LoginName"></span>
-        </div>
-        <div class="form-group">
-            <label class="col-form-label" asp-for="Password"></label>
-            <input class="form-control" asp-for="Password" />
-            <span class="text-danger" asp-validation-for="Password"></span>
-        </div>
-        <div class="form-group">
-            <div class="form-check">
-                <input class="form-check-input" asp-for="RememberMe" />
-                <label class="form-check-label" asp-for="RememberMe"></label>
+    <div class="modal-body">
+        <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" id="loginForm">
+            <div class="form-group">
+                <label class="col-form-label" asp-for="LoginName"></label>
+                <input class="form-control" asp-for="LoginName" />
+                <span class="text-danger" asp-validation-for="LoginName"></span>
             </div>
-        </div>
-        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label class="col-form-label" asp-for="Password"></label>
+                <input class="form-control" asp-for="Password" />
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="RememberMe" />
+                    <label class="form-check-label" asp-for="RememberMe"></label>
+                </div>
+            </div>
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
 
-        <input type="hidden" id="loginIsValid" value="@ViewData.ModelState.IsValid.ToString()" />
-        <div class="row justify-content-center">
-            <button type="button" class="btn btn-primary pl-4 pr-4" onclick="Login()">Войти</button>
-        </div>
-    </form>
+            <input type="hidden" name="IsValid" value="@ViewData.ModelState.IsValid.ToString()" />
 
+            <div class="row justify-content-center">
+                <button type="button" class="btn btn-primary pl-4 pr-4" onclick="Login()">Войти</button>
+            </div>
+        </form>
+    </div>
 </div>
 

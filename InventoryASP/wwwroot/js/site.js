@@ -29,28 +29,23 @@ function openModal(e) {
                 $('#modalWindow-content-lg').html(data);
                 $('.bgModal-lg').modal('show');
                 break;
-        }        
+        }
     });
 }
 
 // Логин пользователя
 function Login() {
 
-    var model = $("#loginForm").serialize();
-    $.ajax({
-        type: "post",
-        data: model,
-        url: "/Account/Login",
-        success: function (result) {
+    let model = $("#loginForm").serialize();
+    $.post("/Account/Login", model).done(function (result) {
 
-            // Код обработки результата
-            $("#modalWindow-content-sm").html(result);
+        // Код обработки результата
+        $("#modalWindow-content-sm").html(result);
 
-            var isValid = $("#loginIsValid").val() == "True";
+        var isValid = $('.modal-body').find('[name="IsValid"]').val() == "True";
 
-            if (isValid) {
-                window.location.href = "/Home/Index";
-            }
+        if (isValid) {
+            window.location.href = "/Home/Index";
         }
     })
 }
@@ -58,20 +53,33 @@ function Login() {
 // Создать нового сотрудника
 function CreateEmployee() {
 
-    var model = $("#createEmployeeForm").serialize();
+    let model = $('#createEmployeeForm').serialize();
+    $.post('/Employee/AddEmployee', model).done(function (result) {
 
-    $.post("/Employee/AddEmployee", model).done(function (result) {
+        // Код обработки результата
+        $('#modalWindow-content-lg').html(result);
 
-        alert('test');
+        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
 
-        //$("#modalWindow-content-lg").html(result);
-        //alert(result);
-        //var isValid = $("#createEmployeeForm").find("name=[IsValid]").val() == 'True';
+        if (isValid) {
+            window.location.href = '/Employee/Index';
+        }
+    });
+}
 
-        //alert(isValid);
+// Изменить данные сотрудника
+function UpdateEmployee() {
 
-        //if (isValid) {
-        //    window.location.href = "/Employee/Index";
-        //}
+    let model = $('#modifyEmployeeForm').serialize();
+    $.post('/Employee/ModifyEmployee', model).done(function (result) {
+        
+        // Код обработки результата
+        $('#modalWindow-content-lg').html(result);
+
+        let isValid = $('.modal-body').find('[name="employeeIsValid"]').val() == 'True';
+
+        if (isValid) {
+            window.location.href = '/Employee/Index';
+        }
     });
 }

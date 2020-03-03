@@ -10,6 +10,7 @@ $(function () {
     $('.openModalBtn-sm').on('click', { size: 'sm' }, openModal);
     $('.openModalBtn-m').on('click', { size: 'm' }, openModal);
     $('.openModalBtn-lg').on('click', { size: 'lg' }, openModal);
+
 });
 
 // Открытие модального окна
@@ -54,7 +55,7 @@ function Login() {
 function CreateEmployee() {
 
     let model = $('#createEmployeeForm').serialize();
-    $.post('/Employee/AddEmployee', model).done(function (result) {
+    $.post(`/Employee/AddEmployee`, model).done(function (result) {
 
         // Код обработки результата
         $('#modalWindow-content-lg').html(result);
@@ -76,10 +77,44 @@ function UpdateEmployee() {
         // Код обработки результата
         $('#modalWindow-content-lg').html(result);
 
-        let isValid = $('.modal-body').find('[name="employeeIsValid"]').val() == 'True';
+        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
 
         if (isValid) {
             window.location.href = '/Employee/Index';
+        }
+    });
+}
+
+// Создать нового сотрудника
+function CreateDevice() {
+
+    let model = $('#createDeviceForm').serialize();
+    $.post('/Device/AddDevice', model).done(function (result) {
+
+        // Код обработки результата
+        $('#modalWindow-content-lg').html(result);
+
+        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
+
+        if (isValid) {
+            window.location.href = '/Device/Index';
+        }
+    });
+}
+
+// Изменить данные сотрудника
+function UpdateDevice() {
+
+    let model = $('#modifyDeviceForm').serialize();
+    $.post('/Device/ModifyDevice', model).done(function (result) {
+
+        // Код обработки результата
+        $('#modalWindow-content-lg').html(result);
+
+        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
+
+        if (isValid) {
+            window.location.href = '/Device/Index';
         }
     });
 }

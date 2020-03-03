@@ -9,7 +9,7 @@
         </button>
     </div>
     <!--Основной блок-->
-    <form method="post" asp-action="ModifyDevice">
+    <form method="post" asp-action="ModifyDevice" id="modifyDeviceForm">
         <div class="modal-body">
             <div class="form-group">
                 <label asp-for="Name">Наименование оборудования</label>
@@ -37,11 +37,12 @@
                 <textarea asp-for="Description" class="form-control" placeholder="Введите текст примечания..."></textarea>
             </div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="IsValid" value="@ViewData.ModelState.IsValid.ToString()" />
         </div>
 
         <!--Подвал-->
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Изменить</button>
+            <button type="button" onclick="UpdateDevice()" class="btn btn-primary">Изменить</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
         </div>
     </form>

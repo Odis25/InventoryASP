@@ -48,9 +48,7 @@ namespace InventoryASP.Controllers
         public IActionResult Details(int id)
         {
             var device = _devices.GetById(id);
-
             var holder = GetDeviceHolder(device);
-
             var history = _checkouts.GetCheckoutHistory(id)
                 .Select(h => new HistoryModel
                 {
@@ -79,28 +77,28 @@ namespace InventoryASP.Controllers
         // Форма добавления нового оборудования
         public IActionResult Create()
         {
-            var model = new NewDeviceModel();
-
-            return PartialView(model);
+            return PartialView(new NewDeviceModel());
         }
 
         // Добавляем новое оборудование
         [HttpPost]
         public IActionResult AddDevice(NewDeviceModel model)
         {
-            var device = new Device
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Type = model.Type,
-                SerialNumber = model.SerialNumber,
-                Manufacturer = model.Manufacturer,
-                DeviceModel = model.DeviceModel,
-                Description = model.Description
-            };
+                var device = new Device
+                {
+                    Name = model.Name,
+                    Type = model.Type,
+                    SerialNumber = model.SerialNumber,
+                    Manufacturer = model.Manufacturer,
+                    DeviceModel = model.DeviceModel,
+                    Description = model.Description
+                };
+                _devices.Add(device);
+            }            
 
-            _devices.Add(device);
-
-            return RedirectToAction("Index", "Device");
+            return PartialView("Create", model);
         }
 
         // Форма изменения данных оборудования
@@ -125,20 +123,22 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult ModifyDevice(NewDeviceModel model)
         {
-            var device = new Device
+            if (ModelState.IsValid)
             {
-                Id = model.Id,
-                Name = model.Name,
-                DeviceModel = model.DeviceModel,
-                Manufacturer = model.Manufacturer,
-                SerialNumber = model.SerialNumber,
-                Type = model.Type,
-                Description = model.Description
-            };
+                var device = new Device
+                {
+                    Id = model.Id,
+                    Name = model.Name,
+                    DeviceModel = model.DeviceModel,
+                    Manufacturer = model.Manufacturer,
+                    SerialNumber = model.SerialNumber,
+                    Type = model.Type,
+                    Description = model.Description
+                };
+                _devices.Update(device);
+            }      
 
-            _devices.Update(device);
-
-            return RedirectToAction("Index");
+            return PartialView("Update", model);
         }
 
         // Удалить оборудование

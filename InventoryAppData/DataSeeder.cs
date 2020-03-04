@@ -16,7 +16,14 @@ namespace InventoryAppData
             _context = context;
         }
 
-        public async Task SeedSuperUser()
+        public void SeedData()
+        {
+            SeedDepartments().Wait();
+            SeedSuperUser("Вадим", "Vadim.Belov@incomsystem.ru", "Vadim").Wait();
+            SeedSuperUser("Радик", "Radik.Nigmatov@incomsystem.ru", "Radik").Wait();
+        }
+
+        private async Task SeedSuperUser(string userName, string userEmail, string userLogin)
         {
             var roleStore = new RoleStore<IdentityRole>(_context);
             var userStore = new UserStore<ApplicationUser>(_context);
@@ -24,11 +31,11 @@ namespace InventoryAppData
 
             var user = new ApplicationUser
             {
-                UserName = "SuperUser",
-                Name = "Вадим",
-                NormalizedUserName = "superuser",
-                Email = "artem.budanov@incomsystem.ru",
-                NormalizedEmail = "artem.budanov@incomsystem.ru",
+                UserName = userLogin,
+                Name = userName,
+                NormalizedUserName = userLogin.ToLower(),
+                Email = userEmail,
+                NormalizedEmail = userEmail.ToLower(),
                 LockoutEnabled = false,
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString()
@@ -36,10 +43,10 @@ namespace InventoryAppData
 
             var hashedPassword = hasher.HashPassword(user, "Admin");
             user.PasswordHash = hashedPassword;
-           
+
             var hasAdminRole = _context.Roles.Any(roles => roles.NormalizedName == "admin");
-            var hasSuperUser = _context.Users.Any(u => u.NormalizedUserName == user.NormalizedUserName);
-            
+            var hasUser = _context.Users.Any(u => u.NormalizedUserName == user.NormalizedUserName);
+
             // Создаем роль админа, если ее нет
             if (!hasAdminRole)
             {
@@ -51,7 +58,7 @@ namespace InventoryAppData
             }
 
             //Создаем суперюзера если его еще нет
-            if (!hasSuperUser)
+            if (!hasUser)
             {
                 await userStore.CreateAsync(user);
                 await userStore.AddToRoleAsync(user, "Admin");
@@ -60,7 +67,7 @@ namespace InventoryAppData
             await _context.SaveChangesAsync();
         }
 
-        public async Task SeedData()
+        public async Task SeedDepartments()
         {
             var hasDepartments = _context.Departments.Any();
             var hasPositions = _context.Positions.Any();

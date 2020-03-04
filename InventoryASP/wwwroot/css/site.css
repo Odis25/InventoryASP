@@ -36,6 +36,16 @@ body {
     font-family: 'Roboto';
 }
 
+.mainHeader {
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+}
+
+.mainContent {
+    padding-top: 150px;
+}
+
 .body-content {
     max-width: 1280px;
 }
@@ -50,13 +60,6 @@ body {
 
 /*------------------Лого---------------------*/
 
-a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-    color: wheat;
-}
-
 .navLogo {
     font-family: 'Roboto Mono';
     font-weight: bold;
@@ -65,8 +68,24 @@ a.navbar-brand {
     text-shadow: 2px 2px 4px #888;
 }
 
-/*------Навигация------*/
+    .navLogo .logoLeft {
+        color: #c7e571;
+    }
 
+    .navLogo .logoRight {
+        background: #c7e571;
+        border-radius: 5px;
+        padding: 5px;
+        color: #335;
+        margin-left: 2px;
+    }
+
+.appName{
+    font-family: 'Roboto mono';
+    font-weight: bold;
+}
+
+/*------Навигация------*/
 .navbar {
     box-shadow: 0 5px 4px -6px #000;
     padding: 0;
@@ -75,6 +94,11 @@ a.navbar-brand {
 
     .navbar li {
         font-weight: bold;
+    }
+
+    .navbar .active a{
+        background: #ddd;
+        color:#000;
     }
 
 .nav-link {
@@ -280,9 +304,9 @@ a.navbar-brand {
     resize: none;
 }
 
-.description:focus {
-    box-shadow: none;
-}
+    .description:focus {
+        box-shadow: none;
+    }
 
 /*------ Историческая таблица ----------*/
 .deviceHistoryTable {

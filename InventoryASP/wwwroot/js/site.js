@@ -36,85 +36,62 @@ function openModal(e) {
 
 // Логин пользователя
 function Login() {
-
-    let model = $("#loginForm").serialize();
-    $.post("/Account/Login", model).done(function (result) {
+    let model = $('.modal form').serialize();
+    $.post('/Account/Login', model).done(function (result) {
 
         // Код обработки результата
-        $("#modalWindow-content-sm").html(result);
-
-        var isValid = $('.modal-body').find('[name="IsValid"]').val() == "True";
-
+        $('#modalWindow-content-sm').html(result);
+        var isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
         if (isValid) {
-            window.location.href = "/Home/Index";
+            window.location.href = '/Home/Index';
+        }
+    })
+}
+
+function ChangePassword() {
+    let model = $('.modal form').serialize();
+    $.post('/Account/ChangePassword', model).done(function (result) {
+
+        // Код обработки результата
+        $('#modalWindow-content-sm').html(result);
+        var isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
+        if (isValid) {
+            window.location.href = '/Home/Index';
         }
     })
 }
 
 // Создать нового сотрудника
 function CreateEmployee() {
-
-    let model = $('#createEmployeeForm').serialize();
-    $.post(`/Employee/AddEmployee`, model).done(function (result) {
-
-        // Код обработки результата
-        $('#modalWindow-content-lg').html(result);
-
-        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
-
-        if (isValid) {
-            window.location.href = '/Employee/Index';
-        }
-    });
+    CreateOrUpdate({ type: 'Create', object: 'Employee', size: 'lg' });
 }
 
 // Изменить данные сотрудника
 function UpdateEmployee() {
-
-    let model = $('#modifyEmployeeForm').serialize();
-    $.post('/Employee/ModifyEmployee', model).done(function (result) {
-        
-        // Код обработки результата
-        $('#modalWindow-content-lg').html(result);
-
-        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
-
-        if (isValid) {
-            window.location.href = '/Employee/Index';
-        }
-    });
+    CreateOrUpdate({ type: 'Update', object: 'Employee', size: 'lg' });
 }
 
-// Создать нового сотрудника
+// Создать новое оборудование
 function CreateDevice() {
-
-    let model = $('#createDeviceForm').serialize();
-    $.post('/Device/AddDevice', model).done(function (result) {
-
-        // Код обработки результата
-        $('#modalWindow-content-lg').html(result);
-
-        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
-
-        if (isValid) {
-            window.location.href = '/Device/Index';
-        }
-    });
+    CreateOrUpdate({ type: 'Create', object: 'Device', size: 'lg' });
 }
 
-// Изменить данные сотрудника
+// Изменить данные оборудования
 function UpdateDevice() {
+    CreateOrUpdate({ type: 'Update', object: 'Device', size: 'lg' });
+}
 
-    let model = $('#modifyDeviceForm').serialize();
-    $.post('/Device/ModifyDevice', model).done(function (result) {
+// Создать или изменить объект
+function CreateOrUpdate(operation) {
+
+    let model = $('.modal form').serialize();
+    $.post(`/${operation.object}/${operation.type}`, model).done(function (result) {
 
         // Код обработки результата
-        $('#modalWindow-content-lg').html(result);
-
-        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
-
+        $(`#modalWindow-content-${operation.size}`).html(result);
+        let isValid = $('.modal-body [name="IsValid"]').val() == 'True';
         if (isValid) {
-            window.location.href = '/Device/Index';
+            window.location.href = `/${operation.object}/Index`;
         }
     });
 }

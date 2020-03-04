@@ -82,7 +82,7 @@ namespace InventoryASP.Controllers
 
         // Добавляем новое оборудование
         [HttpPost]
-        public IActionResult AddDevice(NewDeviceModel model)
+        public IActionResult Create(NewDeviceModel model)
         {
             if (ModelState.IsValid)
             {
@@ -121,7 +121,7 @@ namespace InventoryASP.Controllers
 
         // Изменить данные оборудования
         [HttpPost]
-        public IActionResult ModifyDevice(NewDeviceModel model)
+        public IActionResult Update(NewDeviceModel model)
         {
             if (ModelState.IsValid)
             {

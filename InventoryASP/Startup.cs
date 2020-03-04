@@ -64,8 +64,8 @@ namespace InventoryASP
                 app.UseHsts();
             }
 
-            dataSeeder.SeedData().Wait();
-            dataSeeder.SeedSuperUser().Wait();
+            // Первичное заполнение базы
+            dataSeeder.SeedData();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -57,7 +57,7 @@ namespace InventoryASP.Controllers
 
         // Добавить нового сотрудника
         [HttpPost]
-        public IActionResult AddEmployee(NewEmployeeModel model)
+        public IActionResult Create(NewEmployeeModel model)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +100,7 @@ namespace InventoryASP.Controllers
 
         // Изменить данные сотрудника
         [HttpPost]
-        public IActionResult ModifyEmployee(NewEmployeeModel model)
+        public IActionResult Update(NewEmployeeModel model)
         {
             if (ModelState.IsValid)
             {

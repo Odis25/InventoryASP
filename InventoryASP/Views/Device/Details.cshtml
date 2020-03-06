@@ -1,7 +1,7 @@
 ﻿@model InventoryASP.Models.Device.DeviceDetailModel
-<!--основной блок-->
-<div class="sectionContent detailsSection">
 
+<div class="sectionContent detailsSection">
+    <!--Заголовок секции-->
     <div class="row detailsHeader">
         <div class="col">
             <a class="close btn-close" asp-controller="Device" asp-action="Index">
@@ -10,10 +10,16 @@
         </div>
     </div>
 
+    <!--Основной контент-->
     <div class="row detailsBodyContent">
+        <!--Информация об оборудовании-->
         <div class="col-5">
             <div class="border p-2">
-                <h5 class="border-bottom pb-2 font-weight-bold">Информация:</h5>
+
+                <div class="border-bottom mb-2">
+                    <h5 class="font-weight-bold">Информация:</h5>
+                </div>
+
                 <div><span class="font-weight-bold">Наименование: </span>@Model.DeviceName</div>
                 <div><span class="font-weight-bold">Тип: </span>@Model.DeviceType</div>
                 <div><span class="font-weight-bold">Модель: </span>@Model.DeviceModel</div>
@@ -21,12 +27,10 @@
                 <div><span class="font-weight-bold">Серийный номер: </span>@Model.DeviceSerialNumber</div>
                 <div>
                     <span class="font-weight-bold">Текущий владелец: </span>
-
                     @if (Model.CurrentHolder != null)
                     {
                         <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.CurrentHolder.Id">@Model.CurrentHolder.FullName</a>
                     }
-
                 </div>
                 <div class="form-group">
                     <label class="font-weight-bold" asp-for="DeviceDescription">Примечание:</label>
@@ -38,7 +42,22 @@
         <!------Таблица истории------>
         <div class="col-7">
             <div class="p-2 border deviceHistoryPane">
-                <h5 class="border-bottom font-weight-bold pb-2">История:</h5>
+
+                <div class="d-flex align-content-end align-middle border-bottom mb-2">
+                    <h5 class="font-weight-bold flex-grow-1">История:</h5>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div>
+                            <a class="btn btn-sm btn-success openModalBtn-lg pb-0 py-0"
+                               asp-controller="Employee"
+                               asp-action="SelectEmployee"
+                               asp-route-deviceId="@Model.DeviceId">
+                                <img src="~/icons/add_shopping_cart_24px.png" />Выдать сотруднику
+                            </a>
+                        </div>
+                    }
+                </div>
+
                 <table class="table table-hover table-sm deviceHistoryTable">
                     <thead>
                         <tr>

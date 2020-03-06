@@ -1,5 +1,6 @@
 ﻿using InventoryAppData;
 using InventoryASP.Models.Device;
+using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -22,6 +23,14 @@ namespace InventoryASP.Controllers
             _checkouts.CheckOutItems(model.EmployeeId, idList);
 
             return RedirectToAction("Details", "Employee", new { id = model.EmployeeId });
+        }
+
+        [HttpPost]
+        public IActionResult CheckOutEmployee(int employeeId, int deviceId)
+        {
+            _checkouts.CheckOutItems(employeeId, deviceId);
+
+            return RedirectToAction("Details", "Device", new { id = deviceId });
         }
 
         // Забрать устройство у сотрудника

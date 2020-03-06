@@ -1,0 +1,38 @@
+﻿@model InventoryASP.Models.Employee.SelectEmployeeModel
+
+<div class="modal-content">
+
+    <!--Заголовок окна-->
+    <div class="modal-header">
+        <h5 class="modal-title">Выберите сотрудника:</h5>
+        <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <!--Основной контент-->
+    <div class="modal-body">
+
+        <form method="post" asp-action="CheckOutEmployee" asp-controller="Checkout" id="selectEmployeeForm">
+            
+            <table class="table table-sm table-striped table-hover">
+                @for (int i = 0; i < Model.Employees.Count; i++)
+                {
+                    <tr>
+                        <td><input type="radio" name="employeeId" value="@Model.Employees[i].Id" /></td>
+                        <td>@Model.Employees[i].FullName</td>
+                    </tr>                   
+                }
+            </table>
+            
+            <input type="hidden" name="deviceId" value="@Model.DeviceId" />
+        </form>
+
+    </div>
+
+    <!--Кнопки-->
+    <div class="modal-footer">
+        <button class="btn btn-primary" form="selectEmployeeForm" type="submit">Выбрать</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    </div>
+</div>

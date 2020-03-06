@@ -14,6 +14,7 @@ namespace InventoryASP.Controllers
         private readonly IEmployee _employees;
         private readonly ICheckout _checkouts;
         private readonly IDepartment _departments;
+        private readonly IDevice _devices;
 
         public EmployeeController(IEmployee employees, ICheckout checkouts, IDepartment departments)
         {
@@ -115,14 +116,14 @@ namespace InventoryASP.Controllers
                 };
                 _employees.Update(employee);
             }
-            
+
             ViewBag.Departments = _departments.GetDepartments();
             ViewBag.Positions = _departments.GetPositions();
 
             return PartialView("Update", model);
         }
 
-        
+
 
         // Удалить сотрудника
         public IActionResult Delete(int id)
@@ -161,6 +162,33 @@ namespace InventoryASP.Controllers
             };
 
             return View(model);
+        }
+
+        // Выбрать сотрудника
+        public IActionResult SelectEmployee(int deviceId)
+        {
+            var checkouts = _checkouts.GetCheckout(deviceId);
+            if (checkouts != null)
+                return null;
+
+            var employees = _employees.GetAll()
+                .Select(e => new EmployeeListingModel
+                {
+                    Id = e.Id,
+                    LastName = e.LastName,
+                    Patronymic = e.Patronymic,
+                    Name = e.Name,
+                    Department = e.Department.Name,
+                    Position = e.Position.Name
+                }).ToList();
+
+            var model = new SelectEmployeeModel
+            {
+                DeviceId = deviceId,
+                Employees = employees
+            };
+
+            return PartialView(model);
         }
 
         private IEnumerable<CheckoutModel> GetCheckouts(Employee employee)

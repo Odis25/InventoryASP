@@ -4,7 +4,6 @@ using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 
 namespace InventoryASP.Controllers

@@ -88,7 +88,7 @@ namespace InventoryAppServices
         public IEnumerable<Device> GetAvailableDevices()
         {
             return _context.Devices
-                .Where(device => device.Status == "Available")
+                .Where(d => d.Status == "Available")
                 .OrderBy(d=>d.Name);
         }
 

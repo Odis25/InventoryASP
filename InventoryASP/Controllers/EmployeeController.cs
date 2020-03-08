@@ -1,11 +1,11 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
+using InventoryAppServices.Components;
 using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
@@ -14,7 +14,6 @@ namespace InventoryASP.Controllers
         private readonly IEmployee _employees;
         private readonly ICheckout _checkouts;
         private readonly IDepartment _departments;
-        private readonly IDevice _devices;
 
         public EmployeeController(IEmployee employees, ICheckout checkouts, IDepartment departments)
         {
@@ -64,9 +63,9 @@ namespace InventoryASP.Controllers
             {
                 var employee = new Employee
                 {
-                    Name = model.Name,
-                    LastName = model.LastName,
-                    Patronymic = model.Patronymic,
+                    Name = model.Name.Capitalize(),
+                    LastName = model.LastName.Capitalize(),
+                    Patronymic = model.Patronymic.Capitalize(),
                     Position = model.Position,
                     Department = model.Department
                 };
@@ -108,9 +107,9 @@ namespace InventoryASP.Controllers
                 var employee = new Employee
                 {
                     Id = model.Id,
-                    LastName = model.LastName,
-                    Name = model.Name,
-                    Patronymic = model.Patronymic,
+                    LastName = model.LastName.Capitalize(),
+                    Name = model.Name.Capitalize(),
+                    Patronymic = model.Patronymic.Capitalize(),
                     Position = model.Position,
                     Department = model.Department
                 };
@@ -167,10 +166,6 @@ namespace InventoryASP.Controllers
         // Выбрать сотрудника
         public IActionResult SelectEmployee(int deviceId)
         {
-            var checkouts = _checkouts.GetCheckout(deviceId);
-            if (checkouts != null)
-                return null;
-
             var employees = _employees.GetAll()
                 .Select(e => new EmployeeListingModel
                 {
@@ -187,7 +182,6 @@ namespace InventoryASP.Controllers
                 DeviceId = deviceId,
                 Employees = employees
             };
-
             return PartialView(model);
         }
 

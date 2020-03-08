@@ -1,14 +1,15 @@
 ﻿using InventoryAppData;
 using InventoryASP.Models.Device;
-using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace InventoryASP.Controllers
 {
-    public class CheckoutController: Controller
+    public class CheckoutController : Controller
     {
         private ICheckout _checkouts;
+
+        public string ReturnUrl { get; set; }
 
         public CheckoutController(ICheckout checkouts)
         {
@@ -19,26 +20,30 @@ namespace InventoryASP.Controllers
         [HttpPost]
         public IActionResult CheckOutDevice(AvailableDevicesModel model)
         {
+            ReturnUrl = HttpContext.Request.Headers["Referer"];
             var idList = model.Devices.Where(d => d.IsSelected).Select(d => d.Id).ToArray();
             _checkouts.CheckOutItems(model.EmployeeId, idList);
 
-            return RedirectToAction("Details", "Employee", new { id = model.EmployeeId });
+            return Redirect(ReturnUrl);
+
         }
 
         [HttpPost]
         public IActionResult CheckOutEmployee(int employeeId, int deviceId)
         {
+            ReturnUrl = HttpContext.Request.Headers["Referer"];
             _checkouts.CheckOutItems(employeeId, deviceId);
 
-            return RedirectToAction("Details", "Device", new { id = deviceId });
+            return Redirect(ReturnUrl);
         }
 
         // Забрать устройство у сотрудника
         public IActionResult CheckInDevice(int deviceId, int employeeid)
         {
+            ReturnUrl = HttpContext.Request.Headers["Referer"];
             _checkouts.CheckInItem(deviceId);
 
-            return RedirectToAction("Details", "Employee", new { id = employeeid });
+            return Redirect(ReturnUrl);
         }
 
     }

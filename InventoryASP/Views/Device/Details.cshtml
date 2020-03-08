@@ -47,14 +47,30 @@
                     <h5 class="font-weight-bold flex-grow-1">История:</h5>
                     @if (User.IsInRole("Admin"))
                     {
-                        <div>
-                            <a class="btn btn-sm btn-success openModalBtn-lg pb-0 py-0"
-                               asp-controller="Employee"
-                               asp-action="SelectEmployee"
-                               asp-route-deviceId="@Model.DeviceId">
-                                <img src="~/icons/add_shopping_cart_24px.png" />Выдать сотруднику
-                            </a>
-                        </div>
+                        @if (Model.CurrentHolder == null)
+                        {
+                            <div>
+                                <a class="btn btn-sm btn-success openModalBtn-lg pb-0 py-0"
+                                   asp-controller="Employee"
+                                   asp-action="SelectEmployee"
+                                   asp-route-deviceId="@Model.DeviceId">
+                                    <img src="~/icons/add_shopping_cart_24px.png" />Выдать сотруднику
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <a class="btn btn-sm btn-danger pb-0 py-0"
+                                   asp-controller="Checkout"
+                                   asp-action="CheckInDevice"
+                                   asp-route-deviceId="@Model.DeviceId"
+                                   asp-route-employeeId="@Model.CurrentHolder.Id">
+                                    <img src="~/icons/add_shopping_cart_24px.png" />Забрать у сотрудника
+                                </a>
+                            </div>
+                        }
+
                     }
                 </div>
 

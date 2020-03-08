@@ -1,5 +1,6 @@
 ﻿using InventoryAppData;
 using InventoryAppData.Models;
+using InventoryAppServices.Components;
 using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
@@ -87,12 +88,12 @@ namespace InventoryASP.Controllers
             {
                 var device = new Device
                 {
-                    Name = model.Name,
-                    Type = model.Type,
+                    Name = model.Name.Capitalize(),
+                    Type = model.Type.Capitalize(),
                     SerialNumber = model.SerialNumber,
-                    Manufacturer = model.Manufacturer,
-                    DeviceModel = model.DeviceModel,
-                    Description = model.Description
+                    Manufacturer = model.Manufacturer.Capitalize(),
+                    DeviceModel = model.DeviceModel.Capitalize(),
+                    Description = model.Description.Capitalize()
                 };
                 _devices.Add(device);
             }            
@@ -127,12 +128,12 @@ namespace InventoryASP.Controllers
                 var device = new Device
                 {
                     Id = model.Id,
-                    Name = model.Name,
-                    DeviceModel = model.DeviceModel,
-                    Manufacturer = model.Manufacturer,
+                    Name = model.Name.Capitalize(),
+                    DeviceModel = model.DeviceModel.Capitalize(),
+                    Manufacturer = model.Manufacturer.Capitalize(),
                     SerialNumber = model.SerialNumber,
-                    Type = model.Type,
-                    Description = model.Description
+                    Type = model.Type.Capitalize(),
+                    Description = model.Description.Capitalize()
                 };
                 _devices.Update(device);
             }      

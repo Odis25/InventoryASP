@@ -49,19 +49,16 @@
                     <table class="table table-sm table-hover" id="deviceTable">
                         <thead class="">
                             <tr>
-                                <td scope="col">#</td>
-                                <td scope="col">Оборудование</td>
-                                <td scope="col">Серийный номер</td>
+                                <td>#</td>
+                                <td>Оборудование</td>
+                                <td>Серийный номер</td>
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <td class="text-center">Управление</td>
                                 }
-
                             </tr>
                         </thead>
-                        @{
-                            var i = 1;
-                        }
+                        @{ var i = 1; }
                         <tbody>
                             @foreach (var checkout in Model.Checkouts)
                             {
@@ -76,10 +73,9 @@
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <td class="text-center">
-                                            <a class="btn btn-sm  btnMini p-1"
+                                            <a class="btn btn-sm openModalBtn-sm btnMini p-1"
                                                asp-controller="Checkout"
                                                asp-action="CheckInDevice"
-                                               asp-route-employeeId="@Model.Id"
                                                asp-route-deviceId="@checkout.Checkout.Device.Id">
                                                 <img src="~/icons/icons8_delete_16px.png" />
                                             </a>
@@ -102,9 +98,7 @@
                                 <td>Возвращено</td>
                             </tr>
                         </thead>
-                        @{
-                            i = 1;
-                        }
+                        @{i = 1; }
                         <tbody>
                             @foreach (var history in Model.History)
                             {

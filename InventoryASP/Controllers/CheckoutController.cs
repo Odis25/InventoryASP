@@ -38,13 +38,27 @@ namespace InventoryASP.Controllers
         }
 
         // Забрать устройство у сотрудника
-        public IActionResult CheckInDevice(int deviceId, int employeeid)
+        //public IActionResult CheckInDevice(int deviceId, int employeeid)
+        //{
+        //    ReturnUrl = HttpContext.Request.Headers["Referer"];
+        //    _checkouts.CheckInItem(deviceId);
+
+        //    return Redirect(ReturnUrl);
+        //}
+
+        public IActionResult CheckInDevice(int deviceId)
+        {
+            ViewBag.DeviceId = deviceId;
+            return PartialView() ;
+        }
+
+        [HttpPost]
+        public IActionResult CheckIn(int deviceId)
         {
             ReturnUrl = HttpContext.Request.Headers["Referer"];
             _checkouts.CheckInItem(deviceId);
 
             return Redirect(ReturnUrl);
         }
-
     }
 }

@@ -1,0 +1,18 @@
+﻿
+    <div class="modal-content">
+        <div class="modal-header p-2">
+            <button class="close btn-close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Вы уверены что хотите вернуть это оборудование?</p>
+        </div>
+        <div class="modal-footer p-2">
+            <form method="post" asp-action="CheckIn">
+                <input type="hidden" name="deviceId" value="@ViewBag.DeviceId" />
+                <button class="btn btn-danger" type="submit">Да</button>
+                <button class="btn btn-secondary" data-dismiss="modal">Нет</button>
+            </form>
+        </div>
+    </div>

@@ -35,7 +35,7 @@
                 <select asp-for="Position.Id" asp-items="@(new SelectList(ViewBag.Positions, "Id","Name"))" class="custom-select"></select>
             </div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" name="employeeIsValid" value="@ViewData.ModelState.IsValid.ToString()" />
+            <input type="hidden" name="IsValid" value="@ViewData.ModelState.IsValid.ToString()" />
         </div>
 
         <!--Подвал-->

@@ -29,6 +29,10 @@
                 <input asp-for="Manufacturer" class="form-control" placeholder='Производитель' />
             </div>
             <div class="form-group">
+                <label asp-for="Year">Год выпуска</label>
+                <input type="number" min="2020" max="3000" asp-for="Year" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label asp-for="SerialNumber">Серийный номер</label>
                 <input asp-for="SerialNumber" class="form-control" placeholder="Серийный номер" />
             </div>

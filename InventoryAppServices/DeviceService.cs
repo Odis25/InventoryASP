@@ -67,6 +67,7 @@ namespace InventoryAppServices
             var modifiedDevice = _context.Devices.Find(device.Id);
 
             modifiedDevice.Name = device.Name;
+            modifiedDevice.Year = device.Year;
             modifiedDevice.Manufacturer = device.Manufacturer;
             modifiedDevice.DeviceModel = device.DeviceModel;
             modifiedDevice.SerialNumber = device.SerialNumber;

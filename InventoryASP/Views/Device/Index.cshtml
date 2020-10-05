@@ -41,6 +41,7 @@
                     <th>Модель</th>
                     <th>Серийный номер</th>
                     <th>Производитель</th>
+                    <th>Год выпуска</th>
                     <th>Текущий владелец</th>
                     @if (User.IsInRole("Admin"))
                     {
@@ -57,6 +58,7 @@
                         <td>@device.DeviceModel</td>
                         <td>@device.SerialNumber</td>
                         <td>@device.DeviceManufacturer</td>
+                        <td>@device.Year</td>
                         <td>
                             @if (device.CurrentHolder != null)
                             {

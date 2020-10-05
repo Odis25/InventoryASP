@@ -5,6 +5,7 @@ using InventoryASP.Models.Checkouts;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace InventoryASP.Controllers
@@ -28,6 +29,7 @@ namespace InventoryASP.Controllers
             var listingResult = devices.Select(device => new DeviceListingModel
             {
                 Id = device.Id,
+                Year = device.Year,
                 DeviceType = device.Type,
                 DeviceName = device.Name,
                 DeviceModel = device.DeviceModel,
@@ -61,6 +63,7 @@ namespace InventoryASP.Controllers
             var model = new DeviceDetailModel
             {
                 DeviceId = device.Id,
+                Year = device.Year,
                 DeviceName = device.Name,
                 DeviceType = device.Type,
                 DeviceModel = device.DeviceModel,
@@ -77,7 +80,7 @@ namespace InventoryASP.Controllers
         // Форма добавления нового оборудования
         public IActionResult Create()
         {
-            return PartialView(new NewDeviceModel());
+            return PartialView(new NewDeviceModel {Year = DateTime.Now.Year });
         }
 
         // Добавляем новое оборудование
@@ -89,6 +92,7 @@ namespace InventoryASP.Controllers
                 var device = new Device
                 {
                     Name = model.Name.Capitalize(),
+                    Year = model.Year,
                     Type = model.Type.Capitalize(),
                     SerialNumber = model.SerialNumber,
                     Manufacturer = model.Manufacturer.Capitalize(),
@@ -108,11 +112,12 @@ namespace InventoryASP.Controllers
             var model = new NewDeviceModel
             {
                 Id = device.Id,
+                Year = device.Year,
                 Name = device.Name,
+                Type = device.Type,
                 DeviceModel = device.DeviceModel,
                 Manufacturer = device.Manufacturer,
                 SerialNumber = device.SerialNumber,
-                Type = device.Type,
                 Description = device.Description
             };
 
@@ -129,6 +134,7 @@ namespace InventoryASP.Controllers
                 {
                     Id = model.Id,
                     Name = model.Name.Capitalize(),
+                    Year = model.Year,
                     DeviceModel = model.DeviceModel.Capitalize(),
                     Manufacturer = model.Manufacturer.Capitalize(),
                     SerialNumber = model.SerialNumber,
@@ -165,6 +171,7 @@ namespace InventoryASP.Controllers
             var listingResult = devices.Select(device => new DeviceListingModel
             {
                 Id = device.Id,
+                Year = device.Year,
                 DeviceType = device.Type,
                 DeviceName = device.Name,
                 DeviceModel = device.DeviceModel,

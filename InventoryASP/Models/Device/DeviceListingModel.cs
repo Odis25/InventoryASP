@@ -5,7 +5,7 @@ namespace InventoryASP.Models.Device
     public class DeviceListingModel
     {
         public int Id { get; set; }
-
+        public int? Year { get; set; }
         public string DeviceType { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }

@@ -1,59 +1,75 @@
-﻿@model InventoryASP.Models.Device.DeviceDetailModel
+﻿@using Microsoft.AspNetCore.Identity
+
+@model InventoryASP.Models.Device.DeviceDetailModel
+
+@inject UserManager<InventoryAppData.Entities.ApplicationUser> userManager
 
 <div class="sectionContent detailsSection">
-    <!--Заголовок секции-->
+
     <div class="row detailsHeader">
         <div class="col">
-            <a class="close btn-close" asp-controller="Device" asp-action="Index">
-                <span>&times;</span>
-            </a>
+            <a class="close btn-close" asp-controller="Device" asp-action="Index"><span>&times;</span></a>
         </div>
     </div>
 
-    <!--Основной контент-->
     <div class="row detailsBodyContent">
-        <!--Информация об оборудовании-->
         <div class="col-5">
             <div class="border p-2">
 
                 <div class="border-bottom mb-2">
                     <h5 class="font-weight-bold">Информация:</h5>
                 </div>
-
-                <div><span class="font-weight-bold">Наименование: </span>@Model.DeviceName</div>
-                <div><span class="font-weight-bold">Тип: </span>@Model.DeviceType</div>
-                <div><span class="font-weight-bold">Модель: </span>@Model.DeviceModel</div>
-                <div><span class="font-weight-bold">Производитель: </span>@Model.DeviceManufacturer</div>
-                <div><span class="font-weight-bold">Серийный номер: </span>@Model.DeviceSerialNumber</div>
+                <div>
+                    <span class="font-weight-bold">Наименование: </span>@Model.Device.DeviceName
+                </div>
+                <div>
+                    <span class="font-weight-bold">Тип: </span>@Model.Device.DeviceType
+                </div>
+                <div>
+                    <span class="font-weight-bold">Модель: </span>@Model.Device.DeviceModel
+                </div>
+                <div>
+                    <span class="font-weight-bold">Производитель: </span>@Model.Device.DeviceManufacturer
+                </div>
+                <div>
+                    <span class="font-weight-bold">Серийный номер: </span>@Model.Device.SerialNumber
+                </div>
                 <div>
                     <span class="font-weight-bold">Текущий владелец: </span>
-                    @if (Model.CurrentHolder != null)
+                    @if (Model.Device.Checkout != null)
                     {
-                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.CurrentHolder.Id">@Model.CurrentHolder.FullName</a>
+                        <a asp-controller="Employee"
+                           asp-action="Details"
+                           asp-route-id="@Model.Device.Checkout.Employee.Id">@Model.Device.Checkout.Employee.FullName</a>
                     }
                 </div>
+                <div>
+                    <span class="font-weight-bold">Добавлено: </span>@Model.Device.Created.ToShortDateString() (@((await userManager.FindByIdAsync(Model.Device.CreatedBy))?.Name))
+                </div>
+                <div>
+                    <span class="font-weight-bold">Изменено: </span>@(Model.Device.Modified != null ? $"{Model.Device.Modified?.ToShortDateString()} ({(await userManager.FindByIdAsync(Model.Device.ModifiedBy))?.Name})" : "----")
+                </div>
                 <div class="form-group">
-                    <label class="font-weight-bold" asp-for="DeviceDescription">Примечание:</label>
-                    <textarea rows="10" class="form-control description" asp-for="DeviceDescription" readonly contenteditable="false"></textarea>
+                    <label class="font-weight-bold" asp-for="Device.Description">Примечание:</label>
+                    <textarea rows="10" class="form-control description" asp-for="Device.Description" readonly contenteditable="false"></textarea>
                 </div>
             </div>
         </div>
 
-        <!------Таблица истории------>
         <div class="col-7">
             <div class="p-2 border deviceHistoryPane">
-
                 <div class="d-flex align-content-end align-middle border-bottom mb-2">
                     <h5 class="font-weight-bold flex-grow-1">История:</h5>
+
                     @if (User.IsInRole("Admin"))
                     {
-                        @if (Model.CurrentHolder == null)
+                        if (Model.Device.Checkout == null)
                         {
                             <div>
                                 <a class="btn btn-sm btn-success openModalBtn-lg pb-0 py-0"
                                    asp-controller="Employee"
                                    asp-action="SelectEmployee"
-                                   asp-route-deviceId="@Model.DeviceId">
+                                   asp-route-deviceId="@Model.Device.Id">
                                     <img src="~/icons/add_shopping_cart_24px.png" />Выдать сотруднику
                                 </a>
                             </div>
@@ -64,15 +80,13 @@
                                 <a class="btn btn-sm btn-danger openModalBtn-sm pb-0 py-0"
                                    asp-controller="Checkout"
                                    asp-action="CheckInDevice"
-                                   asp-route-deviceId="@Model.DeviceId">
+                                   asp-route-id="@Model.Device.Id">
                                     <img src="~/icons/add_shopping_cart_24px.png" />Забрать у сотрудника
                                 </a>
                             </div>
                         }
-
                     }
                 </div>
-
                 <table class="table table-hover table-sm deviceHistoryTable">
                     <thead>
                         <tr>
@@ -82,20 +96,23 @@
                             <td>Сотрудник</td>
                         </tr>
                     </thead>
-                    @{ var i = 1; }
                     <tbody>
-                        @foreach (var history in Model.CheckoutHistory)
-                        {
-                            <tr>
-                                <td>@(i++)</td>
-                                <td>@history.Since</td>
-                                <td>@history.Until</td>
-                                <td>
-                                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@history.Holder.Id">
-                                        @history.Holder.FullName
-                                    </a>
-                                </td>
-                            </tr>
+                        @{
+                            var history = Model.Device.CheckoutsHistory.ToArray();
+
+                            for (int i = 0; i < history.Length; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@history[i].Since.ToString()</td>
+                                    <td>@history[i].Until?.ToString()</td>
+                                    <td>
+                                        <a asp-controller="Employee"
+                                           asp-action="Details"
+                                           asp-route-id="@history[i].Employee.Id">@history[i].Employee.FullName</a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>

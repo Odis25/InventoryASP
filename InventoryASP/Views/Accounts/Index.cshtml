@@ -1,0 +1,46 @@
+﻿@model InventoryASP.Models.Accounts.IndexModel
+
+<!--Заголовок секции-->
+<div class="sectionHeader">
+    <div class="row no-gutters">
+        <div class="col d-inline-flex sectionHeading">
+            <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Пользователи</h4>
+            @if (User.IsInRole("Admin"))
+            {
+                <button type="submit" form="accounts-form" class="btn btn-sm btn-success">
+                    <span class="">Сохранить</span>
+                </button>
+            }
+        </div>
+    </div>
+
+</div>
+
+<!--Контент секции-->
+<div class="row no-gutters sectionContent">
+    <div class="col border">
+        <form method="post" asp-action="Index" id="accounts-form">
+            <table class="table table-hover table-sm indexTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Имя аккаунта</th>
+                        <th>Имя пользователя</th>
+                        <th>Роль</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Accounts.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.Accounts[i].Id<input type="hidden" asp-for="@Model.Accounts[i].Id" /></td>
+                            <td>@Model.Accounts[i].AccountName<input type="hidden" asp-for="@Model.Accounts[i].AccountName" /></td>
+                            <td>@Model.Accounts[i].UserName<input type="hidden" asp-for="@Model.Accounts[i].UserName" /></td>
+                            <td><select class="form-control" asp-for="@Model.Accounts[i].Role" asp-items="Html.GetEnumSelectList<Role>()"></select></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

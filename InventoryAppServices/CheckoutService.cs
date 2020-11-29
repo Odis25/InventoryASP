@@ -1,143 +1,184 @@
 ﻿using InventoryAppData;
-using InventoryAppData.Models;
+using InventoryAppData.Entities;
+using InventoryAppServices.Common.Helpers;
+using InventoryAppServices.Interfaces;
+using InventoryAppServices.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryAppServices
 {
-    public class CheckoutService : ICheckout
+    public class CheckoutService : ICheckoutService
     {
-        private readonly InventoryContext _context;
+        private readonly AppDbContext _context;
+        private readonly IDepartmentService _departmentService;
 
-        public CheckoutService(InventoryContext context)
+        public CheckoutService(AppDbContext context,
+            IDepartmentService departmentService)
         {
             _context = context;
+            _departmentService = departmentService;
         }
 
-        // Получить все записи
-        public IEnumerable<Checkout> GetAll()
+        public async Task CheckInDevice(int deviceId)
         {
-            return _context.Checkouts;
-        }
+            var device = await _context.Devices.FindAsync(deviceId);
 
-        // Получить историю записей
-        public IEnumerable<CheckoutHistory> GetCheckoutHistory(int deviceId)
-        {
-            return _context.CheckoutHistories
-                .Where(history => history.Device.Id == deviceId)
-                .Include(ch=>ch.Employee).ThenInclude(e=>e.Position)
-                .Include(ch=>ch.Employee).ThenInclude(e=>e.Department);
-        }
-
-        // Получить запись по ID
-        public Checkout GetById(int checkoutId)
-        {
-            return _context.Checkouts.Find(checkoutId);
-        }
-
-        // Получить запись по ID устройства
-        public Checkout GetCheckout(int deviceId)
-        {
-            return _context.Checkouts
-                .Where(c => c.Device.Id == deviceId)
-                .Include(c=>c.Device)
-                .Include(c=>c.Employee).ThenInclude(e=>e.Position)
-                .Include(c=>c.Employee).ThenInclude(e=>e.Department)
-                .FirstOrDefault();
-        }
-
-        // Добавить новую запись
-        public void Add(Checkout newCheckout)
-        {
-            _context.Checkouts.Add(newCheckout);
-            _context.SaveChanges();
-        }
-
-        // Выдать устройства сотруднику
-        public void CheckOutItems(int employeeId, params int[] deviceId)
-        {
-            if (deviceId.Length == 0)
-                return;
-
-            var employee = _context.Employees.Find(employeeId);
-            var now = DateTime.Now;
-
-            foreach (var id in deviceId)
-            {
-                var device = _context.Devices.Find(id);
-
-                // Создаем запись о получении оборудования
-                _context.Checkouts.Add(new Checkout
-                {
-                    Employee = employee,
-                    Device = device,
-                    Since = now
-                });
-
-                // Создаем историю использования
-                _context.CheckoutHistories.Add(new CheckoutHistory
-                {
-                    Employee = employee,
-                    Device = device,
-                    CheckedOut = now
-                });
-
-                // Обновляем статус устройства
-                UpdateDeviceStatus(id, "Checked Out");
-            }
-
-            _context.SaveChanges();
-        }
-
-        // Вернуть устройство
-        public void CheckInItem(int deviceId)
-        {
-            var now = DateTime.Now;
-
-            //Закрываем чекауты
-            RemoveExistingCheckouts(deviceId);
-            // Закрываем открытую историю
-            CloseExistingCheckoutHistory(deviceId, now);
-            // Обновляем статус устройства
-            UpdateDeviceStatus(deviceId, "Available");
-
-            _context.SaveChanges();
-        }
-
-        private void UpdateDeviceStatus(int deviceId, string status)
-        {
-            var device = _context.Devices.Find(deviceId);
-            if (device != null)
-            {
-                _context.Update(device);
-                device.Status = status;
-            }
-        }
-
-        private void CloseExistingCheckoutHistory(int deviceId, DateTime closingTime)
-        {
-            var history = _context.CheckoutHistories.FirstOrDefault(h => h.Device.Id == deviceId && h.CheckedIn == null);
-
-            if (history != null)
-            {
-                _context.Update(history);
-                history.CheckedIn = closingTime;
-            }
-        }
-
-        private void RemoveExistingCheckouts(int deviceId)
-        {
-            var checkout = _context.Checkouts
-                .FirstOrDefault(checkout => checkout.Device.Id == deviceId);
+            var checkout = await _context.Checkouts.FirstOrDefaultAsync(c => c.Device.Id == deviceId);
 
             if (checkout != null)
             {
                 _context.Remove(checkout);
             }
+
+            var history = await _context.CheckoutHistories.FirstOrDefaultAsync(h => h.Device.Id == deviceId && h.CheckedIn == null);
+
+            if (history != null)
+            {
+                history.CheckedIn = DateTime.Now;
+            }
+
+            device.Status = DeviceStatus.Available;
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task CheckOutDevices(int employeeId, params int[] devicesId)
+        {
+            if (employeeId == 0) return;
+
+            var employee = await _context.Employees.FindAsync(employeeId);
+
+            var now = DateTime.Now;
+
+            foreach (var id in devicesId)
+            {
+                var deviceEntity = await _context.Devices.FindAsync(id);
+
+                var checkout = new Checkout
+                {
+                    Employee = employee,
+                    Device = deviceEntity,
+                    Since = now
+                };
+
+                var history = new CheckoutHistory
+                {
+                    Employee = employee,
+                    Device = deviceEntity,
+                    CheckedOut = now
+                };
+
+                deviceEntity.Status = DeviceStatus.CheckedOut;
+
+                _context.Checkouts.Add(checkout);
+
+                _context.CheckoutHistories.Add(history);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+        public async Task<CheckoutDto> GetByDeviceIdAsync(int id)
+        {
+            var checkout = await _context.Checkouts
+                .Include(c=> c.Employee).ThenInclude(e=> e.Department)
+                .Include(c => c.Employee).ThenInclude(e => e.Position)
+                .FirstOrDefaultAsync(c => c.Device.Id == id);
+
+            return ConvertToDto(checkout);
+        }
+        public async Task<ICollection<CheckoutDto>> GetByEmployeeIdAsync(int id)
+        {
+            var checkouts = await _context.Checkouts
+                .Include(c => c.Device)
+                .Where(c => c.Employee.Id == id)
+                .ToListAsync();
+
+            return ConvertToDto(checkouts);
+        }
+        public async Task<ICollection<CheckoutHistoryDto>> GetDeviceHistoryByIdAsync(int id)
+        {
+            var history = await _context.CheckoutHistories
+                .Include(h => h.Employee).ThenInclude(e => e.Department)
+                .Include(h => h.Employee).ThenInclude(e => e.Position)
+                .Where(c => c.Device.Id == id)
+                .ToListAsync();
+
+            return ConvertToDto(history);
+        }
+        public async Task<ICollection<CheckoutHistoryDto>> GetEmployeeHistoryByIdAsync(int id)
+        {
+            var history = await _context.CheckoutHistories
+                .Include(c => c.Device)
+                .Where(c => c.Employee.Id == id)
+                .ToListAsync();
+
+            return ConvertToDto(history);
         }
 
-        
+        private ICollection<CheckoutHistoryDto> ConvertToDto(IEnumerable<CheckoutHistory> entities)
+        {
+            return entities.Select(h => new CheckoutHistoryDto
+            {
+                Id = h.Id,
+                Device = new DeviceDto
+                {
+                    Id = h.Device.Id,
+                    DeviceName = h.Device.Name,
+                    DeviceType = h.Device.Type,
+                    DeviceModel = h.Device.DeviceModel,
+                    DeviceManufacturer = h.Device.DeviceModel,
+                    SerialNumber = h.Device.SerialNumber,
+                    Description = h.Device.Description
+                },
+                Employee = new EmployeeDto
+                {
+                    Id = h.Employee.Id,
+                    Name = h.Employee.Name,
+                    Patronymic = h.Employee.Patronymic,
+                    LastName = h.Employee.LastName,
+                    ImageUrl = h.Employee.ImageUrl,
+                    Department = _departmentService.Departments.FirstOrDefault(d => d.Id == h.Employee.Department.Id),
+                    Position = _departmentService.Positions.FirstOrDefault(p => p.Id == h.Employee.Position.Id)
+                },
+                Since = h.CheckedOut,
+                Until = h.CheckedIn
+            }).ToHashSet();
+        }
+        private ICollection<CheckoutDto> ConvertToDto(IEnumerable<Checkout> entities)
+        {
+            return entities.Select(c => ConvertToDto(c)).ToHashSet();
+        }
+        private CheckoutDto ConvertToDto(Checkout entity)
+        {
+            if (entity == null) return null;
+
+            return new CheckoutDto
+            {
+                Device = new DeviceDto
+                {
+                    Id = entity.Device.Id,
+                    DeviceName = entity.Device.Name,
+                    DeviceType = entity.Device.Type,
+                    DeviceModel = entity.Device.DeviceModel,
+                    DeviceManufacturer = entity.Device.DeviceModel,
+                    SerialNumber = entity.Device.SerialNumber,
+                    Description = entity.Device.Description
+                },
+                Employee = new EmployeeDto
+                {
+                    Id = entity.Employee.Id,
+                    Name = entity.Employee.Name,
+                    Patronymic = entity.Employee.Patronymic,
+                    LastName = entity.Employee.LastName,
+                    ImageUrl = entity.Employee.ImageUrl,
+                    Department = _departmentService.Departments.FirstOrDefault(d => d.Id == entity.Employee.Department.Id),
+                    Position = _departmentService.Positions.FirstOrDefault(p => p.Id == entity.Employee.Position.Id)
+                },
+                Since = entity.Since
+            };
+        }
     }
 }

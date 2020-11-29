@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using InventoryAppServices.Models;
+using System.Collections.Generic;
 
 namespace InventoryASP.Models.Employee
 {
     public class EmployeeIndexModel
     {
-        public IEnumerable<EmployeeListingModel> Employees { get; set; }
+        public ICollection<EmployeeDto> Employees { get; set; }
     }
 }

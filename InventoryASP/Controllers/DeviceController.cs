@@ -1,219 +1,102 @@
-﻿using InventoryAppData;
-using InventoryAppData.Models;
-using InventoryAppServices.Components;
-using InventoryASP.Models.Checkouts;
+﻿using InventoryAppServices.Interfaces;
+using InventoryAppServices.Models;
 using InventoryASP.Models.Device;
-using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
     public class DeviceController : Controller
     {
-        private readonly IDevice _devices;
-        private readonly ICheckout _checkouts;
+        private readonly IDeviceService _devices;
 
-        public DeviceController(IDevice devices, ICheckout checkouts)
+        public DeviceController(IDeviceService devices)
         {
             _devices = devices;
-            _checkouts = checkouts;
         }
 
-        // Список всех устройств
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            var devices = _devices.GetAll();
+            var devices = await _devices.GetDevicesAsync();
 
-            var listingResult = devices.Select(device => new DeviceListingModel
-            {
-                Id = device.Id,
-                DeviceType = device.Type,
-                DeviceName = device.Name,
-                DeviceModel = device.DeviceModel,
-                DeviceManufacturer = device.Manufacturer,
-                SerialNumber = device.SerialNumber,
-                CurrentHolder = GetDeviceHolder(device)
-            });
-
-            var model = new DeviceIndexModel
-            {
-                Devices = listingResult
-            };
-
-            return View(model);
+            return View(new DeviceIndexModel { Devices = devices });
         }
 
-        // Детальная информация об устройстве
-        public IActionResult Details(int id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
-            var device = _devices.GetById(id);
-            var holder = GetDeviceHolder(device);
-            var history = _checkouts.GetCheckoutHistory(id)
-                .Select(h => new HistoryModel
-                {
-                    Id = h.Id,
-                    Since = h.CheckedOut.ToString(),
-                    Until = h.CheckedIn.ToString(),
-                    Holder = GetDeviceHolder(h)
-                }).ToList();
+            var device = await _devices.GetDeviceByIdAsync(id);
 
-            var model = new DeviceDetailModel
-            {
-                DeviceId = device.Id,
-                DeviceName = device.Name,
-                DeviceType = device.Type,
-                DeviceModel = device.DeviceModel,
-                DeviceSerialNumber = device.SerialNumber,
-                DeviceManufacturer = device.Manufacturer,
-                DeviceDescription = device.Description,
-                CurrentHolder = holder,
-                CheckoutHistory = history
-            };
-
-            return View(model);
+            return View(new DeviceDetailModel { Device = device });
         }
 
-        // Форма добавления нового оборудования
         public IActionResult Create()
         {
-            return PartialView(new NewDeviceModel());
+            var model = new CreateOrUpdateDeviceModel { Device = new DeviceDto() };
+
+            return PartialView(model);
         }
 
-        // Добавляем новое оборудование
         [HttpPost]
-        public IActionResult Create(NewDeviceModel model)
+        public async Task<IActionResult> CreateAsync(CreateOrUpdateDeviceModel model)
         {
             if (ModelState.IsValid)
             {
-                var device = new Device
-                {
-                    Name = model.Name.Capitalize(),
-                    Type = model.Type.Capitalize(),
-                    SerialNumber = model.SerialNumber,
-                    Manufacturer = model.Manufacturer.Capitalize(),
-                    DeviceModel = model.DeviceModel.Capitalize(),
-                    Description = model.Description.Capitalize()
-                };
-                _devices.Add(device);
-            }            
+                await _devices.CreateDeviceAsync(model.Device);
+            }
 
             return PartialView("Create", model);
         }
 
-        // Форма изменения данных оборудования
-        public IActionResult Update(int id)
+        public async Task<IActionResult> UpdateAsync(int id)
         {
-            var device = _devices.GetById(id);
-            var model = new NewDeviceModel
+            var device = await _devices.GetDeviceByIdAsync(id);
+
+            var model = new CreateOrUpdateDeviceModel
             {
-                Id = device.Id,
-                Name = device.Name,
-                DeviceModel = device.DeviceModel,
-                Manufacturer = device.Manufacturer,
-                SerialNumber = device.SerialNumber,
-                Type = device.Type,
-                Description = device.Description
+                Device = device
             };
 
             return PartialView(model);
         }
 
-        // Изменить данные оборудования
         [HttpPost]
-        public IActionResult Update(NewDeviceModel model)
+        public async Task<IActionResult> UpdateAsync(CreateOrUpdateDeviceModel model)
         {
             if (ModelState.IsValid)
             {
-                var device = new Device
-                {
-                    Id = model.Id,
-                    Name = model.Name.Capitalize(),
-                    DeviceModel = model.DeviceModel.Capitalize(),
-                    Manufacturer = model.Manufacturer.Capitalize(),
-                    SerialNumber = model.SerialNumber,
-                    Type = model.Type.Capitalize(),
-                    Description = model.Description.Capitalize()
-                };
-                _devices.Update(device);
-            }      
+                await _devices.UpdateDeviceAsync(model.Device);
+            }
 
             return PartialView("Update", model);
         }
 
-        // Удалить оборудование
         public IActionResult Delete(int id)
         {
             ViewBag.Id = id;
+
             return PartialView();
         }
 
-        // Удалить оборудование
         [HttpPost]
-        public IActionResult DeleteDevice(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            _devices.Delete(id);
+            await _devices.DeleteDeviceAsync(id);
 
             return RedirectToAction("Index", "Device");
         }
 
-        // Получаем список свободного оборудования
-        public IActionResult GetAvailableDevices(int employeeId)
+        public async Task<IActionResult> SelectDevicesAsync(int employeeId)
         {
-            var devices = _devices.GetAvailableDevices();
+            var devices = await _devices.GetDevicesAsync(true);
 
-            var listingResult = devices.Select(device => new DeviceListingModel
+            var model = new SelectDevicesModel
             {
-                Id = device.Id,
-                DeviceType = device.Type,
-                DeviceName = device.Name,
-                DeviceModel = device.DeviceModel,
-                DeviceManufacturer = device.Manufacturer,
-                SerialNumber = device.SerialNumber
-            }).ToList();
-
-            var model = new AvailableDevicesModel
-            {
-                Devices = listingResult,
+                Devices = devices.ToArray(),
                 EmployeeId = employeeId
             };
 
             return PartialView(model);
-        }
-
-        private EmployeeListingModel GetDeviceHolder(Device device)
-        {
-            var employee = _checkouts.GetCheckout(device.Id)?.Employee;
-
-            if (employee == null)
-                return null;
-
-            return new EmployeeListingModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Department = employee.Department.Name,
-                Position = employee.Position.Name
-            };
-        }
-        private EmployeeListingModel GetDeviceHolder(CheckoutHistory history)
-        {
-            var employee = history.Employee;
-
-            if (employee == null)
-                return null;
-
-            return new EmployeeListingModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Department = employee.Department.Name,
-                Position = employee.Position.Name
-            };
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using InventoryASP.Models.Device;
-using InventoryASP.Models.Employee;
+﻿using InventoryAppServices.Models;
 using System.Collections.Generic;
 
 namespace InventoryASP.Models.Search
@@ -7,7 +6,7 @@ namespace InventoryASP.Models.Search
     public class SearchResultModel
     {
         public string SearchQuery { get; set; }
-        public IEnumerable<DeviceListingModel> Devices { get; set; }
-        public IEnumerable<EmployeeListingModel> Employees { get; set; }
+        public ICollection<DeviceDto> Devices { get; set; }
+        public ICollection<EmployeeDto> Employees { get; set; }
     }
 }

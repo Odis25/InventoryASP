@@ -1,7 +1,6 @@
 ﻿@model InventoryASP.Models.Employee.SelectEmployeeModel
 
 <div class="modal-content">
-
     <!--Заголовок окна-->
     <div class="modal-header">
         <h5 class="modal-title">Выберите сотрудника:</h5>
@@ -9,34 +8,32 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
     <!--Основной контент-->
     <div class="modal-body">
-        <form method="post" asp-action="CheckOutEmployee" asp-controller="Checkout" id="selectEmployeeForm">
+        <form method="post" asp-action="CheckOutDevice" asp-controller="Checkout" id="checkout-form">
             <table class="table table-sm table-striped table-hover">
-                @{ var i = 1;}
-                @foreach (var employee in Model.Employees)
-                {
-                    <tr>
-                        <td>
-                            <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="employee@(i)" name="employeeId" value="@employee.Id" />
-                                <label class="custom-control-label" for="employee@(i++)" style="cursor: pointer">
-                                    <span>@employee.LastName @employee.Name @employee.Patronymic</span>
-                                </label>
-                            </div>
-
-                        </td>
-                    </tr>
-                }
+                <tbody>
+                    @for (int i = 0; i < Model.Employees.Length; i++)
+                    {
+                        <tr>
+                            <td>
+                                <div class="custom-control custom-radio">
+                                    <input class="custom-control-input" id="emp-@i" type="radio" asp-for="SelectedEmployeeId" value="@Model.Employees[i].Id"/>
+                                    <label class="custom-control-label" for="emp-@i" style="cursor: pointer">
+                                        <span>@Model.Employees[i].LastName @Model.Employees[i].Name @Model.Employees[i].Patronymic</span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
-            <input type="hidden" name="deviceId" value="@Model.DeviceId" />
+            <input type="hidden" asp-for="DeviceId" />
         </form>
     </div>
-
     <!--Кнопки-->
     <div class="modal-footer">
-        <button class="btn btn-primary" form="selectEmployeeForm" type="submit">Выбрать</button>
+        <button class="btn btn-primary" form="checkout-form" type="submit">Выбрать</button>
         <button class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
     </div>
 </div>

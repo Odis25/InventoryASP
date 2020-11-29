@@ -7,7 +7,7 @@
 </div>
 <div class="row">
     <div class="col sectionContent">
-        @if (Model.Devices != null && Model.Devices.Any())
+        @if (Model.Devices.Any())
         {
             <table class="table table-hover table-sm indexTable border">
                 <thead>
@@ -18,16 +18,16 @@
                 @foreach (var device in Model.Devices)
                 {
                     <tr>
-                        <td><a asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
+                        <td><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
                         <td>@device.DeviceType</td>
                         <td>@device.DeviceModel</td>
                         <td>@device.SerialNumber</td>
                         <td>@device.DeviceManufacturer</td>
                         <td>
-                            @if (device.CurrentHolder != null)
+                            @if (device.Checkout != null)
                             {
-                                <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.CurrentHolder.Id">
-                                    @device.CurrentHolder.FullName
+                                <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.Checkout.Employee.Id">
+                                    @device.Checkout.Employee.FullName
                                 </a>
                             }
                         </td>
@@ -35,7 +35,7 @@
                 }
             </table>
         }
-        @if (Model.Employees != null && Model.Employees.Any())
+        @if (Model.Employees.Any())
         {
             <table class="table table-hover table-sm indexTable border">
                 <thead>
@@ -51,15 +51,15 @@
                                 <span>@employee.LastName @employee.Name @employee.Patronymic</span>
                             </a>
                         </td>
-                        <td>@employee.Department</td>
-                        <td>@employee.Position</td>
+                        <td>@employee.Department.Name</td>
+                        <td>@employee.Position.Name</td>
                         <td>
                             <ol class="m-0">
                                 @foreach (var checkout in employee.Checkouts)
                                 {
                                     <li>
-                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
-                                            <span>@checkout.Checkout.Device.Type @checkout.Checkout.Device.Name @checkout.Checkout.Device.DeviceModel</span>
+                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Device.Id">
+                                            <span>@checkout.Device.DeviceType @checkout.Device.DeviceName @checkout.Device.DeviceModel</span>
                                         </a>
                                     </li>
                                 }

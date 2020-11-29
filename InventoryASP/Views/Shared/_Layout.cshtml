@@ -52,6 +52,12 @@
                         <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Employee" ? "active" : "")">
                             <a class="nav-link " asp-controller="Employee" asp-action="Index">Сотрудники</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Accounts" ? "active" : "")">
+                                <a class="nav-link " asp-controller="Accounts" asp-action="Index">Пользователи</a>
+                            </li>
+                        }
                     </ul>
                     <div>
                         <partial name="_LoginPartial" />

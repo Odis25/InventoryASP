@@ -1,112 +1,151 @@
 ﻿using InventoryAppData;
-using InventoryAppData.Models;
+using InventoryAppData.Entities;
+using InventoryAppServices.Common.Extensions;
+using InventoryAppServices.Common.Helpers;
+using InventoryAppServices.Interfaces;
+using InventoryAppServices.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryAppServices
 {
-    public class EmployeeService : IEmployee
+    public class EmployeeService : IEmployeeService
     {
-        private readonly InventoryContext _context;
+        private readonly AppDbContext _context;
+        private readonly ICheckoutService _checkoutService;
+        private readonly IDepartmentService _departmentService;
 
-        public EmployeeService(InventoryContext context)
+        public EmployeeService(AppDbContext context,
+            ICheckoutService checkoutService,
+            IDepartmentService departmentService)
         {
             _context = context;
+            _checkoutService = checkoutService;
+            _departmentService = departmentService;
         }
 
         // Добавить нового сотрудника
-        public void Add(Employee newEmployee)
+        public async Task CreateEmployeeAsync(EmployeeDto employee)
         {
-            var position = _context.Positions.Find(newEmployee.Position.Id);
-            var department = _context.Departments.Find(newEmployee.Department.Id);
+            var position = await _context.Positions.FindAsync(employee.Position.Id);
 
-            newEmployee.IsActive = true;
-            newEmployee.Position = position;
-            newEmployee.Department = department;
+            var department = await _context.Departments.FindAsync(employee.Department.Id);
 
-            _context.Employees.Add(newEmployee);
-            _context.SaveChanges();
+            var entity = new Employee
+            {
+                Name = employee.Name.Capitalize(),
+                LastName = employee.LastName.Capitalize(),
+                Patronymic = employee.Patronymic.Capitalize(),
+                ImageUrl = employee.ImageUrl,
+                Position = position,
+                Department = department,
+                IsActive = true
+            };
+
+            _context.Employees.Add(entity);
+
+            await _context.SaveChangesAsync();
         }
 
         // Удалить сотрудника
-        public void Delete(int employeeId)
+        public async Task DeleteEmployeeAsync(int employeeId)
         {
-            var employee = _context.Employees.Find(employeeId);
+            var employee = await _context.Employees
+                .Include(e => e.Checkouts).ThenInclude(c => c.Device)
+                .FirstOrDefaultAsync(e => e.Id == employeeId);
 
-            // Вернуть все устройства
             var checkouts = _context.Checkouts.Where(c => c.Employee == employee);
 
             if (checkouts != null)
             {
+                foreach (var checkout in checkouts)
+                {
+                    checkout.Device.Status = DeviceStatus.Available;
+                }
                 _context.RemoveRange(checkouts);
             }
 
-            // Закрыть всю историю использования
-            var now = DateTime.Now;
-
-            var histories = _context.CheckoutHistories
-                .Where(h => h.Employee == employee && h.CheckedIn == null);
+            var histories = _context.CheckoutHistories.Where(h => h.Employee == employee && h.CheckedIn == null);
 
             if (histories != null)
             {
-                _context.UpdateRange(histories);
+                var now = DateTime.Now;
+
                 foreach (var history in histories)
                 {
                     history.CheckedIn = now;
                 }
             }
 
-            // Обновляем статус сотрудника
-            _context.Update(employee);
             employee.IsActive = false;
 
-            // Сохраняем изменения
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         // Получить список всех сотрудников
-        public IEnumerable<Employee> GetAll()
+        public async Task<ICollection<EmployeeDto>> GetEmployeesAsync()
         {
-            return _context.Employees.Where(e => e.IsActive).OrderBy(e=> e.LastName)
-                .Include(e => e.Checkouts).ThenInclude(c => c.Device)
+            var employees = await _context.Employees
+                .Where(e => e.IsActive)
+                .OrderBy(e => e.LastName)
                 .Include(e => e.Department)
-                .Include(e => e.Position);
+                .Include(e => e.Position)
+                .ToListAsync();
+
+            return ConvertToDto(employees);
         }
 
         // Получить сотрудника по Id
-        public Employee GetById(int employeeId)
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
         {
-            return GetAll()
-                .FirstOrDefault(e => e.Id == employeeId);
-        }
+            var employee = await _context.Employees
+                .Include(e => e.Position)
+                .Include(e => e.Department)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-        // Получить историю использования оборудования сотрудником
-        public IEnumerable<CheckoutHistory> GetCheckoutHistory(int employeeId)
-        {
-            return _context.CheckoutHistories
-                .Where(ch => ch.Employee.Id == employeeId)
-                .OrderByDescending(ch=>ch.CheckedIn)
-                .Include(ch => ch.Device);
+            return ConvertToDto(employee);
         }
 
         // Изменить данные сотрудника
-        public void Update(Employee employee)
+        public async Task UpdateEmployeeAsync(EmployeeDto employee)
         {
-            var modifiedEmployee = _context.Employees.Find(employee.Id);
-            
-            var position = _context.Positions.Find(employee.Position.Id);
-            var department = _context.Departments.Find(employee.Department.Id);
+            var entity = await _context.Employees.FindAsync(employee.Id);
+            var position = await _context.Positions.FirstOrDefaultAsync(p => p.Id == employee.Position.Id);
+            var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == employee.Department.Id);
 
-            modifiedEmployee.ImageUrl = employee.ImageUrl;
-            modifiedEmployee.LastName = employee.LastName;
-            modifiedEmployee.Name = employee.Name;
-            modifiedEmployee.Patronymic = employee.Patronymic;
-            modifiedEmployee.Position = position;
-            modifiedEmployee.Department = department;
+            entity.ImageUrl = employee.ImageUrl;
+            entity.LastName = employee.LastName.Capitalize();
+            entity.Name = employee.Name.Capitalize();
+            entity.Patronymic = employee.Patronymic.Capitalize();
+            entity.Position = position;
+            entity.Department = department;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        private EmployeeDto ConvertToDto(Employee entity)
+        {
+            if (entity == null) return null;
+
+            return new EmployeeDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                LastName = entity.LastName,
+                Patronymic = entity.Patronymic,
+                ImageUrl = entity.ImageUrl,
+                Department = _departmentService.Departments.First(d => d.Id == entity.Department.Id),
+                Position = _departmentService.Positions.First(p => p.Id == entity.Position.Id),
+                Checkouts = _checkoutService.GetByEmployeeIdAsync(entity.Id).GetAwaiter().GetResult(),
+                CheckoutHistory = _checkoutService.GetEmployeeHistoryByIdAsync(entity.Id).GetAwaiter().GetResult()
+            };
+        }
+        private ICollection<EmployeeDto> ConvertToDto(IEnumerable<Employee> entities)
+        {
+            return entities.Select(entity => ConvertToDto(entity)).ToHashSet();
         }
     }
 }

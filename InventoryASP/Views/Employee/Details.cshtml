@@ -1,7 +1,4 @@
-﻿@model InventoryASP.Models.Employee.EmployeeDetailsModel
-@inject Microsoft.AspNetCore.Identity.UserManager<InventoryAppData.Models.ApplicationUser> UserManager
-@inject Microsoft.AspNetCore.Identity.SignInManager<InventoryAppData.Models.ApplicationUser> SignInManager
-
+﻿@model InventoryASP.Models.Employee.EmployeeDetailModel
 
 <div class="sectionContent detailsSection">
     <!--Заголовок-->
@@ -20,11 +17,11 @@
         <div class="col-4">
             <div class="">
                 <img class="profilePhoto img-thumbnail" src="~/img/userPhoto.png" />
-                <div class="mt-3"><span class="font-weight-bold">Фамилия:</span> @Model.LastName</div>
-                <div class="mt-1"><span class="font-weight-bold">Имя:</span> @Model.Name</div>
-                <div class="mt-1"><span class="font-weight-bold">Отчество:</span> @Model.Patronymic</div>
-                <div class="mt-1"><span class="font-weight-bold">Отдел:</span> @Model.Department</div>
-                <div class="mt-1"><span class="font-weight-bold">Должность:</span> @Model.Position</div>
+                <div class="mt-3"><span class="font-weight-bold">Фамилия:</span> @Model.Employee.LastName</div>
+                <div class="mt-1"><span class="font-weight-bold">Имя:</span> @Model.Employee.Name</div>
+                <div class="mt-1"><span class="font-weight-bold">Отчество:</span> @Model.Employee.Patronymic</div>
+                <div class="mt-1"><span class="font-weight-bold">Отдел:</span> @Model.Employee.Department.Name</div>
+                <div class="mt-1"><span class="font-weight-bold">Должность:</span> @Model.Employee.Position.Name</div>
             </div>
         </div>
 
@@ -58,30 +55,34 @@
                                 }
                             </tr>
                         </thead>
-                        @{ var i = 1; }
                         <tbody>
-                            @foreach (var checkout in Model.Checkouts)
-                            {
-                                <tr>
-                                    <td>@(i++)</td>
-                                    <td>
-                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
-                                            @checkout.Checkout.Device.Name @checkout.Checkout.Device.Manufacturer @checkout.Checkout.Device.DeviceModel @checkout.Checkout.Device.Type
-                                        </a>
-                                    </td>
-                                    <td>@checkout.Checkout.Device.SerialNumber</td>
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <td class="text-center">
-                                            <a class="btn btn-sm openModalBtn-sm btnMini p-1"
-                                               asp-controller="Checkout"
-                                               asp-action="CheckInDevice"
-                                               asp-route-deviceId="@checkout.Checkout.Device.Id">
-                                                <img src="~/icons/icons8_delete_16px.png" />
+                            @{
+                                var checkouts = Model.Employee.Checkouts.ToArray();
+
+                                for (int i = 0; i < checkouts.Length; i++)
+                                {
+                                    var device = checkouts[i].Device;
+                                    <tr>
+                                        <td>@(i+1)</td>
+                                        <td>
+                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">
+                                                @device.DeviceName @device.DeviceManufacturer @checkouts[i].Device.DeviceModel @device.DeviceType
                                             </a>
                                         </td>
-                                    }
-                                </tr>
+                                        <td>@device.SerialNumber</td>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <td class="text-center">
+                                                <a class="btn btn-sm openModalBtn-sm btnMini p-1"
+                                                   asp-controller="Checkout"
+                                                   asp-action="CheckInDevice"
+                                                   asp-route-id="@device.Id">
+                                                    <img src="~/icons/icons8_delete_16px.png" />
+                                                </a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
@@ -98,21 +99,26 @@
                                 <td>Возвращено</td>
                             </tr>
                         </thead>
-                        @{i = 1; }
                         <tbody>
-                            @foreach (var history in Model.History)
-                            {
-                                <tr>
-                                    <td>@(i++)</td>
-                                    <td>
-                                        <a asp-controller="Device" asp-action="Details" asp-route-id="@history.Device.Id">
-                                            @history.Device.Name @history.Device.Manufacturer @history.Device.DeviceModel @history.Device.Type
-                                        </a>
-                                    </td>
-                                    <td>@history.Device.SerialNumber</td>
-                                    <td>@history.CheckedOut</td>
-                                    <td>@history.CheckedIn</td>
-                                </tr>
+                            @{
+                                var history = Model.Employee.CheckoutHistory.ToArray();
+
+                                for (int i = 0; i < history.Length; i++)
+                                {
+                                    var device = history[i].Device;
+
+                                    <tr>
+                                        <td>@(i+1)</td>
+                                        <td>
+                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">
+                                                @device.DeviceName @device.DeviceManufacturer @device.DeviceModel @device.DeviceType
+                                            </a>
+                                        </td>
+                                        <td>@device.SerialNumber</td>
+                                        <td>@history[i].Since.ToString()</td>
+                                        <td>@history[i].Until?.ToString()</td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
@@ -128,8 +134,8 @@
             <div class="col offset-4 text-left py-2 pb-3">
                 <a class="btn btn-sm btn-success openModalBtn-lg"
                    asp-controller="Device"
-                   asp-action="GetAvailableDevices"
-                   asp-route-employeeId="@Model.Id">
+                   asp-action="SelectDevices"
+                   asp-route-employeeId="@Model.Employee.Id">
                     <img src="~/icons/add_shopping_cart_24px.png" />Добавить оборудование
                 </a>
             </div>

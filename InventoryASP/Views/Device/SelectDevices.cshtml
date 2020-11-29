@@ -1,0 +1,53 @@
+﻿@model InventoryASP.Models.Device.SelectDevicesModel
+
+<div class="modal-content">
+    <!--Заголовок окна-->
+    <div class="modal-header">
+        <h5 class="modal-title">Выберите свободное устройство:</h5>
+        <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <!--Основной контент-->
+    @if (Model.Devices.Any())
+    {
+        <div class="modal-body">
+            <form method="post" asp-action="CheckOutDevices" asp-controller="Checkout" id="checkout-form">
+                <table class="table table-sm table-hover table-borderless table-striped">
+                    <tbody>
+                        @for (int i = 0; i < Model.Devices.Length; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" asp-for="Devices[i].Id" />
+                                    <input type="checkbox" asp-for="Devices[i].IsSelected" />
+                                </td>
+                                <td>@Model.Devices[i].DeviceName</td>
+                                <td>@Model.Devices[i].DeviceType</td>
+                                <td>@Model.Devices[i].DeviceModel</td>
+                                <td>@Model.Devices[i].DeviceManufacturer</td>
+                                <td>@Model.Devices[i].SerialNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <input type="hidden" asp-for="EmployeeId" />
+            </form>
+        </div>
+        <!--Кнопки-->
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-primary" form="checkout-form" type="submit">Добавить</button>
+            <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+        </div>
+    }
+    else
+    {
+        <div class="modal-body text-center">
+            <p class="font-weight-bold">Нет свободного оборудования. :(</p>
+        </div>
+        <!--Кнопки-->
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-secondary" type="button" data-dismiss="modal">Закрыть</button>
+        </div>
+    }
+</div>

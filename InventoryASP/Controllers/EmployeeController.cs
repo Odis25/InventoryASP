@@ -1,21 +1,23 @@
-﻿using InventoryAppData;
-using InventoryAppData.Models;
-using InventoryAppServices.Components;
-using InventoryASP.Models.Checkouts;
+﻿using InventoryAppServices.Interfaces;
+using InventoryAppServices.Models;
 using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployee _employees;
-        private readonly ICheckout _checkouts;
-        private readonly IDepartment _departments;
+        private readonly IEmployeeService _employees;
+        private readonly ICheckoutService _checkouts;
+        private readonly IDepartmentService _departments;
 
-        public EmployeeController(IEmployee employees, ICheckout checkouts, IDepartment departments)
+        public EmployeeController(
+            IEmployeeService employees,
+            ICheckoutService checkouts,
+            IDepartmentService departments)
         {
             _employees = employees;
             _checkouts = checkouts;
@@ -23,25 +25,11 @@ namespace InventoryASP.Controllers
         }
 
         // Список сотрудников
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            var employees = _employees.GetAll();
+            var employees = await _employees.GetEmployeesAsync();
 
-            var listingResult = employees.Select(employee => new EmployeeListingModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Position = employee.Position.Name,
-                Department = employee.Department.Name,
-                Checkouts = GetCheckouts(employee)
-            });
-
-            var model = new EmployeeIndexModel
-            {
-                Employees = listingResult
-            };
+            var model = new EmployeeIndexModel { Employees = employees };
 
             return View(model);
         }
@@ -49,148 +37,98 @@ namespace InventoryASP.Controllers
         // Форма добавления нового сотрудника
         public IActionResult Create()
         {
-            ViewBag.Departments = _departments.GetDepartments();
-            ViewBag.Positions = _departments.GetPositions();
+            var model = new CreateOrUpdateEmployeeModel
+            {
+                Employee = new EmployeeDto(),
+                Departments = new SelectList(_departments.Departments, "Id", "Name"),
+                Positions = new SelectList(_departments.Positions, "Id", "Name")
+            };
 
-            return PartialView();
+            return PartialView(model);
         }
 
         // Добавить нового сотрудника
         [HttpPost]
-        public IActionResult Create(NewEmployeeModel model)
+        public async Task<IActionResult> CreateAsync(CreateOrUpdateEmployeeModel model)
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee
-                {
-                    Name = model.Name.Capitalize(),
-                    LastName = model.LastName.Capitalize(),
-                    Patronymic = model.Patronymic.Capitalize(),
-                    Position = model.Position,
-                    Department = model.Department
-                };
-                _employees.Add(employee);
+                await _employees.CreateEmployeeAsync(model.Employee);
             }
 
-            ViewBag.Departments = _departments.GetDepartments();
-            ViewBag.Positions = _departments.GetPositions();
+            model.Departments = new SelectList(_departments.Departments, "Id", "Name");
+            model.Positions = new SelectList(_departments.Positions, "Id", "Name");
 
             return PartialView("Create", model);
         }
 
         // Форма изменения данных сотрудника
-        public IActionResult Update(int id)
+        public async Task<IActionResult> UpdateAsync(int id)
         {
-            var employee = _employees.GetById(id);
-            var model = new NewEmployeeModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Department = employee.Department,
-                Position = employee.Position
-            };
+            var employee = await _employees.GetEmployeeByIdAsync(id);
 
-            ViewBag.Departments = _departments.GetDepartments();
-            ViewBag.Positions = _departments.GetPositions();
+            var model = new CreateOrUpdateEmployeeModel
+            {
+                Employee = employee,
+                Departments = new SelectList(_departments.Departments, "Id", "Name"),
+                Positions = new SelectList(_departments.Positions, "Id", "Name")
+            };
 
             return PartialView(model);
         }
 
         // Изменить данные сотрудника
         [HttpPost]
-        public IActionResult Update(NewEmployeeModel model)
+        public async Task<IActionResult> UpdateAsync(CreateOrUpdateEmployeeModel model)
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee
-                {
-                    Id = model.Id,
-                    LastName = model.LastName.Capitalize(),
-                    Name = model.Name.Capitalize(),
-                    Patronymic = model.Patronymic.Capitalize(),
-                    Position = model.Position,
-                    Department = model.Department
-                };
-                _employees.Update(employee);
+                await _employees.UpdateEmployeeAsync(model.Employee);
             }
 
-            ViewBag.Departments = _departments.GetDepartments();
-            ViewBag.Positions = _departments.GetPositions();
+            model.Departments = new SelectList(_departments.Departments, "Id", "Name");
+            model.Positions = new SelectList(_departments.Positions, "Id", "Name");
 
             return PartialView("Update", model);
         }
-
-
 
         // Удалить сотрудника
         public IActionResult Delete(int id)
         {
             ViewBag.Id = id;
+
             return PartialView();
         }
 
         // Удалить сотрудника
         [HttpPost]
-        public IActionResult DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            _employees.Delete(id);
+            await _employees.DeleteEmployeeAsync(id);
 
             return RedirectToAction("Index", "Employee");
         }
 
-
         // Детальная информация о сотруднике
-        public IActionResult Details(int id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
-            var employee = _employees.GetById(id);
-            var checkouts = GetCheckouts(employee);
-            var checkoutsHistory = _employees.GetCheckoutHistory(id);
+            var employee = await _employees.GetEmployeeByIdAsync(id);
 
-            var model = new EmployeeDetailsModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Department = employee.Department.Name,
-                Position = employee.Position.Name,
-                Checkouts = checkouts,
-                History = checkoutsHistory
-            };
-
-            return View(model);
+            return View(new EmployeeDetailModel { Employee = employee });
         }
 
         // Выбрать сотрудника
-        public IActionResult SelectEmployee(int deviceId)
+        public async Task<IActionResult> SelectEmployeeAsync(int deviceId)
         {
-            var employees = _employees.GetAll()
-                .Select(e => new EmployeeListingModel
-                {
-                    Id = e.Id,
-                    LastName = e.LastName,
-                    Patronymic = e.Patronymic,
-                    Name = e.Name,
-                    Department = e.Department.Name,
-                    Position = e.Position.Name
-                }).ToList();
+            var employees = await _employees.GetEmployeesAsync();
 
             var model = new SelectEmployeeModel
             {
-                DeviceId = deviceId,
-                Employees = employees
+                Employees = employees.ToArray(),
+                DeviceId = deviceId
             };
-            return PartialView(model);
-        }
 
-        private IEnumerable<CheckoutModel> GetCheckouts(Employee employee)
-        {
-            return employee.Checkouts.Select(checkout => new CheckoutModel
-            {
-                Checkout = checkout
-            });
+            return PartialView(model);
         }
     }
 }

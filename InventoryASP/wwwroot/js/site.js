@@ -1,8 +1,4 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
+﻿
 $(function () {
     $.ajaxSetup({ cache: false });
 
@@ -10,13 +6,14 @@ $(function () {
     $('.openModalBtn-sm').on('click', { size: 'sm' }, openModal);
     $('.openModalBtn-m').on('click', { size: 'm' }, openModal);
     $('.openModalBtn-lg').on('click', { size: 'lg' }, openModal);
-
 });
 
 // Открытие модального окна
 function openModal(e) {
+    
     e.preventDefault();
     $.get(this.href).done(function (data) {
+        console.log(data);
         switch (e.data.size) {
             case 'sm':
                 $('#modalWindow-content-sm').html(data);
@@ -36,8 +33,15 @@ function openModal(e) {
 
 // Логин пользователя
 function Login() {
+
+    let button = document.querySelector('#login-button');
+
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Авторизация...'
+
     let model = $('.modal form').serialize();
-    $.post('/Account/Login', model).done(function (result) {
+    $.post('/Authorization/Login', model).done(function (result) {
+
+        button.innerHTML = 'Войти';
 
         // Код обработки результата
         $('#modalWindow-content-sm').html(result);
@@ -45,53 +49,45 @@ function Login() {
         if (isValid) {
             window.location.href = '/Home/Index';
         }
-    })
-}
-
-function ChangePassword() {
-    let model = $('.modal form').serialize();
-    $.post('/Account/ChangePassword', model).done(function (result) {
-
-        // Код обработки результата
-        $('#modalWindow-content-sm').html(result);
-        var isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
-        if (isValid) {
-            window.location.href = '/Home/Index';
-        }
-    })
+    }).fail(function () {
+        button.innerHTML = 'Войти';
+    });
 }
 
 // Создать нового сотрудника
 function CreateEmployee() {
-    CreateOrUpdate({ type: 'Create', object: 'Employee', size: 'lg' });
+    CreateOrUpdate({ action: 'Create', controller: 'Employee', modalWindowSize: 'lg' });
 }
 
 // Изменить данные сотрудника
 function UpdateEmployee() {
-    CreateOrUpdate({ type: 'Update', object: 'Employee', size: 'lg' });
+    CreateOrUpdate({ action: 'Update', controller: 'Employee', modalWindowSize: 'lg' });
 }
 
 // Создать новое оборудование
 function CreateDevice() {
-    CreateOrUpdate({ type: 'Create', object: 'Device', size: 'lg' });
+    CreateOrUpdate({ action: 'Create', controller: 'Device', modalWindowSize: 'lg' });
 }
 
 // Изменить данные оборудования
 function UpdateDevice() {
-    CreateOrUpdate({ type: 'Update', object: 'Device', size: 'lg' });
+    CreateOrUpdate({ action: 'Update', controller: 'Device', modalWindowSize: 'lg' });
 }
 
 // Создать или изменить объект
 function CreateOrUpdate(operation) {
 
     let model = $('.modal form').serialize();
-    $.post(`/${operation.object}/${operation.type}`, model).done(function (result) {
+
+    $.post(`/${operation.controller}/${operation.action}`, model).done(function (result) {
 
         // Код обработки результата
-        $(`#modalWindow-content-${operation.size}`).html(result);
+        $(`#modalWindow-content-${operation.modalWindowSize}`).html(result);
+
         let isValid = $('.modal-body [name="IsValid"]').val() == 'True';
+
         if (isValid) {
-            window.location.href = `/${operation.object}/Index`;
+            window.location.href = `/${operation.controller}/Index`;
         }
     });
 }

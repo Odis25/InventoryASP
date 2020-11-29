@@ -7,7 +7,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <a asp-controller="Employee" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
-                    <span class=""><img src="~/icons/add_user_male_24px_1.png" class="mr-1"/>Добавить</span>
+                    <span class=""><img src="~/icons/add_user_male_24px_1.png" class="mr-1" />Добавить</span>
                 </a>
             }
         </div>
@@ -48,30 +48,30 @@
                 {
                     <tr>
                         <td><a asp-action="Details" asp-route-id="@employee.Id">@employee.FullName</a></td>
-                        <td>@employee.Department</td>
-                        <td>@employee.Position</td>
+                        <td>@employee.Department.Name</td>
+                        <td>@employee.Position.Name</td>
                         <td>
-                            
-                                <ol class="m-0">
-                                    @foreach (var checkout in employee.Checkouts)
-                                    {
-                                        <li>
-                                            <a asp-controller="Device" asp-action="Details" asp-route-id="@checkout.Checkout.Device.Id">
-                                                <span>@checkout.Checkout.Device.Type @checkout.Checkout.Device.Name @checkout.Checkout.Device.DeviceModel</span>
-                                            </a>
-                                        </li>
-                                    }
-                                </ol>
-                            
+                            <ol class="m-0">
+                                @foreach (var checkout in employee.Checkouts)
+                                {
+                                    <li>
+                                        <a asp-controller="Device" 
+                                           asp-action="Details" 
+                                           asp-route-id="@checkout.Device.Id">
+                                            <span>@checkout.Device.DeviceType @checkout.Device.DeviceName @checkout.Device.DeviceModel</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ol>
                         </td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <td  class="controlCell">
+                            <td class="controlCell">
                                 <a class="btn btn-sm btnMini openModalBtn-lg" asp-action="Update" asp-route-id="@employee.Id">
-                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать"/>
+                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать" />
                                 </a>
                                 <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@employee.Id">
-                                    <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить"/>
+                                    <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить" />
                                 </a>
                             </td>
                         }

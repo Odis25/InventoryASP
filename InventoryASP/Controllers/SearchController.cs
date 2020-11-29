@@ -1,107 +1,58 @@
-﻿using InventoryAppData;
-using InventoryAppData.Models;
-using InventoryASP.Models.Checkouts;
+﻿using InventoryAppServices.Interfaces;
 using InventoryASP.Models.Device;
 using InventoryASP.Models.Employee;
 using InventoryASP.Models.Search;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly ISearch _search;
-        private readonly ICheckout _checkouts;
+        private readonly ISearchService _search;
 
-        public SearchController(ISearch search, ICheckout checkouts)
+        public SearchController(ISearchService search, ICheckoutService checkouts)
         {
             _search = search;
-            _checkouts = checkouts;
         }
 
-        public IActionResult Find(string searchQuery)
+        public async Task<IActionResult> FindAsync(string searchQuery)
         {
-            var employees = _search.SearchEmployee(searchQuery);
-            var devices = _search.SearchDevice(searchQuery);
+            var employees = await _search.FindEmployeesAsync(searchQuery);
+
+            var devices = await _search.FindDevicesAsync(searchQuery);
 
             var model = new SearchResultModel
             {
-                Devices = BuildDeviceListingModel(devices),
-                Employees = BuildEmployeeListingModel(employees),
+                Devices = devices,
+                Employees = employees,
                 SearchQuery = searchQuery
             };
             return View("SearchResult", model);
         }
 
-        public IActionResult FindEmployee(string searchQuery)
+        public async Task<IActionResult> FindEmployeeAsync(string searchQuery)
         {
-            var employees = _search.SearchEmployee(searchQuery);
+            var employees = await _search.FindEmployeesAsync(searchQuery);
+
             var model = new EmployeeIndexModel
             {
-                Employees = BuildEmployeeListingModel(employees)
+                Employees = employees
             };
 
             return View("~/Views/Employee/Index.cshtml", model);
         }
 
-        public IActionResult FindDevice(string searchQuery)
+        public async Task<IActionResult> FindDeviceAsync(string searchQuery)
         {
-            var devices = _search.SearchDevice(searchQuery);
+            var devices = await _search.FindDevicesAsync(searchQuery);
 
             var model = new DeviceIndexModel
             {
-                Devices = BuildDeviceListingModel(devices),
+                Devices = devices,
             };
 
             return View("~/Views/Device/Index.cshtml", model);
-        }
-
-        private IEnumerable<EmployeeListingModel> BuildEmployeeListingModel(IEnumerable<Employee> employees)
-        {
-            return employees?.Select(e => new EmployeeListingModel
-            {
-                Id = e.Id,
-                Name = e.Name,
-                LastName = e.LastName,
-                Patronymic = e.Patronymic,
-                Position = e.Position.Name,
-                Department = e.Department.Name,
-                Checkouts = e.Checkouts.Select(c => new CheckoutModel { Checkout = c })
-            });
-        }
-
-        private IEnumerable<DeviceListingModel> BuildDeviceListingModel(IEnumerable<Device> devices)
-        {
-            return devices?.Select(d => new DeviceListingModel
-            {
-                Id = d.Id,
-                DeviceName = d.Name,
-                DeviceModel = d.DeviceModel,
-                DeviceManufacturer = d.Manufacturer,
-                DeviceType = d.Type,
-                SerialNumber = d.SerialNumber,
-                CurrentHolder = GetDeviceHolder(d)
-            });
-        }
-
-        private EmployeeListingModel GetDeviceHolder(Device device)
-        {
-            var employee = _checkouts.GetCheckout(device.Id)?.Employee;
-
-            if (employee == null)
-                return null;
-
-            return new EmployeeListingModel
-            {
-                Id = employee.Id,
-                Name = employee.Name,
-                LastName = employee.LastName,
-                Patronymic = employee.Patronymic,
-                Department = employee.Department.Name,
-                Position = employee.Position.Name
-            };
-        }
+        }        
     }
 }

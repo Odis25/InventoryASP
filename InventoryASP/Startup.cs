@@ -1,6 +1,7 @@
 using InventoryAppData;
-using InventoryAppData.Models;
+using InventoryAppData.Entities;
 using InventoryAppServices;
+using InventoryAppServices.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -20,10 +21,9 @@ namespace InventoryASP
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<InventoryContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options=>
@@ -31,24 +31,26 @@ namespace InventoryASP
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireNonAlphanumeric = false;
             })
-                .AddEntityFrameworkStores<InventoryContext>()
+                .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
             services.AddRazorPages()
                     .AddRazorRuntimeCompilation();
 
-            services.AddScoped<IDevice, DeviceService>();
-            services.AddScoped<ICheckout, CheckoutService>();
-            services.AddScoped<IEmployee, EmployeeService>();
-            services.AddScoped<IDepartment, DepartmentService>();
-            services.AddScoped<ISearch, SearchService>();
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<ICheckoutService, CheckoutService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
 
-            services.AddTransient<DataSeeder>();
+            services.AddTransient<ICurrentUserService, CurrentUserService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataSeeder dataSeeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -58,13 +60,9 @@ namespace InventoryASP
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/Home/Error");                
                 app.UseHsts();
             }
-
-            // Первичное заполнение базы
-            dataSeeder.SeedData();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

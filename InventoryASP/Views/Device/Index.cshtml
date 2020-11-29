@@ -1,34 +1,31 @@
 ﻿@model InventoryASP.Models.Device.DeviceIndexModel
-@inject Microsoft.AspNetCore.Identity.UserManager<InventoryAppData.Models.ApplicationUser> UserManager
-
 <!--Заголовок секции-->
-    <div class="sectionHeader">
-        <div class="row no-gutters">
-            <div class="col d-inline-flex sectionHeading">
-                <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Оборудование</h4>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
-                        <span><img src="~/icons/add_device_24px.png" class="mr-1"/>Добавить</span>
-                    </a>
-                }
-            </div>
+<div class="sectionHeader">
+    <div class="row no-gutters">
+        <div class="col d-inline-flex sectionHeading">
+            <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Оборудование</h4>
+            @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
+            {
+                <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
+                    <span><img src="~/icons/add_device_24px.png" class="mr-1" />Добавить</span>
+                </a>
+            }
         </div>
-
-        <!--Поиск по разделу-->
-        <div class="row no-gutters">
-            <form method="post" asp-controller="Search" asp-action="FindDevice" class="col subSearchForm">
-                <div class="input-group searchGroup">
-                    <div class="input-group-prepend">
-                        <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
-                    </div>
-                    <input class="searchInput flex-grow-1" type="search" autocomplete="off" placeholder="Поиск по оборудованию..." name="searchQuery" />
-
-                </div>
-            </form>
-        </div>
-
     </div>
+
+    <!--Поиск по разделу-->
+    <div class="row no-gutters">
+        <form method="post" asp-controller="Search" asp-action="FindDevice" class="col subSearchForm">
+            <div class="input-group searchGroup">
+                <div class="input-group-prepend">
+                    <button type="submit" class="searchBtn"><img src="~/img/search_24px.png"></button>
+                </div>
+                <input class="searchInput flex-grow-1" type="search" autocomplete="off" placeholder="Поиск по оборудованию..." name="searchQuery" />
+            </div>
+        </form>
+    </div>
+
+</div>
 
 <!--Контент секции-->
 <div class="row no-gutters sectionContent">
@@ -42,7 +39,7 @@
                     <th>Серийный номер</th>
                     <th>Производитель</th>
                     <th>Текущий владелец</th>
-                    @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
                     {
                         <th class="controlCell">Управление</th>
                     }
@@ -58,30 +55,33 @@
                         <td>@device.SerialNumber</td>
                         <td>@device.DeviceManufacturer</td>
                         <td>
-                            @if (device.CurrentHolder != null)
+                            @if (device.Checkout != null)
                             {
-                                <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.CurrentHolder.Id">
-                                    @device.CurrentHolder.FullName
+                                <a asp-controller="Employee" asp-action="Details" asp-route-id="@device.Checkout.Employee.Id">
+                                    @device.Checkout.Employee.FullName
                                 </a>
                             }
                         </td>
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
                         {
                             <td class="controlCell">
                                 <a class="btn btn-sm btnMini openModalBtn-lg" asp-action="Update" asp-route-id="@device.Id">
-                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать"/>
+                                    <img src="~/icons/icons8_edit_24px.png" alt="Редактировать" title="Редактировать" />
                                 </a>
-                                <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@device.Id">
-                                    <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить"/>
-                                </a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="btn btn-sm btnMini openModalBtn-sm" asp-action="Delete" asp-route-id="@device.Id">
+                                        <img src="~/icons/icons8_delete_bin_24px.png" alt="Удалить" title="Удалить" />
+                                    </a>
+                                }
                             </td>
                         }
                     </tr>
                 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 
 

@@ -1,62 +1,62 @@
-﻿using InventoryAppData;
+﻿using InventoryAppServices.Interfaces;
 using InventoryASP.Models.Device;
+using InventoryASP.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace InventoryASP.Controllers
 {
     public class CheckoutController : Controller
     {
-        private ICheckout _checkouts;
+        private readonly ICheckoutService _checkouts;
+        private readonly IDeviceService _deviceService;
 
         public string ReturnUrl { get; set; }
 
-        public CheckoutController(ICheckout checkouts)
+        public CheckoutController(ICheckoutService checkouts, IDeviceService deviceService)
         {
             _checkouts = checkouts;
+            _deviceService = deviceService;
         }
 
         // Добавить устройство сотруднику
         [HttpPost]
-        public IActionResult CheckOutDevice(AvailableDevicesModel model)
+        public async Task<IActionResult> CheckOutDevicesAsync(SelectDevicesModel model)
         {
             ReturnUrl = HttpContext.Request.Headers["Referer"];
-            var idList = model.Devices.Where(d => d.IsSelected).Select(d => d.Id).ToArray();
-            _checkouts.CheckOutItems(model.EmployeeId, idList);
+
+            var devicesId = model.Devices.Where(d => d.IsSelected).Select(d=> d.Id).ToArray();
+
+            await _checkouts.CheckOutDevices(model.EmployeeId, devicesId);
 
             return Redirect(ReturnUrl);
-
         }
 
         [HttpPost]
-        public IActionResult CheckOutEmployee(int employeeId, int deviceId)
+        public async Task<IActionResult> CheckOutDeviceAsync(SelectEmployeeModel model)
         {
             ReturnUrl = HttpContext.Request.Headers["Referer"];
-            _checkouts.CheckOutItems(employeeId, deviceId);
+
+            await _checkouts.CheckOutDevices(model.SelectedEmployeeId, model.DeviceId);
 
             return Redirect(ReturnUrl);
         }
 
         // Забрать устройство у сотрудника
-        //public IActionResult CheckInDevice(int deviceId, int employeeid)
-        //{
-        //    ReturnUrl = HttpContext.Request.Headers["Referer"];
-        //    _checkouts.CheckInItem(deviceId);
-
-        //    return Redirect(ReturnUrl);
-        //}
-
-        public IActionResult CheckInDevice(int deviceId)
+        public IActionResult CheckInDevice(int id)
         {
-            ViewBag.DeviceId = deviceId;
-            return PartialView() ;
+            ViewBag.Id = id;
+
+            return PartialView();
         }
 
         [HttpPost]
-        public IActionResult CheckIn(int deviceId)
+        public async Task<IActionResult> CheckInAsync(int id)
         {
             ReturnUrl = HttpContext.Request.Headers["Referer"];
-            _checkouts.CheckInItem(deviceId);
+
+            await _checkouts.CheckInDevice(id);
 
             return Redirect(ReturnUrl);
         }

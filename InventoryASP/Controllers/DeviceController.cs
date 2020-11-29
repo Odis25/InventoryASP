@@ -2,7 +2,6 @@
 using InventoryAppServices.Models;
 using InventoryASP.Models.Device;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 

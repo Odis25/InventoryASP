@@ -7,6 +7,7 @@ namespace InventoryAppServices.Models
     public class DeviceDto
     {
         public int Id { get; set; }
+        public int? Year { get; set; }
 
         public string DeviceType { get; set; }
 

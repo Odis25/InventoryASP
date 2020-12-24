@@ -68,8 +68,7 @@ namespace InventoryAppServices
                                     user = new ApplicationUser
                                     {
                                         UserName = accountName,
-                                        Name = $"{lastName} {name}",
-                                        NormalizedUserName = accountName.ToLower()
+                                        Name = $"{lastName} {name}"
                                     };
 
                                     await _userManager.CreateAsync(user);

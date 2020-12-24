@@ -28,6 +28,7 @@ namespace InventoryAppServices
         {
             var entity = new Device
             {
+                Year = device.Year,
                 Name = device.DeviceName.Capitalize(),
                 Type = device.DeviceType.Capitalize(),
                 SerialNumber = device.SerialNumber,
@@ -81,6 +82,7 @@ namespace InventoryAppServices
         {
             var entity = await _context.Devices.FindAsync(device.Id);
 
+            entity.Year = device.Year;
             entity.Name = device.DeviceName;
             entity.Manufacturer = device.DeviceManufacturer;
             entity.DeviceModel = device.DeviceModel;
@@ -123,6 +125,7 @@ namespace InventoryAppServices
             return new DeviceDto
             {
                 Id = entity.Id,
+                Year = entity.Year,
                 DeviceType = entity.Type,
                 DeviceName = entity.Name,
                 DeviceModel = entity.DeviceModel,

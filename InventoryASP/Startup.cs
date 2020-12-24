@@ -28,11 +28,9 @@ namespace InventoryASP
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options=>
             {
-                options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireNonAlphanumeric = false;
             })
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddControllersWithViews();
             services.AddRazorPages()

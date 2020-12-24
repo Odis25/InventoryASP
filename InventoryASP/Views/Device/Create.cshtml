@@ -17,6 +17,10 @@
                 <span asp-validation-for="Device.DeviceName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Device.Year">Год выпуска устройства</label>
+                <input type="number" asp-for="Device.Year" class="form-control" />
+            </div>
+            <div class="form-group">
                 <label asp-for="Device.DeviceType">Тип устройства</label>
                 <input asp-for="Device.DeviceType" class="form-control" placeholder="Тип" />
             </div>

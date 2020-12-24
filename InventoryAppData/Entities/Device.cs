@@ -5,6 +5,7 @@ namespace InventoryAppData.Entities
     public class Device: AuditableEntity
     {
         public int Id { get; set; }
+        public int? Year { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string DeviceModel { get; set; }

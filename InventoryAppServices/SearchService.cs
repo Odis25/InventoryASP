@@ -35,6 +35,7 @@ namespace InventoryAppServices
             var result = devices.Select(d => new DeviceDto
             {
                 Id = d.Id,
+                Year = d.Year,
                 DeviceName = d.Name,
                 DeviceType = d.Type,
                 DeviceModel = d.DeviceModel,

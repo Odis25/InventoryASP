@@ -22,8 +22,7 @@ namespace InventoryASP.Controllers
             return PartialView(new LoginModel { ReturnUrl = returnUrl });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]       
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -46,7 +45,6 @@ namespace InventoryASP.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(string returnUrl = null)
         {
             await _authorizationService.Logout();

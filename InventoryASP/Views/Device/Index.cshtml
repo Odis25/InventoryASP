@@ -50,7 +50,7 @@
                 @foreach (var device in Model.Devices)
                 {
                     <tr>
-                        <td><a asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
+                        <td><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
                         <td>@device.DeviceType</td>
                         <td>@device.DeviceModel</td>
                         <td>@device.SerialNumber</td>

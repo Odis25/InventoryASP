@@ -1,13 +1,13 @@
-﻿using InventoryAppData;
-using InventoryAppServices.Common.Helpers;
-using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
+﻿using InventoryApp.Data;
+using InventoryApp.Services.Common.Helpers;
+using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class SearchService : ISearchService
     {

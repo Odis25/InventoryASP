@@ -1,7 +1,7 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using System.Collections.Generic;
 
-namespace InventoryASP.Models.Device
+namespace InventoryApp.Models.Device
 {
     public class DeviceIndexModel
     {

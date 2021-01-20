@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace InventoryAppServices.Models
+namespace InventoryApp.Services.Models
 {
     public class DeviceDto
     {

@@ -1,7 +1,7 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using System.Collections.Generic;
 
-namespace InventoryASP.Models.Accounts
+namespace InventoryApp.Models.Accounts
 {
     public class IndexModel
     {

@@ -1,7 +1,7 @@
-﻿using InventoryAppData.Entities;
-using InventoryAppServices.Common.Enums;
-using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
+﻿using InventoryApp.Data.Entities;
+using InventoryApp.Services.Common.Enums;
+using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class AccountService : IAccountService
     {

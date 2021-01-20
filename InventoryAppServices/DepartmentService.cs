@@ -1,10 +1,10 @@
-﻿using InventoryAppData;
-using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
+﻿using InventoryApp.Data;
+using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class DepartmentService : IDepartmentService
     {

@@ -1,12 +1,12 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
-using InventoryASP.Models.Employee;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
+using InventoryApp.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class EmployeeController : Controller
     {

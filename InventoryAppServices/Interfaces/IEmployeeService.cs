@@ -1,8 +1,8 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices.Interfaces
+namespace InventoryApp.Services.Interfaces
 {
     public interface IEmployeeService
     {

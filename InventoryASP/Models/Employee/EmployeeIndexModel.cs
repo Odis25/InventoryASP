@@ -1,7 +1,7 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using System.Collections.Generic;
 
-namespace InventoryASP.Models.Employee
+namespace InventoryApp.Models.Employee
 {
     public class EmployeeIndexModel
     {

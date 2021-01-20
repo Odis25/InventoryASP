@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InventoryAppData.Entities
+namespace InventoryApp.Data.Entities
 {
     public class CheckoutHistory
     {

@@ -1,11 +1,11 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
-using InventoryASP.Models.Device;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
+using InventoryApp.Models.Device;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class DeviceController : Controller
     {

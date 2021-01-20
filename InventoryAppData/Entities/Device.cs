@@ -1,6 +1,6 @@
-﻿using InventoryAppData.Common;
+﻿using InventoryApp.Data.Common;
 
-namespace InventoryAppData.Entities
+namespace InventoryApp.Data.Entities
 {
     public class Device: AuditableEntity
     {

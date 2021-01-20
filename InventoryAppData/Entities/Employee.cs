@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace InventoryAppData.Entities
+namespace InventoryApp.Data.Entities
 {
     public class Employee
     {

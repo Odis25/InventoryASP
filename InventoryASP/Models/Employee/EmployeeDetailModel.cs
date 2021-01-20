@@ -1,6 +1,6 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 
-namespace InventoryASP.Models.Employee
+namespace InventoryApp.Models.Employee
 {
     public class EmployeeDetailModel
     {

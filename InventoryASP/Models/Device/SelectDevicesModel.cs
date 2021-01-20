@@ -1,6 +1,6 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 
-namespace InventoryASP.Models.Device
+namespace InventoryApp.Models.Device
 {
     public class SelectDevicesModel
     {

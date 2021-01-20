@@ -1,7 +1,7 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using System.Collections.Generic;
 
-namespace InventoryAppServices.Interfaces
+namespace InventoryApp.Services.Interfaces
 {
     public interface IDepartmentService
     {

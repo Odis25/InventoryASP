@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace InventoryAppServices.Models
+namespace InventoryApp.Services.Models
 {
     public class EmployeeDto
     {

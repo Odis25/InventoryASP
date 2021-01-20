@@ -1,4 +1,4 @@
-﻿namespace InventoryAppServices.Common.Helpers
+﻿namespace InventoryApp.Services.Common.Helpers
 {
     public static class DeviceStatus
     {

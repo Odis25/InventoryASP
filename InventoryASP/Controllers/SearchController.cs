@@ -1,11 +1,11 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryASP.Models.Device;
-using InventoryASP.Models.Employee;
-using InventoryASP.Models.Search;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Models.Device;
+using InventoryApp.Models.Employee;
+using InventoryApp.Models.Search;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class SearchController : Controller
     {

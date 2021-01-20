@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryASP.Models.Authorization
+namespace InventoryApp.Models.Authorization
 {
     public class LoginModel
     {

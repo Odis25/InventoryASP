@@ -1,8 +1,8 @@
-﻿using InventoryAppData.Entities;
+﻿using InventoryApp.Data.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices.Interfaces
+namespace InventoryApp.Services.Interfaces
 {
     public interface IUserService
     {

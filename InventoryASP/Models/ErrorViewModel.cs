@@ -1,6 +1,6 @@
 using System;
 
-namespace InventoryASP.Models
+namespace InventoryApp.Models
 {
     public class ErrorViewModel
     {

@@ -1,11 +1,11 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryASP.Models.Accounts;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class AccountsController : Controller
     {

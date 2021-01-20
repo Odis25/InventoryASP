@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InventoryAppServices.Common.Enums
+namespace InventoryApp.Services.Common.Enums
 {
     public enum Role
     {

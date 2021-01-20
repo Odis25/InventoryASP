@@ -1,8 +1,8 @@
-﻿using InventoryAppData;
+﻿using InventoryApp.Data;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class CurrentUserService : ICurrentUserService
     {

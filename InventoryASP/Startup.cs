@@ -1,7 +1,7 @@
-using InventoryAppData;
-using InventoryAppData.Entities;
-using InventoryAppServices;
-using InventoryAppServices.Interfaces;
+using InventoryApp.Data;
+using InventoryApp.Data.Entities;
+using InventoryApp.Services;
+using InventoryApp.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

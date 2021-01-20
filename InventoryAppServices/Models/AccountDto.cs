@@ -1,6 +1,6 @@
-﻿using InventoryAppServices.Common.Enums;
+﻿using InventoryApp.Services.Common.Enums;
 
-namespace InventoryAppServices.Models
+namespace InventoryApp.Services.Models
 {
     public class AccountDto
     {

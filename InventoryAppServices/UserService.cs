@@ -1,5 +1,5 @@
-﻿using InventoryAppData.Entities;
-using InventoryAppServices.Interfaces;
+﻿using InventoryApp.Data.Entities;
+using InventoryApp.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +8,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class UserService : IUserService
     {

@@ -1,4 +1,4 @@
-﻿namespace InventoryAppServices.Models
+﻿namespace InventoryApp.Services.Models
 {
     public class PositionDto
     {

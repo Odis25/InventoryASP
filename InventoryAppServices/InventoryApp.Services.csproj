@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\InventoryAppData\InventoryAppData.csproj" />
+    <ProjectReference Include="..\InventoryAppData\InventoryApp.Data.csproj" />
   </ItemGroup>
 
 </Project>

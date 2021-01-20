@@ -1,4 +1,4 @@
-﻿namespace InventoryAppServices.Common.Extensions
+﻿namespace InventoryApp.Services.Common.Extensions
 {
     public static class StringExtensions
     {

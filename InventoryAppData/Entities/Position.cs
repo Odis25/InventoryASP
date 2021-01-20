@@ -1,4 +1,4 @@
-﻿namespace InventoryAppData.Entities
+﻿namespace InventoryApp.Data.Entities
 {
     public class Position
     {

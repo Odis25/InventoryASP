@@ -1,5 +1,5 @@
-﻿using InventoryAppData.Common;
-using InventoryAppData.Entities;
+﻿using InventoryApp.Data.Common;
+using InventoryApp.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace InventoryAppData
+namespace InventoryApp.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {

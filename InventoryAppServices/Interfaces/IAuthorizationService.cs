@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace InventoryAppServices.Interfaces
+namespace InventoryApp.Services.Interfaces
 {
     public interface IAuthorizationService
     {

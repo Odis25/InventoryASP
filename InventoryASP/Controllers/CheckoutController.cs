@@ -1,11 +1,11 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryASP.Models.Device;
-using InventoryASP.Models.Employee;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Models.Device;
+using InventoryApp.Models.Employee;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class CheckoutController : Controller
     {

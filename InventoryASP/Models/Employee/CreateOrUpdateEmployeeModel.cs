@@ -1,7 +1,7 @@
-﻿using InventoryAppServices.Models;
+﻿using InventoryApp.Services.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace InventoryASP.Models.Employee
+namespace InventoryApp.Models.Employee
 {
     public class CreateOrUpdateEmployeeModel
     {

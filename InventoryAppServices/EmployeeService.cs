@@ -1,16 +1,16 @@
-﻿using InventoryAppData;
-using InventoryAppData.Entities;
-using InventoryAppServices.Common.Extensions;
-using InventoryAppServices.Common.Helpers;
-using InventoryAppServices.Interfaces;
-using InventoryAppServices.Models;
+﻿using InventoryApp.Data;
+using InventoryApp.Data.Entities;
+using InventoryApp.Services.Common.Extensions;
+using InventoryApp.Services.Common.Helpers;
+using InventoryApp.Services.Interfaces;
+using InventoryApp.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace InventoryAppServices
+namespace InventoryApp.Services
 {
     public class EmployeeService : IEmployeeService
     {

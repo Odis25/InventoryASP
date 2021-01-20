@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InventoryAppData.Common
+namespace InventoryApp.Data.Common
 {
     public abstract class AuditableEntity
     {

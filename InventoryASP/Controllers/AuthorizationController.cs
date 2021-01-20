@@ -1,10 +1,10 @@
-﻿using InventoryAppServices.Interfaces;
-using InventoryASP.Models.Authorization;
+﻿using InventoryApp.Services.Interfaces;
+using InventoryApp.Models.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace InventoryASP.Controllers
+namespace InventoryApp.Controllers
 {
     public class AuthorizationController : Controller
     {

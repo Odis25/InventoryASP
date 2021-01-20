@@ -1,4 +1,4 @@
-﻿namespace InventoryAppData
+﻿namespace InventoryApp.Data
 {
     public interface ICurrentUserService
     {

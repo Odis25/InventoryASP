@@ -23,8 +23,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\InventoryAppData\InventoryApp.Data.csproj" />
-    <ProjectReference Include="..\InventoryAppServices\InventoryApp.Services.csproj" />
+    <ProjectReference Include="..\InventoryApp.Data\InventoryApp.Data.csproj" />
+    <ProjectReference Include="..\InventoryApp.Services\InventoryApp.Services.csproj" />
   </ItemGroup>
 
 

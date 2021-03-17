@@ -33,9 +33,9 @@
         <table class="table table-hover table-sm indexTable">
             <thead>
                 <tr>
-                    <th>Ф.И.О.</th>
-                    <th>Отдел</th>
-                    <th>Должность</th>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]">Ф.И.О.</a></th>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["DepartmentSortParam"]">Отдел</a></th>
+                    <th><a asp-action="Index" asp-route-sortOrder="@ViewData["PositionSortParam"]">Должность</a></th>
                     <th>Оборудование на балансе</th>
                     @if (User.IsInRole("Admin"))
                     {

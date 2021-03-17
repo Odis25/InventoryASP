@@ -10,15 +10,41 @@ namespace InventoryApp.Controllers
     public class DeviceController : Controller
     {
         private readonly IDeviceService _devices;
+        private readonly ISearchService _searchService;
 
-        public DeviceController(IDeviceService devices)
+        public DeviceController(IDeviceService devices, ISearchService searchService)
         {
             _devices = devices;
+            _searchService = searchService;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string sortOrder, string searchQuery)
         {
-            var devices = await _devices.GetDevicesAsync();
+
+            var devices = string.IsNullOrWhiteSpace(searchQuery) ? await _devices.GetDevicesAsync() : await _searchService.FindDevicesAsync(searchQuery);
+
+            ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["TypeSortParam"] = sortOrder == "type" ? "type_desc" : "type";
+            ViewData["SnSortParam"] = sortOrder == "sn" ? "sn_desc" : "sn";
+            ViewData["YearSortParam"] = sortOrder == "year" ? "year_desc" : "year";
+            ViewData["ModelSortParam"] = sortOrder == "model" ? "model_desc" : "model";
+            ViewData["ManufacturerSortParam"] = sortOrder == "manufacturer" ? "manufacturer_desc" : "manufacturer";
+
+            devices = sortOrder switch
+            {
+                "name_desc" => devices.OrderByDescending(s => s.DeviceName).ToHashSet(),
+                "type" => devices.OrderBy(s => s.DeviceType).ToHashSet(),
+                "type_desc" => devices.OrderByDescending(s => s.DeviceType).ToHashSet(),
+                "sn" => devices.OrderBy(s => s.SerialNumber).ToHashSet(),
+                "sn_desc" => devices.OrderByDescending(s => s.SerialNumber).ToHashSet(),
+                "year" => devices.OrderBy(s => s.Year).ToHashSet(),
+                "year_desc" => devices.OrderByDescending(s => s.Year).ToHashSet(),
+                "model" => devices.OrderBy(s => s.DeviceModel).ToHashSet(),
+                "model_desc" => devices.OrderByDescending(s => s.DeviceModel).ToHashSet(),
+                "manufacturer" => devices.OrderBy(s => s.DeviceManufacturer).ToHashSet(),
+                "manufacturer_desc" => devices.OrderByDescending(s => s.DeviceManufacturer).ToHashSet(),
+                _ => devices.OrderBy(s => s.DeviceName).ToHashSet()
+            };
 
             return View(new DeviceIndexModel { Devices = devices });
         }

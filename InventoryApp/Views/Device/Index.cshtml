@@ -34,12 +34,12 @@
         <table class="table table-striped table-hover table-sm indexTable">
             <thead>
                 <tr>
-                    <th>Название</th>
-                    <th>Тип</th>
-                    <th>Модель</th>
-                    <th>Серийный номер</th>
-                    <th>Производитель</th>
-                    <th>Год выпуска</th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["NameSortParam"]">Название</a></th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["TypeSortParam"]">Тип</a></th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ModelSortParam"]">Модель</a></th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["SnSortParam"]">Серийный номер</a></th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ManufacturerSortParam"]">Производитель</a></th>
+                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["YearSortParam"]">Год выпуска</a></th>
                     <th>Текущий владелец</th>
                     @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
                     {

@@ -25,9 +25,23 @@ namespace InventoryApp.Controllers
         }
 
         // Список сотрудников
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string sortOrder)
         {
             var employees = await _employees.GetEmployeesAsync();
+
+            ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DepartmentSortParam"] = sortOrder == "department" ? "department_desc" : "department";
+            ViewData["PositionSortParam"] = sortOrder == "position" ? "position_desc" : "position";
+
+            employees = sortOrder switch
+            {
+                "name_desc" => employees.OrderByDescending(e=> e.FullName).ToHashSet(),
+                "department" => employees.OrderBy(e=> e.Department.Id).ToHashSet(),
+                "department_desc" => employees.OrderByDescending(e=> e.Department.Id).ToHashSet(),
+                "position" => employees.OrderBy(e=> e.Position.Id).ToHashSet(),
+                "position_desc" => employees.OrderByDescending(e=> e.Position.Id).ToHashSet(),
+                _ => employees.OrderBy(e=> e.FullName).ToHashSet()
+            };
 
             var model = new EmployeeIndexModel { Employees = employees };
 

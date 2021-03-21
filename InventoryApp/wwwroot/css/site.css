@@ -1,7 +1,8 @@
 ﻿
 /* Provide sufficient contrast against white background */
 a {
-    color: #0366d6;
+    /*color: #0366d6;*/
+    color:#111;
 }
 
 .btn-primary {

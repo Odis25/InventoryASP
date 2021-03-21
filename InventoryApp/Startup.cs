@@ -40,7 +40,6 @@ namespace InventoryASP
             services.AddScoped<ICheckoutService, CheckoutService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
-            services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAccountService, AccountService>();

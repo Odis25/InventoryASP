@@ -33,12 +33,12 @@
         <table class="table table-striped table-hover table-sm indexTable">
             <thead>
                 <tr>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Название</a></th>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["TypeSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Тип</a></th>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ModelSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Модель</a></th>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["SnSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Серийный номер</a></th>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ManufacturerSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Производитель</a></th>
-                    <th><a asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["YearSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Год выпуска</a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Название<span class="pl-1"><img src="@(string.IsNullOrEmpty(ViewData["NameSortParam"].ToString()) ? "/icons/ascending_sorting_16px.png":"/icons/descending_sorting_16px.png")" /></span></a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["TypeSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Тип</a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ModelSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Модель</a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["SnSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Серийный номер</a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["ManufacturerSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Производитель</a></th>
+                    <th><a class="d-block text-decoration-none" asp-action="Index" asp-controller="Device" asp-route-sortOrder="@ViewData["YearSortParam"]" asp-route-searchPattern="@ViewData["SearchPattern"]">Год выпуска</a></th>
                     <th>Текущий владелец</th>
                     @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
                     {

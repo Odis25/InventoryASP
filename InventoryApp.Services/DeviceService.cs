@@ -23,6 +23,7 @@ namespace InventoryApp.Services
             _checkoutService = checkoutService;
         }
 
+
         // Добавить новое устройство
         public async Task CreateDeviceAsync(DeviceDto device)
         {
@@ -42,7 +43,6 @@ namespace InventoryApp.Services
 
             await _context.SaveChangesAsync();
         }
-
         // Удалить устройство
         public async Task DeleteDeviceAsync(int deviceId)
         {
@@ -76,7 +76,6 @@ namespace InventoryApp.Services
 
             await _context.SaveChangesAsync();
         }
-
         // Изменить данные устройства
         public async Task UpdateDeviceAsync(DeviceDto device)
         {
@@ -93,22 +92,6 @@ namespace InventoryApp.Services
             await _context.SaveChangesAsync();
         }
 
-        // Получить все устройства
-        public async Task<ICollection<DeviceDto>> GetDevicesAsync()
-        {
-            return await GetDevicesAsync(false);
-        }
-
-        // Получить доступные устройства
-        public async Task<ICollection<DeviceDto>> GetDevicesAsync(bool onlyAvailable)
-        {
-            var devices = await _context.Devices
-                .Where(d => onlyAvailable ? d.Status == DeviceStatus.Available : d.Status != DeviceStatus.Deleted)
-                .OrderBy(d => d.Name)
-                .ToListAsync();
-
-            return ConvertToDto(devices);
-        }
 
         // Получить устройство по ID
         public async Task<DeviceDto> GetDeviceByIdAsync(int id)
@@ -117,6 +100,42 @@ namespace InventoryApp.Services
 
             return ConvertToDto(device);
         }
+
+
+        // Получить все устройства
+        public async Task<ICollection<DeviceDto>> GetDevicesAsync()
+        {
+            return await GetDevicesAsync(string.Empty, false);
+        }
+        // Получить все доступные устройства
+        public async Task<ICollection<DeviceDto>> GetDevicesAsync(bool onlyAvailable)
+        {
+            return await GetDevicesAsync(string.Empty, onlyAvailable);
+        }
+        // Получить все устройства соответствующие критерию поиска
+        public async Task<ICollection<DeviceDto>> GetDevicesAsync(string searchPattern)
+        {
+            return await GetDevicesAsync(searchPattern, false);
+        }
+        // Получить устройства соответствующие критерию поиска и доступности
+        public async Task<ICollection<DeviceDto>> GetDevicesAsync(string searchPattern, bool onlyAvailable)
+        {
+            var devices = _context.Devices.Where(d => onlyAvailable ? d.Status == DeviceStatus.Available : d.Status != DeviceStatus.Deleted);
+
+            if (!string.IsNullOrWhiteSpace(searchPattern))
+            {
+                devices = devices.Where(d => d.Name.Contains(searchPattern) ||
+                            d.Type.Contains(searchPattern) ||
+                            d.DeviceModel.Contains(searchPattern) ||
+                            d.Manufacturer.Contains(searchPattern) ||
+                            d.SerialNumber.Contains(searchPattern) ||
+                            d.Year.ToString().Contains(searchPattern));
+            }
+            devices = devices.OrderBy(d => d.Name);
+
+            return ConvertToDto(await devices.ToListAsync());
+        }
+
 
         private DeviceDto ConvertToDto(Device entity)
         {
@@ -143,5 +162,6 @@ namespace InventoryApp.Services
         {
             return entities.Select(entity => ConvertToDto(entity)).ToHashSet();
         }
+
     }
 }

@@ -27,6 +27,7 @@ namespace InventoryApp.Services
             _departmentService = departmentService;
         }
 
+
         // Добавить нового сотрудника
         public async Task CreateEmployeeAsync(EmployeeDto employee)
         {
@@ -49,7 +50,6 @@ namespace InventoryApp.Services
 
             await _context.SaveChangesAsync();
         }
-
         // Удалить сотрудника
         public async Task DeleteEmployeeAsync(int employeeId)
         {
@@ -84,31 +84,6 @@ namespace InventoryApp.Services
 
             await _context.SaveChangesAsync();
         }
-
-        // Получить список всех сотрудников
-        public async Task<ICollection<EmployeeDto>> GetEmployeesAsync()
-        {
-            var employees = await _context.Employees
-                .Where(e => e.IsActive)
-                .OrderBy(e => e.LastName)
-                .Include(e => e.Department)
-                .Include(e => e.Position)
-                .ToListAsync();
-
-            return ConvertToDto(employees);
-        }
-
-        // Получить сотрудника по Id
-        public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
-        {
-            var employee = await _context.Employees
-                .Include(e => e.Position)
-                .Include(e => e.Department)
-                .FirstOrDefaultAsync(e => e.Id == id);
-
-            return ConvertToDto(employee);
-        }
-
         // Изменить данные сотрудника
         public async Task UpdateEmployeeAsync(EmployeeDto employee)
         {
@@ -125,6 +100,46 @@ namespace InventoryApp.Services
 
             await _context.SaveChangesAsync();
         }
+
+
+        // Получить список всех сотрудников
+        public async Task<ICollection<EmployeeDto>> GetEmployeesAsync()
+        {
+            return await GetEmployeesAsync(string.Empty);
+        }
+        // Получить список всех сотрудников по критерию
+        public async Task<ICollection<EmployeeDto>> GetEmployeesAsync(string searchPattern)
+        {
+            var employees = _context.Employees.Where(e => e.IsActive);
+
+            if (!string.IsNullOrWhiteSpace(searchPattern))
+            {
+                employees = employees.Where(e => e.Name.Contains(searchPattern) ||
+                                                e.LastName.Contains(searchPattern) ||
+                                                e.Patronymic.Contains(searchPattern) ||
+                                                e.Position.Name.Contains(searchPattern) ||
+                                                e.Department.Name.Contains(searchPattern));
+            }
+
+            employees = employees.Include(e => e.Position)
+                .Include(e => e.Department)
+                .OrderBy(e => e.LastName);
+
+            return ConvertToDto(await employees.ToListAsync());
+        }
+
+
+        // Получить сотрудника по Id
+        public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
+        {
+            var employee = await _context.Employees
+                .Include(e => e.Position)
+                .Include(e => e.Department)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            return ConvertToDto(employee);
+        }
+
 
         private EmployeeDto ConvertToDto(Employee entity)
         {

@@ -25,22 +25,23 @@ namespace InventoryApp.Controllers
         }
 
         // Список сотрудников
-        public async Task<IActionResult> IndexAsync(string sortOrder)
+        public async Task<IActionResult> IndexAsync(string sortOrder, string searchPattern)
         {
-            var employees = await _employees.GetEmployeesAsync();
+            var employees = await _employees.GetEmployeesAsync(searchPattern);
 
             ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SearchPattern"] = string.IsNullOrEmpty(searchPattern) ? "" : searchPattern;
             ViewData["DepartmentSortParam"] = sortOrder == "department" ? "department_desc" : "department";
             ViewData["PositionSortParam"] = sortOrder == "position" ? "position_desc" : "position";
 
             employees = sortOrder switch
             {
-                "name_desc" => employees.OrderByDescending(e=> e.FullName).ToHashSet(),
-                "department" => employees.OrderBy(e=> e.Department.Id).ToHashSet(),
-                "department_desc" => employees.OrderByDescending(e=> e.Department.Id).ToHashSet(),
-                "position" => employees.OrderBy(e=> e.Position.Id).ToHashSet(),
-                "position_desc" => employees.OrderByDescending(e=> e.Position.Id).ToHashSet(),
-                _ => employees.OrderBy(e=> e.FullName).ToHashSet()
+                "name_desc" => employees.OrderByDescending(e => e.FullName).ToHashSet(),
+                "department" => employees.OrderBy(e => e.Department.Id).ToHashSet(),
+                "department_desc" => employees.OrderByDescending(e => e.Department.Id).ToHashSet(),
+                "position" => employees.OrderBy(e => e.Position.Id).ToHashSet(),
+                "position_desc" => employees.OrderByDescending(e => e.Position.Id).ToHashSet(),
+                _ => employees.OrderBy(e => e.FullName).ToHashSet()
             };
 
             var model = new EmployeeIndexModel { Employees = employees };

@@ -10,20 +10,19 @@ namespace InventoryApp.Controllers
     public class DeviceController : Controller
     {
         private readonly IDeviceService _devices;
-        private readonly ISearchService _searchService;
 
-        public DeviceController(IDeviceService devices, ISearchService searchService)
+        public DeviceController(IDeviceService devices)
         {
             _devices = devices;
-            _searchService = searchService;
         }
 
-        public async Task<IActionResult> IndexAsync(string sortOrder, string searchQuery)
+        public async Task<IActionResult> IndexAsync(string sortOrder, string searchPattern)
         {
 
-            var devices = string.IsNullOrWhiteSpace(searchQuery) ? await _devices.GetDevicesAsync() : await _searchService.FindDevicesAsync(searchQuery);
+            var devices = await _devices.GetDevicesAsync(searchPattern);
 
             ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["SearchPattern"] = string.IsNullOrEmpty(searchPattern) ? "" : searchPattern;
             ViewData["TypeSortParam"] = sortOrder == "type" ? "type_desc" : "type";
             ViewData["SnSortParam"] = sortOrder == "sn" ? "sn_desc" : "sn";
             ViewData["YearSortParam"] = sortOrder == "year" ? "year_desc" : "year";

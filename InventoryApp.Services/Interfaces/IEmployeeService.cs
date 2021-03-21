@@ -7,6 +7,7 @@ namespace InventoryApp.Services.Interfaces
     public interface IEmployeeService
     {
         Task<ICollection<EmployeeDto>> GetEmployeesAsync();
+        Task<ICollection<EmployeeDto>> GetEmployeesAsync(string searchPattern);
 
         Task<EmployeeDto> GetEmployeeByIdAsync(int employeeId);
         

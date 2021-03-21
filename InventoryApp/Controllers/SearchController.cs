@@ -9,50 +9,28 @@ namespace InventoryApp.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly ISearchService _search;
+        private readonly IEmployeeService _employeeService;
+        private readonly IDeviceService _deviceService;
 
-        public SearchController(ISearchService search, ICheckoutService checkouts)
+        public SearchController(IEmployeeService employeeService, IDeviceService deviceService)
         {
-            _search = search;
+            _employeeService = employeeService;
+            _deviceService = deviceService;
         }
 
-        public async Task<IActionResult> FindAsync(string searchQuery)
+        public async Task<IActionResult> IndexAsync(string searchPattern)
         {
-            var employees = await _search.FindEmployeesAsync(searchQuery);
+            var employees = await _employeeService.GetEmployeesAsync(searchPattern);
 
-            var devices = await _search.FindDevicesAsync(searchQuery);
+            var devices = await _deviceService.GetDevicesAsync(searchPattern);
 
             var model = new SearchResultModel
             {
                 Devices = devices,
                 Employees = employees,
-                SearchQuery = searchQuery
+                SearchQuery = searchPattern
             };
             return View("SearchResult", model);
-        }
-
-        public async Task<IActionResult> FindEmployeeAsync(string searchQuery)
-        {
-            var employees = await _search.FindEmployeesAsync(searchQuery);
-
-            var model = new EmployeeIndexModel
-            {
-                Employees = employees
-            };
-
-            return View("~/Views/Employee/Index.cshtml", model);
-        }
-
-        public async Task<IActionResult> FindDeviceAsync(string searchQuery)
-        {
-            var devices = await _search.FindDevicesAsync(searchQuery);
-
-            var model = new DeviceIndexModel
-            {
-                Devices = devices,
-            };
-
-            return View("~/Views/Device/Index.cshtml", model);
-        }        
+        }      
     }
 }

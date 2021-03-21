@@ -8,6 +8,8 @@ namespace InventoryApp.Services.Interfaces
     {
         Task<ICollection<DeviceDto>> GetDevicesAsync();
         Task<ICollection<DeviceDto>> GetDevicesAsync(bool onlyAvailable);
+        Task<ICollection<DeviceDto>> GetDevicesAsync(string searchPattern);
+        Task<ICollection<DeviceDto>> GetDevicesAsync(string searchPattern, bool onlyAvailable);
 
         Task<DeviceDto> GetDeviceByIdAsync(int id);
 

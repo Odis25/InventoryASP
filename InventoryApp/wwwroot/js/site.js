@@ -10,7 +10,7 @@ $(function () {
 
 // Открытие модального окна
 function openModal(e) {
-    
+
     e.preventDefault();
     $.get(this.href).done(function (data) {
         console.log(data);
@@ -28,6 +28,64 @@ function openModal(e) {
                 $('.bgModal-lg').modal('show');
                 break;
         }
+    });
+}
+
+// Сортировка таблиц в диалоговых окнах
+function SortTable(data) {
+
+    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+        v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+    {
+        const table = document.querySelector('#device-table');
+        const tbody = table.querySelector('tbody');
+
+        Array.from(tbody.querySelectorAll('tr'))
+            .sort(comparer(data, this.asc = !this.asc))
+            .forEach(tr => tbody.appendChild(tr));
+    };
+}
+
+// Фильтрация таблицы в диалоговых окнах
+function FilterTable() {
+
+    let searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
+
+    let table = document.querySelector('#device-table tbody');
+
+    let rows = table.querySelectorAll('tr');
+
+    for (let row of rows) {
+
+        let rowVisible = true;
+
+        for (let cell of row.cells) {
+
+            if (cell.innerText.toUpperCase().includes(searchPattern)) {
+                rowVisible = true;
+                break;
+            }
+            rowVisible = false;
+        }
+
+        if (rowVisible) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    }
+
+
+    let model = { employeeId: id, sortOrder: "", searchPattern: searchPattern };
+    console.log(model);
+
+    $.get('/Device/SelectDevices', model).done(function (result) {
+        $('#modalWindow-content-lg').html(result);
     });
 }
 

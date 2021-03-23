@@ -49,7 +49,7 @@
                     <tr>
                         <td>
                             <a asp-controller="Employee" asp-action="Details" asp-route-id="@employee.Id">
-                                <span>@employee.LastName @employee.Name @employee.Patronymic</span>
+                                <span>@employee.FullName</span>
                             </a>
                         </td>
                         <td>@employee.Department.Name</td>

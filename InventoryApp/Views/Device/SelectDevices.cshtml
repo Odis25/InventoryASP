@@ -12,25 +12,51 @@
     @if (Model.Devices.Any())
     {
         <div class="modal-body">
+            <!--Поиск по разделу-->
+            <div class="sectionHeader">
+                <div class="row no-gutters">
+                    <div class="input-group searchGroup">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                Фильтр:
+                            </div>
+                        </div>
+                        <input id="search-pattern" onkeyup="FilterTable()" class="searchInput flex-grow-1" type="text" autocomplete="off" placeholder="условие фильтрации..." value="@ViewData["SearchPattern"]" />
+                    </div>
+                </div>
+            </div>
+
             <form method="post" asp-action="CheckOutDevices" asp-controller="Checkout" id="checkout-form">
-                <table class="table table-sm table-hover table-borderless table-striped">
-                    <tbody>
-                        @for (int i = 0; i < Model.Devices.Length; i++)
-                        {
+                <div class="table-container">
+                    <table class="table table-sm table-hover table-borderless table-striped selection-table" id="device-table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <input type="hidden" asp-for="Devices[i].Id" />
-                                    <input type="checkbox" asp-for="Devices[i].IsSelected" />
-                                </td>
-                                <td>@Model.Devices[i].DeviceName</td>
-                                <td>@Model.Devices[i].DeviceType</td>
-                                <td>@Model.Devices[i].DeviceModel</td>
-                                <td>@Model.Devices[i].DeviceManufacturer</td>
-                                <td>@Model.Devices[i].SerialNumber</td>
+                                <th></th>
+                                <th onclick="SortTable(1)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(2)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(3)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(4)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(5)">Зав. номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Devices.Length; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" asp-for="Devices[i].Id" />
+                                        <input type="checkbox" asp-for="Devices[i].IsSelected" />
+                                    </td>
+                                    <td>@Model.Devices[i].DeviceName</td>
+                                    <td>@Model.Devices[i].DeviceType</td>
+                                    <td>@Model.Devices[i].DeviceModel</td>
+                                    <td>@Model.Devices[i].DeviceManufacturer</td>
+                                    <td>@Model.Devices[i].SerialNumber</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
                 <input type="hidden" asp-for="EmployeeId" />
             </form>
         </div>

@@ -114,9 +114,9 @@ namespace InventoryApp.Services
 
             if (!string.IsNullOrWhiteSpace(searchPattern))
             {
-                employees = employees.Where(e => e.Name.Contains(searchPattern) ||
+                employees = employees.Where(e => //e.Name.Contains(searchPattern) ||
                                                 e.LastName.Contains(searchPattern) ||
-                                                e.Patronymic.Contains(searchPattern) ||
+                                             //   e.Patronymic.Contains(searchPattern) ||
                                                 e.Position.Name.Contains(searchPattern) ||
                                                 e.Department.Name.Contains(searchPattern));
             }

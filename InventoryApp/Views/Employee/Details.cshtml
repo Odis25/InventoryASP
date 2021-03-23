@@ -135,7 +135,9 @@
                 <a class="btn btn-sm btn-success openModalBtn-lg"
                    asp-controller="Device"
                    asp-action="SelectDevices"
-                   asp-route-employeeId="@Model.Employee.Id">
+                   asp-route-employeeId="@Model.Employee.Id"
+                   asp-route-sortOrder=""
+                   asp-route-searchPattern="">
                     <img src="~/icons/add_shopping_cart_24px.png" />Добавить оборудование
                 </a>
             </div>

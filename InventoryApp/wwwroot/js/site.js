@@ -40,14 +40,12 @@ function SortTable(data) {
         v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
     )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
 
-    {
-        const table = document.querySelector('#device-table');
-        const tbody = table.querySelector('tbody');
+    const table = document.querySelector('.indexTable');
+    const tbody = table.querySelector('tbody');
 
-        Array.from(tbody.querySelectorAll('tr'))
-            .sort(comparer(data, this.asc = !this.asc))
-            .forEach(tr => tbody.appendChild(tr));
-    };
+    Array.from(tbody.querySelectorAll('tr'))
+        .sort(comparer(data, this.asc = !this.asc))
+        .forEach(tr => tbody.appendChild(tr));
 }
 
 // Фильтрация таблицы в диалоговых окнах
@@ -55,7 +53,7 @@ function FilterTable() {
 
     let searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
 
-    let table = document.querySelector('#device-table tbody');
+    let table = document.querySelector('.indexTable tbody');
 
     let rows = table.querySelectorAll('tr');
 
@@ -77,7 +75,6 @@ function FilterTable() {
         } else {
             row.style.display = "none";
         }
-
     }
 
 

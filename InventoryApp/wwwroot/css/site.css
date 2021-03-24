@@ -15,7 +15,7 @@
 }
 
 a {
-    color:#000;
+    color: #000;
 }
 
 .btn-primary {
@@ -23,7 +23,7 @@ a {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
- 
+
 html {
     font-size: 14px;
     position: relative;
@@ -92,7 +92,7 @@ body {
         margin-left: 2px;
     }
 
-.appName{
+.appName {
     font-family: 'Roboto mono';
     font-weight: bold;
 }
@@ -108,9 +108,9 @@ body {
         font-weight: bold;
     }
 
-    .navbar .active a{
+    .navbar .active a {
         background: #ddd;
-        color:#000;
+        color: #000;
     }
 
 .nav-link {
@@ -222,19 +222,23 @@ body {
 /*-----------таблицы------------*/
 .table-container {
     overflow: auto;
+    max-height: 60vh;
+}
+
+    .table-container th {
+        position: sticky;
+        top: 0;
+        z-index: 90;
+        background: wheat;
+    }
+
+.modal-table {
     max-height: 30vh;
 }
 
-.table-container th{
-    position: sticky;
-    top: 0;
-    z-index: 90;
-    background: wheat;
-    cursor: pointer;
-}
-
-.indexTable thead {
+.indexTable th {
     background-color: wheat;
+    cursor: pointer;
 }
 
 .indexTable td {

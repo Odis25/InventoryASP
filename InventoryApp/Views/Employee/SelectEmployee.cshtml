@@ -10,24 +10,42 @@
     </div>
     <!--Основной контент-->
     <div class="modal-body">
+        <!--Поиск по разделу-->
+        <div class="sectionHeader">
+            <div class="row no-gutters">
+                <form method="get" class="col subSearchForm">
+                    <div class="input-group searchGroup">
+                        <div class="input-group-prepend mr-2">
+                            <div class="align-middle">
+                                <img src="~/img/search_24px.png">
+                            </div>
+                        </div>
+                        <input id="search-pattern" onkeyup="FilterTable()" class="searchInput flex-grow-1" type="text" autocomplete="off" placeholder="фильтр..." />
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <form method="post" asp-action="CheckOutDevice" asp-controller="Checkout" id="checkout-form">
-            <table class="table table-sm table-striped table-hover">
-                <tbody>
-                    @for (int i = 0; i < Model.Employees.Length; i++)
-                    {
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" id="emp-@i" type="radio" asp-for="SelectedEmployeeId" value="@Model.Employees[i].Id"/>
-                                    <label class="custom-control-label" for="emp-@i" style="cursor: pointer">
-                                        <span>@Model.Employees[i].LastName @Model.Employees[i].Name @Model.Employees[i].Patronymic</span>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="table-container modal-table mt-2">
+                <table class="table table-sm table-striped table-hover modal-table indexTable">
+                    <tbody>
+                        @for (int i = 0; i < Model.Employees.Length; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" id="emp-@i" type="radio" asp-for="SelectedEmployeeId" value="@Model.Employees[i].Id" />
+                                        <label class="custom-control-label" for="emp-@i" style="cursor: pointer">
+                                            <span>@Model.Employees[i].LastName @Model.Employees[i].Name @Model.Employees[i].Patronymic</span>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             <input type="hidden" asp-for="DeviceId" />
         </form>
     </div>

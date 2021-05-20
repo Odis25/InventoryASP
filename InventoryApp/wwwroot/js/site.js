@@ -31,6 +31,53 @@ function openModal(e) {
     });
 }
 
+// Распечатка таблицы оборудования или сотрудников
+function PrintTable() {
+
+    const table = document.querySelector('.indexTable');
+
+    let css = '<style type = "text/css">';
+    css += `
+    table
+    {
+        font-family: Arial;
+        font-size: 0.9em;
+        border: 1px solid #333;
+        border-collapse: collapse;
+    }
+    table a
+    {
+        text-decoration: none;
+    }
+    .controlCell
+    {
+        display: none;
+    }
+    table th span
+    {
+        display: none;
+    }
+    table th
+    {
+        font-weight: bold;
+    }
+    table th, table td
+    {
+        padding: 5px;
+        border: 1px solid #333;
+    }`; 
+    css += '</style>';
+
+    let html = table.outerHTML;
+
+    window.frames["print_frame"].document.write(css);
+    window.frames["print_frame"].document.write(html);
+    
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    window.frames["print_frame"].document.close();
+}
+
 // Сортировка таблиц в диалоговых окнах
 function SortTable(data) {
 
@@ -51,11 +98,13 @@ function SortTable(data) {
 // Фильтрация таблицы в диалоговых окнах
 function FilterTable() {
 
-    let searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
+    const searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
 
-    let table = document.querySelector('.indexTable tbody');
+    const table = document.querySelector('.indexTable tbody');
 
-    let rows = table.querySelectorAll('tr');
+    const rows = table.querySelectorAll('tr');
+
+    let i = 1;
 
     for (let row of rows) {
 
@@ -72,6 +121,8 @@ function FilterTable() {
 
         if (rowVisible) {
             row.style.display = "";
+            row.cells[0].innerText = i++;
+            //i++;
         } else {
             row.style.display = "none";
         }
@@ -79,7 +130,6 @@ function FilterTable() {
 
 
     let model = { employeeId: id, sortOrder: "", searchPattern: searchPattern };
-    console.log(model);
 
     $.get('/Device/SelectDevices', model).done(function (result) {
         $('#modalWindow-content-lg').html(result);

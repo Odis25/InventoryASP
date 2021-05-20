@@ -7,10 +7,12 @@
             <h4 class="flex-grow-1 m-0 text-uppercase pl-2">Оборудование</h4>
             @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
             {
-                <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg">
+                <a asp-controller="Device" asp-action="Create" class="btn btn-sm btn-success openModalBtn-lg mr-2">
                     <span><img src="~/icons/add_device_24px.png" class="mr-1" />Добавить</span>
                 </a>
             }
+            <button class="btn btn-sm btn-secondary" onclick="PrintTable()"><img src="~/icons/print_white_24x24.png" class="mr-1" />Печать</button>
+            <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
         </div>
     </div>
 
@@ -35,13 +37,14 @@
         <table class="table table-striped table-hover table-sm indexTable">
             <thead>
                 <tr>
-                    <th onclick="SortTable(0)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(1)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(2)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(3)">Серийный номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(4)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(5)">Год выпуска<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(6)">Текущий владелец<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(0)">#<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(1)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(2)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(3)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(4)">Серийный номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(5)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(6)">Год выпуска<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(7)">Текущий владелец<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                     @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
                     {
                         <th class="controlCell">Управление</th>
@@ -49,9 +52,11 @@
                 </tr>
             </thead>
             <tbody>
+                @{var i = 1; }
                 @foreach (var device in Model.Devices)
                 {
                     <tr>
+                        <td>@(i++)</td>
                         <td><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
                         <td>@device.DeviceType</td>
                         <td>@device.DeviceModel</td>

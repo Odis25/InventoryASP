@@ -38,11 +38,11 @@
             <thead>
                 <tr>
                     <th onclick="SortTable(0)">#<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(1)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(2)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(3)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(4)">Серийный номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                    <th onclick="SortTable(5)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(1)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(2)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(3)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(4)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                    <th onclick="SortTable(5)">Серийный номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                     <th onclick="SortTable(6)">Год выпуска<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                     <th onclick="SortTable(7)">Текущий владелец<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                     @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
@@ -57,11 +57,11 @@
                 {
                     <tr>
                         <td>@(i++)</td>
-                        <td><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
                         <td>@device.DeviceType</td>
+                        <td><a asp-controller="Device" asp-action="Details" asp-route-id="@device.Id">@device.DeviceName</a></td>
+                        <td>@device.DeviceManufacturer</td>
                         <td>@device.DeviceModel</td>
                         <td>@device.SerialNumber</td>
-                        <td>@device.DeviceManufacturer</td>
                         <td>@device.Year</td>
                         <td>
                             @if (device.Checkout != null)

@@ -129,7 +129,7 @@ namespace InventoryApp.Services
                     DeviceName = h.Device.Name,
                     DeviceType = h.Device.Type,
                     DeviceModel = h.Device.DeviceModel,
-                    DeviceManufacturer = h.Device.DeviceModel,
+                    DeviceManufacturer = h.Device.Manufacturer,
                     SerialNumber = h.Device.SerialNumber,
                     Description = h.Device.Description
                 },
@@ -163,7 +163,7 @@ namespace InventoryApp.Services
                     DeviceName = entity.Device.Name,
                     DeviceType = entity.Device.Type,
                     DeviceModel = entity.Device.DeviceModel,
-                    DeviceManufacturer = entity.Device.DeviceModel,
+                    DeviceManufacturer = entity.Device.Manufacturer,
                     SerialNumber = entity.Device.SerialNumber,
                     Description = entity.Device.Description
                 },

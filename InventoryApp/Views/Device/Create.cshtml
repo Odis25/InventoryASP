@@ -12,29 +12,29 @@
     <form asp-action="Create" method="post" id="createDeviceForm">
         <div class="modal-body">
             <div class="form-group">
-                <label asp-for="Device.DeviceName">Наименование устройства</label>
-                <input asp-for="Device.DeviceName" class="form-control" placeholder="Наименование" />
-                <span asp-validation-for="Device.DeviceName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Device.Year">Год выпуска устройства</label>
-                <input type="number" asp-for="Device.Year" class="form-control" />
-            </div>
-            <div class="form-group">
                 <label asp-for="Device.DeviceType">Тип устройства</label>
                 <input asp-for="Device.DeviceType" class="form-control" placeholder="Тип" />
             </div>
             <div class="form-group">
-                <label asp-for="Device.DeviceModel">Модель устройства</label>
-                <input asp-for="Device.DeviceModel" class="form-control" placeholder="Модель" />
+                <label asp-for="Device.DeviceName">Наименование устройства</label>
+                <input asp-for="Device.DeviceName" class="form-control" placeholder="Наименование" />
+                <span asp-validation-for="Device.DeviceName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Device.DeviceManufacturer">Производитель устройства</label>
                 <input asp-for="Device.DeviceManufacturer" class="form-control" placeholder='Производитель' />
             </div>
             <div class="form-group">
+                <label asp-for="Device.DeviceModel">Модель устройства</label>
+                <input asp-for="Device.DeviceModel" class="form-control" placeholder="Модель" />
+            </div>
+            <div class="form-group">
                 <label asp-for="Device.SerialNumber">Серийный номер</label>
                 <input asp-for="Device.SerialNumber" class="form-control" placeholder="Серийный номер" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Device.Year">Год выпуска устройства</label>
+                <input type="number" asp-for="Device.Year" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="Device.Description">Описание</label>

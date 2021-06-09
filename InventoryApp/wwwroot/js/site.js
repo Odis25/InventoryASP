@@ -122,7 +122,6 @@ function FilterTable() {
         if (rowVisible) {
             row.style.display = "";
             row.cells[0].innerText = i++;
-            //i++;
         } else {
             row.style.display = "none";
         }

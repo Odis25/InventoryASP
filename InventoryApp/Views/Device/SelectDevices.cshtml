@@ -34,10 +34,10 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th onclick="SortTable(1)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                                <th onclick="SortTable(2)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                                <th onclick="SortTable(3)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
-                                <th onclick="SortTable(4)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(1)">Тип<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(2)">Название<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(3)">Производитель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
+                                <th onclick="SortTable(4)">Модель<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                                 <th onclick="SortTable(5)">Зав. номер<span class="pl-1"><img src="~/icons/sorting.png" /></span></th>
                             </tr>
                         </thead>
@@ -49,10 +49,10 @@
                                         <input type="hidden" asp-for="Devices[i].Id" />
                                         <input type="checkbox" asp-for="Devices[i].IsSelected" />
                                     </td>
-                                    <td>@Model.Devices[i].DeviceName</td>
                                     <td>@Model.Devices[i].DeviceType</td>
-                                    <td>@Model.Devices[i].DeviceModel</td>
+                                    <td>@Model.Devices[i].DeviceName</td>
                                     <td>@Model.Devices[i].DeviceManufacturer</td>
+                                    <td>@Model.Devices[i].DeviceModel</td>
                                     <td>@Model.Devices[i].SerialNumber</td>
                                 </tr>
                             }

@@ -101,7 +101,6 @@ namespace InventoryApp.Services
             await _context.SaveChangesAsync();
         }
 
-
         // Получить список всех сотрудников
         public async Task<ICollection<EmployeeDto>> GetEmployeesAsync()
         {
@@ -114,9 +113,7 @@ namespace InventoryApp.Services
 
             if (!string.IsNullOrWhiteSpace(searchPattern))
             {
-                employees = employees.Where(e => //e.Name.Contains(searchPattern) ||
-                                                e.LastName.Contains(searchPattern) ||
-                                             //   e.Patronymic.Contains(searchPattern) ||
+                employees = employees.Where(e => e.LastName.Contains(searchPattern) ||
                                                 e.Position.Name.Contains(searchPattern) ||
                                                 e.Department.Name.Contains(searchPattern));
             }
@@ -127,7 +124,6 @@ namespace InventoryApp.Services
 
             return ConvertToDto(await employees.ToListAsync());
         }
-
 
         // Получить сотрудника по Id
         public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)

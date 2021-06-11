@@ -13,7 +13,7 @@ function openModal(e) {
 
     e.preventDefault();
     $.get(this.href).done(function (data) {
-        console.log(data);
+
         switch (e.data.size) {
             case 'sm':
                 $('#modalWindow-content-sm').html(data);
@@ -65,14 +65,14 @@ function PrintTable() {
     {
         padding: 5px;
         border: 1px solid #333;
-    }`; 
+    }`;
     css += '</style>';
 
     let html = table.outerHTML;
 
     window.frames["print_frame"].document.write(css);
     window.frames["print_frame"].document.write(html);
-    
+
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
     window.frames["print_frame"].document.close();
@@ -95,10 +95,16 @@ function SortTable(data) {
         .forEach(tr => tbody.appendChild(tr));
 }
 
-// Фильтрация таблицы в диалоговых окнах
+// Фильтрация таблицы
 function FilterTable() {
 
     const searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
+
+    let searchArray = searchPattern.split(' ');
+
+    const hasArgs = searchArray.includes('@USE');
+
+    searchArray = searchArray.filter(w => !w.includes('@USE'));
 
     const table = document.querySelector('.indexTable tbody');
 
@@ -112,27 +118,26 @@ function FilterTable() {
 
         for (let cell of row.cells) {
 
-            if (cell.innerText.toUpperCase().includes(searchPattern)) {
+            if (searchArray.some(word => cell.innerText.toUpperCase().includes(word))) {
                 rowVisible = true;
                 break;
             }
             rowVisible = false;
         }
 
+        if (table.parentElement.id == 'device-table' && hasArgs && row.cells[7].innerText == '') {
+            rowVisible = false;
+        }
+
         if (rowVisible) {
             row.style.display = "";
-            row.cells[0].innerText = i++;
+            if (!table.parentElement.classList.contains('selection-table')) {
+                row.cells[0].innerText = i++;
+            }
         } else {
             row.style.display = "none";
         }
     }
-
-
-    let model = { employeeId: id, sortOrder: "", searchPattern: searchPattern };
-
-    $.get('/Device/SelectDevices', model).done(function (result) {
-        $('#modalWindow-content-lg').html(result);
-    });
 }
 
 // Логин пользователя

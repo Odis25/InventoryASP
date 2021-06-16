@@ -98,13 +98,15 @@ function SortTable(data) {
 // Фильтрация таблицы
 function FilterTable() {
 
-    const searchPattern = document.querySelector('#search-pattern').value.toUpperCase();
+    let keyWords = document.querySelector('#search-pattern').value.toUpperCase().split(' ');
 
-    let searchArray = searchPattern.split(' ');
+    const hasArgs = keyWords.includes('@USE');
 
-    const hasArgs = searchArray.includes('@USE');
+    keyWords = keyWords.filter(w => !w.includes('@'));
 
-    searchArray = searchArray.filter(w => !w.includes('@USE'));
+    if (keyWords.length == 0) {
+        keyWords[0] = '';
+    }
 
     const table = document.querySelector('.indexTable tbody');
 
@@ -118,14 +120,14 @@ function FilterTable() {
 
         for (let cell of row.cells) {
 
-            if (searchArray.some(word => cell.innerText.toUpperCase().includes(word))) {
+            if (keyWords.some(word => cell.innerText.toUpperCase().includes(word))) {
                 rowVisible = true;
                 break;
             }
             rowVisible = false;
         }
 
-        if (table.parentElement.id == 'device-table' && hasArgs && row.cells[7].innerText == '') {
+        if (table.parentElement.id == 'device-table' && hasArgs && row.cells[7].innerText.trim() === '') {
             rowVisible = false;
         }
 
@@ -137,6 +139,12 @@ function FilterTable() {
         } else {
             row.style.display = "none";
         }
+    }
+}
+
+function LoginByEnterKey(event) {
+    if (event.keyCode === 13) {
+        Login();
     }
 }
 
@@ -154,7 +162,7 @@ function Login() {
 
         // Код обработки результата
         $('#modalWindow-content-sm').html(result);
-        var isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
+        let isValid = $('.modal-body').find('[name="IsValid"]').val() == 'True';
         if (isValid) {
             window.location.href = '/Home/Index';
         }

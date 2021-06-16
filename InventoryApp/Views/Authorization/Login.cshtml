@@ -9,7 +9,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <form method="post" asp-controller="Authorization" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" id="loginForm">
+        <form method="post" asp-controller="Authorization" asp-action="Login" onkeyup="LoginByEnterKey(event)" asp-route-returnUrl="@Model.ReturnUrl" id="loginForm">
             <div class="form-group">
                 <label class="col-form-label" asp-for="LoginName"></label>
                 <input class="form-control" asp-for="LoginName" />
